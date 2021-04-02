@@ -1,6 +1,8 @@
 { config, pkgs, lib, ... }:
 
 {
+  imports = [ ./shells.nix ];
+
   programs.bat = {
     enable = true;
     config = { theme = "Monokai Extended"; };
@@ -43,7 +45,6 @@
       tree
       yq
     ] ++ lib.optionals stdenv.isDarwin [ m-cli ];
-
 
   # This value determines the Home Manager release that your configuration is compatible with. This
   # helps avoid breakage when a new Home Manager release introduces backwards incompatible changes.

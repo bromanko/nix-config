@@ -11,8 +11,9 @@
   services.nix-daemon.enable = true;
 
   environment.shells = with pkgs; [ zsh ];
-
   programs.zsh.enable = true;
+  environment.loginShell = pkgs.zsh;
+  environment.variables.SHELL = "${pkgs.zsh}/bin/zsh";
 
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
