@@ -22,4 +22,12 @@
   programs.zsh.enableAutosuggestions = true;
   programs.zsh.enableCompletion = true;
   programs.zsh.history.extended = true;
+
+  programs.starship.enable = true;
+  programs.starship.enableZshIntegration = true;
+  programs.starship.settings = {
+    # See docs at https://starship.rs/config/
+    #
+    gcloud.disabled = true;
+  };
 }
