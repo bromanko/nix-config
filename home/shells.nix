@@ -2,6 +2,7 @@
 
 {
   programs.zsh.shellAliases = with pkgs; {
+    ".." = "cd ..";
     cat = "${bat}/bin/bat";
     "cat!" = "command cat";
     find = "${fd}/bin/fd";
