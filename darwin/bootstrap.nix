@@ -2,14 +2,13 @@
 
 {
   nix.trustedUsers = [ "@admin" ];
+  users.nix.configureBuildUsers = true;
 
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = "experimental-features = nix-command flakes";
 
   # Auto upgrade nix package and the daemon service.
   services.nix-daemon.enable = true;
-
-  # nixpkgs = { config = { allowUnfree = true; }; };
 
   environment.shells = with pkgs; [ zsh ];
 

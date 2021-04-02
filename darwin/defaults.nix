@@ -133,7 +133,7 @@
     # Chrome - Prevent native print dialog, use system dialog instead.
     defaults write com.google.Chrome DisablePrintPreview -boolean true
 
-    # Mail - Copy email addresses as 'foo@example.com' instead of 'Foo Bar <foo@example.com>'.
+    # Mail - Copy email addresses as "foo@example.com" instead of "Foo Bar <foo@example.com>".
     defaults write com.apple.mail AddressesIncludeNameOnPasteboard -bool false
 
     # Printer - Automatically quit printer app once the print jobs complete.

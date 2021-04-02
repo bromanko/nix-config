@@ -66,7 +66,7 @@
         # My personal machine
         personalMacbookPro = darwin.lib.darwinSystem {
           modules = nixDarwinCommonModules { user = "bromanko"; } ++ [{
-            networking.computerName = "bromanko's Macbook Pro";
+            networking.computerName = "bromanko Macbook Pro";
             networking.hostName = "bromanko-macbook-pro";
           }];
         };
