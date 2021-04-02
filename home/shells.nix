@@ -9,6 +9,7 @@
       bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
     la = "ll -a";
     ll = "ls -l --time-style long-iso --icons";
+    l = "ll";
     ls = "${exa}/bin/exa";
     "reload!" = ". ~/.zshrc";
     vim = "${neovim}/bin/nvim";
