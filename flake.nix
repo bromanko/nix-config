@@ -33,13 +33,15 @@
         ];
       };
 
-      nixDarwinCommonModules = { user }:
-        [
-
-        ];
+      # Modules shared by nix-darwin configurations.
+      nixDarwinCommonModules = { user }: [ ./darwin ];
 
     in {
       darwinConfigurations = {
+        bootstrap = darwin.lib.darwinSystem {
+          modules = [ ./darwin/bootstrap.nix { nixpkgs = nixpkgsConfig; } ];
+        };
+
         PersonalMacbookPro = darwin.lib.darwinSystem {
           modules = nixDarwinCommonModules { user = "bromanko"; } ++ [{
             networking.computerName = "bromanko's Macbook Pro";
@@ -47,6 +49,8 @@
           }];
         };
       };
+
+      overlays = with inputs; [ ]; # ++ [ ./overlays ];
 
       darwinModules = { };
 
