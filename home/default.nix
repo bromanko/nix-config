@@ -23,6 +23,7 @@
       delta
       direnv
       exa
+      fantasque-sans-mono-nerd-font
       fd
       fontconfig # For Emacs
       fzf
