@@ -30,6 +30,7 @@
   programs.starship.settings = {
     # See docs at https://starship.rs/config/
     #
+    # Symbols are configures in Flake
     gcloud.disabled = true;
   };
 }

@@ -39,7 +39,7 @@
 
       # Modules shared between nix-darwin and plain home-manager
       homeManagerCommonConfig = with self.homeManagerModules; {
-        imports = [ ./home ];
+        imports = [ ./home configs.starship.symbols ];
       };
 
       # Modules shared by nix-darwin configurations
@@ -90,7 +90,9 @@
 
       overlays = with inputs; [ ];
 
-      homeManagerModules = { };
+      homeManagerModules = {
+        configs.starship.symbols = import ./home/configs/starship-symbols.nix;
+      };
 
       # Add re-export nixpkgs packages with overlays.
       # This is handy in combination with `nix-registry add my /Users/bromanko/.config/nixpkgs`

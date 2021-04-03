@@ -3,6 +3,8 @@
 {
   imports = [ ./shells.nix ];
 
+  home.sessionVariables = { EDITOR = "vim"; };
+
   programs.bat = {
     enable = true;
     config = { theme = "Monokai Extended"; };
