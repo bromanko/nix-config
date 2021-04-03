@@ -1,6 +1,14 @@
 { config, pkgs, lib, ... }:
 
 {
+  home.sessionVariables = {
+    EDITOR = "vim";
+
+    # zsh-vim-mode
+    MODE_CURSOR_VIINS = "#ffffff steady bar";
+    MODE_CURSOR_VICMD = "#ffffff steady block";
+  };
+
   programs.zsh.shellAliases = with pkgs; {
     ".." = "cd ..";
     cat = "${bat}/bin/bat";
