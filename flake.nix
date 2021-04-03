@@ -88,7 +88,7 @@
         };
       };
 
-      overlays = with inputs; [ ];
+      overlays = map import ((import ./lsnix.nix) ./overlays);
 
       homeManagerModules = {
         configs.starship.symbols = import ./home/configs/starship-symbols.nix;

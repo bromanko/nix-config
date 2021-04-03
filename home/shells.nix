@@ -36,5 +36,6 @@
 
   programs.zsh.initExtra = ''
     source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
+    source ${pkgs.zsh-vim-mode}/share/zsh/plugins/zsh-vim-mode/zsh-vim-mode.plugin.zsh
   '';
 }
