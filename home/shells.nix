@@ -33,4 +33,8 @@
     # Symbols are configures in Flake
     gcloud.disabled = true;
   };
+
+  programs.zsh.initExtra = ''
+    source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
+  '';
 }

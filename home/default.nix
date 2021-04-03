@@ -46,6 +46,7 @@
       tmux
       tree
       yq
+      zsh-fast-syntax-highlighting
     ] ++ lib.optionals stdenv.isDarwin [ m-cli ];
 
   # This value determines the Home Manager release that your configuration is compatible with. This
