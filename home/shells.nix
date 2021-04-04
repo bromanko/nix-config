@@ -22,6 +22,18 @@
     ls = "${exa}/bin/exa";
     "reload!" = ". ~/.zshrc";
     vim = "${neovim}/bin/nvim";
+    g = "git";
+    ga = "git add";
+    gb = "git branch";
+    gc = "git commit";
+    gcm = "git checkout main";
+    gco = "git checkout";
+    gcp = "git cherry-pick";
+    gd = "git diff";
+    ggpush = "git push origin $(current_branch)";
+    gl = "git pull --prune";
+    gp = "git push origin HEAD";
+    gs = "git status -sb";
   };
 
   programs.zsh.enable = true;
