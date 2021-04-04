@@ -36,6 +36,16 @@
     gs = "git status -sb";
   };
 
+  programs.zsh.plugins = [{
+    name = "zsh-vim-mde";
+    src = pkgs.fetchFromGitHub {
+      owner = "softmoth";
+      repo = "zsh-vim-mode";
+      rev = "1f9953b";
+      sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
+    };
+  }];
+
   programs.zsh.enable = true;
   # programs.zsh.enableBashCompletion = true;
   # programs.zsh.enableFzfCompletion = true;

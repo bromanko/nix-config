@@ -51,7 +51,6 @@
       tree
       yq
       zsh-fast-syntax-highlighting
-      zsh-vim-mode
     ] ++ lib.optionals stdenv.isDarwin [ m-cli ];
 
   # This value determines the Home Manager release that your configuration is compatible with. This
