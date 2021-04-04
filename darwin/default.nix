@@ -13,7 +13,7 @@
   };
 
   fonts.enableFontDir = true;
-  fonts.fonts = [ pkgs.recursive ];
+  fonts.fonts = [ pkgs.fantasque-sans-mono-nerd-font ];
 
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
