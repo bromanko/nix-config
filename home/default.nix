@@ -13,6 +13,12 @@
     enableNixDirenvIntegration = true;
   };
 
+  programs.fzf = {
+    enable = true;
+    enableZshIntegration = true;
+    defaultCommand = "fd --type f --hidden --follow --exclude .git";
+  };
+
   home.packages = with pkgs;
     [
       aspell # For Emacs
@@ -26,7 +32,6 @@
       fantasque-sans-mono-nerd-font
       fd
       fontconfig # For Emacs
-      fzf
       gh
       git
       gnupg
