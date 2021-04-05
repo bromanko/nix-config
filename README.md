@@ -44,3 +44,6 @@ For `home-manager` (Linux):
 ./result/sw/bin/activate 
 ```
 
+## References
+
+This setup is heavily inspired by [malob's](https://github.com/malob/nixpkgs) excellent nixpkgs configuration. 
