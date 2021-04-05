@@ -11,17 +11,18 @@
 
   programs.zsh.shellAliases = with pkgs; {
     ".." = "cd ..";
+    "reload!" = ". ~/.zshrc";
+    S = "sudo";
+
     cat = "${bat}/bin/bat";
     "cat!" = "command cat";
     find = "${fd}/bin/fd";
-    initgo = ''
-      bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
+
     la = "ll -a";
     ll = "ls -l --time-style long-iso --icons";
     l = "ll";
     ls = "${exa}/bin/exa";
-    "reload!" = ". ~/.zshrc";
-    vim = "${neovim}/bin/nvim";
+
     g = "git";
     ga = "git add";
     gb = "git branch";
@@ -34,6 +35,11 @@
     gl = "git pull --prune";
     gp = "git push origin HEAD";
     gs = "git status -sb";
+
+    dc = "docker-compose";
+    vim = "${neovim}/bin/nvim";
+    initgo = ''
+      bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
   };
 
   programs.zsh.plugins = [
