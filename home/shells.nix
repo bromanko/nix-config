@@ -36,15 +36,27 @@
     gs = "git status -sb";
   };
 
-  programs.zsh.plugins = [{
-    name = "zsh-vim-mode";
-    src = pkgs.fetchFromGitHub {
-      owner = "softmoth";
-      repo = "zsh-vim-mode";
-      rev = "1f9953b";
-      sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
-    };
-  }];
+  programs.zsh.plugins = [
+    {
+      name = "zsh-vim-mode";
+      src = pkgs.fetchFromGitHub {
+        owner = "softmoth";
+        repo = "zsh-vim-mode";
+        rev = "1f9953b";
+        sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
+      };
+    }
+    {
+      name = "zsh-fast-syntax-highlighting";
+      file = "fast-syntax-highlighting.plugin.zsh";
+      src = pkgs.fetchFromGitHub {
+        owner = "zdharma";
+        repo = "fast-syntax-highlighting";
+        rev = "v1.55";
+        sha256 = "019hda2pj8lf7px4h1z07b9l6icxx4b2a072jw36lz9bh6jahp32";
+      };
+    }
+  ];
 
   programs.zsh.enable = true;
   # programs.zsh.enableBashCompletion = true;
@@ -64,7 +76,5 @@
     gcloud.disabled = true;
   };
 
-  programs.zsh.initExtra = ''
-    source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
-  '';
+  programs.zsh.initExtra = "";
 }
