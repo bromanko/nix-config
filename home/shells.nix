@@ -37,7 +37,6 @@
     gs = "git status -sb";
 
     dc = "docker-compose";
-    vim = "${neovim}/bin/nvim";
     initgo = ''
       bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
   };
@@ -45,7 +44,7 @@
   programs.zsh.plugins = [
     {
       name = "zsh-bromanko-functions";
-      src = ./zsh/plugins/zsh-bromanko-functions;
+      src = ./programs/zsh/plugins/zsh-bromanko-functions;
     }
     {
       name = "zsh-vim-mode";

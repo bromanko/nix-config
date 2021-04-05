@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./shells.nix ];
+  imports = [ ./shells.nix ./programs/neovim ];
 
   programs.bat = {
     enable = true;
@@ -39,7 +39,6 @@
       imagemagick
       jq
       lorri
-      neovim
       nixfmt
       peco
       python3
