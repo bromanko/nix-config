@@ -1,0 +1,3 @@
+# Generates a random password
+local len="${1:-14}"
+openssl rand -base64 "$len"

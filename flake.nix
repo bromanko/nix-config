@@ -68,6 +68,8 @@
           modules = nixDarwinCommonModules { user = "bromanko"; } ++ [{
             networking.computerName = "bromanko Macbook Pro";
             networking.hostName = "bromanko-macbook-pro";
+
+            environment.variables.PROJECTS = "$HOME/Code";
           }];
         };
 

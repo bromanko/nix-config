@@ -38,6 +38,10 @@
 
   programs.zsh.plugins = [
     {
+      name = "zsh-bromanko-functions";
+      src = ./zsh/plugins/zsh-bromanko-functions;
+    }
+    {
       name = "zsh-vim-mode";
       src = pkgs.fetchFromGitHub {
         owner = "softmoth";
@@ -59,10 +63,6 @@
   ];
 
   programs.zsh.enable = true;
-  # programs.zsh.enableBashCompletion = true;
-  # programs.zsh.enableFzfCompletion = true;
-  # programs.zsh.enableFzfGit = true;
-  # programs.zsh.enableFzfHistory = true;
   programs.zsh.enableAutosuggestions = true;
   programs.zsh.enableCompletion = true;
   programs.zsh.history.extended = true;
