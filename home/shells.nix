@@ -37,7 +37,7 @@
   };
 
   programs.zsh.plugins = [{
-    name = "zsh-vim-mde";
+    name = "zsh-vim-mode";
     src = pkgs.fetchFromGitHub {
       owner = "softmoth";
       repo = "zsh-vim-mode";
@@ -66,6 +66,5 @@
 
   programs.zsh.initExtra = ''
     source ${pkgs.zsh-fast-syntax-highlighting}/share/zsh/site-functions/fast-syntax-highlighting.plugin.zsh
-    source ${pkgs.zsh-vim-mode}/share/zsh/plugins/zsh-vim-mode/zsh-vim-mode.plugin.zsh
   '';
 }
