@@ -15,8 +15,15 @@ will set those up.
 
 You can now build a system configuration by running `nix build` and specifying the configuration target:
 
+For `nix-darwin` (macOS):
 ```sh
 nix build .#darwinConfigurations.PersonalMacbookPro.system
+```
+
+For `home-manager` (Linux):
+
+``` sh
+nix build .#workDevServer.activationPackage
 ```
 
 Results will be placed in the `result` folder.
