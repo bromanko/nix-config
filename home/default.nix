@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./shells.nix ./neovim.nix ];
+  imports = [ ./shells.nix ./neovim.nix ./emacs.nix ];
 
   programs.bat = {
     enable = true;

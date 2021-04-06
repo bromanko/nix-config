@@ -16,9 +16,11 @@
 
     # Other sources
     flake-utils.url = "github:numtide/flake-utils";
+    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
   };
 
-  outputs = { self, nixpkgs, darwin, home-manager, flake-utils, ... }@inputs:
+  outputs = { self, nixpkgs, darwin, home-manager, flake-utils, nix-doom-emacs
+    , ... }@inputs:
     let
       nixpkgsConfig = with inputs; {
         config = { allowUnfree = true; };
@@ -39,7 +41,7 @@
 
       # Modules shared between nix-darwin and plain home-manager
       homeManagerCommonConfig = with self.homeManagerModules; {
-        imports = [ ./home configs.starship.symbols ];
+        imports = [ ./home configs.starship.symbols nix-doom-emacs.hmModule ];
       };
 
       # Modules shared by nix-darwin configurations
