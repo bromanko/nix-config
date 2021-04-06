@@ -11,6 +11,7 @@
 
   programs.zsh.shellAliases = with pkgs; {
     ".." = "cd ..";
+    "..." = "cd ../..";
     "reload!" = ". ~/.zshrc";
     S = "sudo";
 
