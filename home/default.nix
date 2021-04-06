@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./shells.nix ./programs/neovim ];
+  imports = [ ./shells.nix ./neovim.nix ];
 
   programs.bat = {
     enable = true;
