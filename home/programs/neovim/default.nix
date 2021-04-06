@@ -1,31 +1,18 @@
 { config, pkgs, lib, ... }:
 
-let plugins = pkgs.vimPlugins // pkgs.callPackage ./plugins.nix { };
-in {
+{
   programs.neovim.enable = true;
   programs.neovim.viAlias = true;
   programs.neovim.vimAlias = true;
   programs.neovim.vimdiffAlias = true;
 
-  programs.neovim.plugins = with plugins; [
+  programs.neovim.plugins = with pkgs.vimPlugins; [
     sensible
     vim-surround
     vim-repeat
     vim-commentary
     vim-easymotion
     vim-highlightedyank
-    {
-      plugin = sonokai-vim;
-      config = ''
-        if has('termguicolors')
-          set termguicolors
-        endif
-        let g:sonokai_style = 'shusia'
-        let g:sonokai_enable_italic = 1
-        let g:sonokai_better_performance = 1
-        colorscheme sonokai
-      '';
-    }
     vim-polyglot
     fzf-vim
     {
@@ -43,6 +30,18 @@ in {
         let g:gitgutter_sign_removed_first_line = '│'
         let g:gitgutter_sign_removed_above_and_below = '│'
         let g:gitgutter_sign_modified_removed   = '│'
+      '';
+    }
+    {
+      plugin = sonokai;
+      config = ''
+        if has('termguicolors')
+          set termguicolors
+        endif
+        let g:sonokai_style = 'shusia'
+        let g:sonokai_enable_italic = 1
+        let g:sonokai_better_performance = 1
+         " colorscheme sonokai
       '';
     }
   ];
