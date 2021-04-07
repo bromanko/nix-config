@@ -17,7 +17,7 @@ You can now build a system configuration by running `nix build` and specifying t
 
 For `nix-darwin` (macOS):
 ```sh
-nix build .#darwinConfigurations.PersonalMacbookPro.system
+nix build .#darwinConfigurations.personalMacbookPro.system
 ```
 
 For `home-manager` (Linux):
