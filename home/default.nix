@@ -40,7 +40,7 @@
       jq
       kitty
       lorri
-      nixfmt
+      nixpkgs-fmt
       peco
       python3
       ripgrep

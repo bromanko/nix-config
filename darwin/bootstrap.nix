@@ -4,7 +4,8 @@
   nix.package = pkgs.nixFlakes;
   nix.extraOptions = "experimental-features = nix-command flakes";
 
-  environment.shells = with pkgs; [ zsh ];
+  environment.shells = with pkgs; [ zsh bash ];
+  programs.bash.enable = true;
   programs.zsh.enable = true;
   environment.loginShell = pkgs.zsh;
   environment.variables.SHELL = "${pkgs.zsh}/bin/zsh";
