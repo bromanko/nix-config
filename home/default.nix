@@ -38,6 +38,7 @@
       httpie
       imagemagick
       jq
+      kitty
       lorri
       nixfmt
       peco
