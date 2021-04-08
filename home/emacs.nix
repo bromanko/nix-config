@@ -1,10 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
-  programs.doom-emacs = {
-    enable = true;
-    # TODO This is not appropriate for linux
-    package = pkgs.emacsMacport;
-    doomPrivateDir = ./programs/emacs/doom.d;
-  };
+  programs.doom-emacs =
+    {
+      enable = true;
+      doomPrivateDir = ./programs/emacs/doom.d;
+      emacsPackage = if pkgs.stdenv.isDarwin then pkgs.emacsMacport else pkgs.emacs;
+    };
 }
