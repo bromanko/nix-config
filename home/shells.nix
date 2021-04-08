@@ -2,7 +2,7 @@
 
 {
   home.sessionVariables = {
-    EDITOR = "vim";
+    EDITOR = "emacsclient -t -a ''";
 
     # zsh-vim-mode
     MODE_CURSOR_VIINS = "#ffffff steady bar";

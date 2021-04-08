@@ -22,6 +22,8 @@
   home.packages = with pkgs;
     [
       aspell # For Emacs
+      aspellDicts.en
+      aspellDicts.en-computers
       bat
       bottom
       coreutils # For Emacs
