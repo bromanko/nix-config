@@ -50,6 +50,6 @@ self: super: rec {
         url = "ftp://ftp.math.s.chiba-u.ac.jp/emacs/${emacsName}-mac-${macportVersion}.tar.gz";
         sha256 = "6iclooc+8jOqF8et5M+z8nes8ffV8iNokDMfP8cT9a0=";
       };
-      configureFlags = old.configureFlags ++ [ "--with-mac-metal" ];
+      configureFlags = old.configureFlags ++ [ "--with-mac-metal" "--with-no-title-bars" ];
     });
 }
