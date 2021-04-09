@@ -135,3 +135,8 @@ apps are not started from a shell."
 (use-package! edit-server
   :config
   (edit-server-start))
+
+;; **************************************************
+;; projectile
+;; **************************************************
+(setq projectile-globally-ignored-files '("flake.lock"))
