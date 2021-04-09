@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./shells.nix ./neovim.nix ./emacs.nix ];
+  imports = [ ./shells.nix ./neovim.nix ./emacs.nix ./kitty.nix ];
 
   programs.bat = {
     enable = true;
@@ -18,6 +18,7 @@
     enableZshIntegration = true;
     defaultCommand = "fd --type f --hidden --follow --exclude .git";
   };
+
 
   home.packages = with pkgs;
     [
@@ -40,7 +41,6 @@
       httpie
       imagemagick
       jq
-      kitty
       lorri
       nixpkgs-fmt
       peco
