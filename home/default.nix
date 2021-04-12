@@ -55,6 +55,8 @@
       zsh-fast-syntax-highlighting
     ] ++ lib.optionals stdenv.isDarwin [ m-cli ];
 
+  home.file.".ideavimrc".source = ../configs/idea/ideavimrc;
+
   home.activation = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin) {
     copyApplications =
       let

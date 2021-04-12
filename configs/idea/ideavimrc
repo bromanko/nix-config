@@ -1,0 +1,462 @@
+source ~/.config/nvim/init.vim
+
+# plugins
+set ideajoin
+set surround
+set easymotion
+
+" Show current vim mode
+set showmode
+
+" Search as characters are entered
+set incsearch
+
+" Highlight search results
+set hlsearch
+
+" If a pattern contains an uppercase letter, searching is case sensitive,
+" otherwise, it is not.
+set ignorecase
+set smartcase
+
+" Use the clipboard register '*' for all yank, delete, change and put operations
+" which would normally go to the unnamed register.
+set clipboard+=unnamed
+
+"
+" Spacemacs style mappings
+"
+
+" Show usages for symbol.
+" Ideally this should be FindInPath the current word, but I think that it is
+" not possible.
+nnoremap <leader>*    :action ShowUsages<CR>
+vnoremap <leader>*    :action ShowUsages<CR>
+
+ 
+" Switch among recently opened files
+nnoremap <leader>bb    :action RecentFiles<CR>
+vnoremap <leader>bb    :action RecentFiles<CR>
+
+" Close current tab
+nnoremap <leader>bd    :action CloseContent<CR>
+vnoremap <leader>bd    <Esc>:action CloseContent<CR>
+
+" Next Tab
+nnoremap <leader>bn    :action NextTab<CR>
+vnoremap <leader>bn    <Esc>:action NextTab<CR>
+
+" Previous Tab
+nnoremap <leader>bp    :action PreviousTab<CR>
+vnoremap <leader>bp    <Esc>:action PreviousTab<CR>
+
+" Close other tabs in current window
+nnoremap <leader>b<C-d>    :action CloseAllEditorsButActive<CR>
+vnoremap <leader>b<C-d>    :action CloseAllEditorsButActive<CR>
+
+
+" List errors
+nnoremap <leader>el    :action CodeInspection.OnEditor<CR>
+vnoremap <leader>el    :action CodeInspection.OnEditor<CR>
+
+" Go to previous error
+nnoremap <leader>eN    :action GotoPreviousError<CR>
+vnoremap <leader>eN    <Esc>:action GotoPreviousError<CR>
+
+" Go to previous error
+nnoremap <leader>ep    :action GotoPreviousError<CR>
+vnoremap <leader>ep    <Esc>:action GotoPreviousError<CR>
+
+" Go to next error
+nnoremap <leader>en    :action GotoNextError<CR>
+vnoremap <leader>en    <Esc>:action GotoNextError<CR>
+
+" Explain error at point
+nnoremap <leader>ex    :action ShowErrorDescription<CR>
+vnoremap <leader>ex    :action ShowErrorDescription<CR>
+
+
+" Show settings
+nnoremap <leader>fed    :action ShowSettings<CR>
+vnoremap <leader>fed    <Esc>:action ShowSettings<CR>
+
+" Execute an action. Like <M-x>
+nnoremap <A-X>    :action GotoAction<CR>
+vnoremap <A-X>    :action GotoAction<CR>
+inoremap <A-X>    <Esc>:action GotoAction<CR>
+
+
+" Find files
+nnoremap <leader>fF    :action GotoFile<CR>
+vnoremap <leader>fF    :action GotoFile<CR>
+nnoremap <leader>ff    :action GotoFile<CR>
+vnoremap <leader>ff    :action GotoFile<CR>
+
+" Search in project
+nnoremap <leader>fg    :action FindInPath<CR>
+vnoremap <leader>fg    :action FindInPath<CR>
+
+" Rename file
+nnoremap <leader>fR    :action RenameFile<CR>
+vnoremap <leader>fR    :action RenameFile<CR>
+
+" Recent files
+nnoremap <leader>fr    :action RecentFiles<CR>
+vnoremap <leader>fr    :action RecentFiles<CR>
+
+" Focus on project window.
+" Sadly when you are inside the project window this key binding does not work
+" anymore. You can use <A-1> if you want to close the window or <Esc> if you
+" want to leave the window opened and focus on the code.
+nnoremap <leader>ft    :action ActivateProjectToolWindow<CR>
+vnoremap <leader>ft    :action ActivateProjectToolWindow<CR>
+
+
+" Show log of current file
+nnoremap <leader>gfl    :action Vcs.ShowTabbedFileHistory<CR>
+vnoremap <leader>gfl    :action Vcs.ShowTabbedFileHistory<CR>
+
+" Show local changes (git status)
+nnoremap <leader>gs    :action Vcs.Show.Local.Changes<CR>
+vnoremap <leader>gs    :action Vcs.Show.Local.Changes<CR>
+
+" Update project (git pull)
+nnoremap <leader>gv+    :action Vcs.UpdateProject<CR>
+vnoremap <leader>gv+    :action Vcs.UpdateProject<CR>
+
+" Annotate. Show when each line was last edited and by whom.
+nnoremap <leader>gvg    :action Annotate<CR>
+vnoremap <leader>gvg    :action Annotate<CR>
+
+" Show log (git log)
+nnoremap <leader>gvl    :action Vcs.Show.Log<CR>
+vnoremap <leader>gvl    :action Vcs.Show.Log<CR>
+
+
+" Show key bindings
+nnoremap <leader>hk     :map<CR>
+vnoremap <leader>hk     <Esc>:map<CR>
+nnoremap <leader>hdb    :map<CR>
+vnoremap <leader>hdb    <Esc>:map<CR>
+nnoremap <leader>hdk    :map<CR>
+vnoremap <leader>hdk    <Esc>:map<CR>
+
+
+" Execute an action. Like <M-x>
+nnoremap <leader>aa   :action GotoAction<CR>
+vnoremap <leader>aa   :action GotoAction<CR>
+
+
+" Show key bindings
+nnoremap <leader>?    :map<CR>
+vnoremap <leader>?    <Esc>:map<CR>
+
+
+" Go to next change
+nnoremap g,    :action JumpToNextChange<CR>
+vnoremap g,    :action JumpToNextChange<CR>
+
+" Go to last change
+nnoremap g;    :action JumpToLastChange<CR>
+vnoremap g;    :action JumpToLastChange<CR>
+
+" Go to declaration
+nnoremap <leader>gd    :action GotoDeclaration<CR>
+vnoremap <leader>gd    <Esc>:action GotoDeclaration<CR>
+
+
+" Jump to previously visited location
+nnoremap <C-i>    :action Forward<CR>
+
+" Jump to lately visited location
+nnoremap <C-o>    :action Back<CR>
+
+
+" Recent projects
+nnoremap <leader>pp    :action ManageRecentProjects<CR>
+vnoremap <leader>pp    :action ManageRecentProjects<CR>
+
+" Replace in path
+nnoremap <leader>pR    :action ReplaceInPath<CR>
+vnoremap <leader>pR    :action ReplaceInPath<CR>
+
+
+" Close project
+nnoremap <leader>qf    :action CloseProject<CR>
+vnoremap <leader>qf    <Esc>:action CloseProject<CR>
+nnoremap <leader>qq    :action CloseProject<CR>
+vnoremap <leader>qq    <Esc>:action CloseProject<CR>
+
+" Exit (close all projects)
+nnoremap <leader>qQ    :action Exit<CR>
+vnoremap <leader>qQ    <Esc>:action Exit<CR>
+
+
+" Rename symbol
+nnoremap <leader>se    :action RenameElement<CR>
+vnoremap <leader>se    :action RenameElement<CR>
+
+" Find usages
+nnoremap <leader>sP    :action FindUsages<CR>
+vnoremap <leader>sP    :action FindUsages<CR>
+
+" Search in project. Unfortunately <leader>/ does not work.
+nnoremap <leader>sp    :action FindInPath<CR>
+vnoremap <leader>sp    :action FindInPath<CR>
+nnoremap <leader>sl    :action FindInPath<CR>
+vnoremap <leader>sl    :action FindInPath<CR>
+nnoremap <leader>ss    :action FindInPath<CR>
+vnoremap <leader>ss    :action FindInPath<CR>
+
+" Find actions
+nnoremap <leader>:     :action FindActions<CR>
+vnoremap <leader>:     :action FindActions<CR>
+
+
+" Increase font size
+nnoremap <leader>zx+    :action EditorIncreaseFontSize<CR>
+vnoremap <leader>zx+    :action EditorIncreaseFontSize<CR>
+nnoremap <leader>zx=    :action EditorIncreaseFontSize<CR>
+vnoremap <leader>zx=    :action EditorIncreaseFontSize<CR>
+
+" Decrease font size
+nnoremap <leader>zx-    :action EditorDecreaseFontSize<CR>
+vnoremap <leader>zx-    :action EditorDecreaseFontSize<CR>
+
+" Reset font size
+nnoremap <leader>zx0    :action EditorResetFontSize<CR>
+vnoremap <leader>zx0    :action EditorResetFontSize<CR>
+
+
+" Reformat whole buffer
+nnoremap <leader>m=    :action ReformatCode<CR>
+
+" Reformat selected lines
+vnoremap <leader>m=    :action ReformatCode<CR>
+
+
+" Compile selected file, package or module
+nnoremap <leader>mcC      :action Compile<CR>
+vnoremap <leader>mcC      :action Compile<CR>
+
+" Make project
+nnoremap <leader>mcc      :action CompileDirty<CR>
+vnoremap <leader>mcc      :action CompileDirty<CR>
+
+
+" Call hierarchy
+nnoremap <leader>mhc      :action CallHierarchy<CR>
+vnoremap <leader>mhc      <Esc>:action CallHierarchy<CR>
+
+" Show implementation
+nnoremap <leader>mhH      :action QuickImplementations<CR>
+vnoremap <leader>mhH      <Esc>:action QuickImplementations<CR>
+
+" Show documentation
+nnoremap <leader>mhh      :action QuickJavaDoc<CR>
+vnoremap <leader>mhh      <Esc>:action QuickJavaDoc<CR>
+
+" Inheritance hierarchy
+nnoremap <leader>mhi      :action TypeHierarchy<CR>
+vnoremap <leader>mhi      <Esc>:action TypeHierarchy<CR>
+
+" Type Definition
+nnoremap <leader>mht      :action QuickTypeDefinition<CR>
+vnoremap <leader>mht      :action QuickTypeDefinition<CR>
+
+" Show usages for symbol
+nnoremap <leader>mhU      :action ShowUsages<CR>
+vnoremap <leader>mhU      :action ShowUsages<CR>
+
+
+" View Breakpoints
+nnoremap <leader>mdB    :action ViewBreakpoints<CR>
+vnoremap <leader>mdB    <Esc>:action ViewBreakpoints<CR>
+
+" Toggle breakpoint
+nnoremap <leader>mdb    :action ToggleLineBreakpoint<CR>
+vnoremap <leader>mdb    <Esc>:action ToggleLineBreakpoint<CR>
+
+" Clear all breakpoints
+nnoremap <leader>mdC    :action Debugger.RemoveAllBreakpointsInFile<CR>
+vnoremap <leader>mdC    <Esc>:action Debugger.RemoveAllBreakpointsInFile<CR>
+
+" Continue (Go to next breakpoint). 'c' is the same as gdb.
+nnoremap <leader>mdc    :action Resume<CR>
+vnoremap <leader>mdc    <Esc>:action Resume<CR>
+
+" Debug class
+nnoremap <leader>mdD    :action DebugClass<CR>
+vnoremap <leader>mdD    <Esc>:action DebugClass<CR>
+
+" Debug
+nnoremap <leader>mdd    :action Debug<CR>
+vnoremap <leader>mdd    <Esc>:action Debug<CR>
+
+" Next (Step over). 's' is the same as gdb
+nnoremap <leader>mdn    :action StepOver<CR>
+vnoremap <leader>mdn    <Esc>:action StepOver<CR>
+
+" Step out (same as "finish" in gdb).
+nnoremap <leader>mdo    :action StepOut<CR>
+vnoremap <leader>mdo    <Esc>:action StepOut<CR>
+
+" Select configuration and debug
+nnoremap <leader>mdr    :action ChooseDebugConfiguration<CR>
+vnoremap <leader>mdr    <Esc>:action ChooseDebugConfiguration<CR>
+
+" Step (Step into). 's' is the same as gdb.
+nnoremap <leader>mds    :action StepInto<CR>
+vnoremap <leader>mds    <Esc>:action StepInto<CR>
+
+" Find usages for symbol
+nnoremap <leader>mhu      :action FindUsages<CR>
+vnoremap <leader>mhu      :action FindUsages<CR>
+
+
+" Go to declaration
+nnoremap <leader>mgg    :action GotoDeclaration<CR>
+vnoremap <leader>mgg    <Esc>:action GotoDeclaration<CR>
+
+" Go to implementation
+nnoremap <leader>mgi    :action GotoImplementation<CR>
+vnoremap <leader>mgi    <Esc>:action GotoImplementation<CR>
+
+" Go to type declaration
+nnoremap <leader>mgt    :action GotoTypeDeclaration<CR>
+vnoremap <leader>mgt    <Esc>:action GotoTypeDeclaration<CR>
+
+
+" Make project (build)
+nnoremap <leader>mpb    :action CompileDirty<CR>
+vnoremap <leader>mpb    :action CompileDirty<CR>
+
+" Create project
+nnoremap <leader>mpc    :action NewProject<CR>
+vnoremap <leader>mpc    :action NewProject<CR>
+
+" Open project
+nnoremap <leader>mpo    :action WelcomeScreen.OpenProject<CR>
+vnoremap <leader>mpo    <Esc>:action WelcomeScreen.OpenProject<CR>
+
+" Run project
+nnoremap <leader>mpr    :action Run<CR>
+vnoremap <leader>mpr    :action Run<CR>
+
+
+" Code cleanup
+nnoremap <leader>mrC      :action CodeCleanup<CR>
+vnoremap <leader>mrC      :action CodeCleanup<CR>
+
+" Create constructor
+nnoremap <leader>mrc      :action GenerateConstructor<CR>
+vnoremap <leader>mrc      <Esc>:action GenerateConstructor<CR>
+
+" Extract method
+nnoremap <leader>mrem    :action ExtractMethod<CR>
+vnoremap <leader>mrem    <Esc>:action ExtractMethod<CR>
+
+" Extract superclass
+nnoremap <leader>mres    :action ExtractSuperclass<CR>
+vnoremap <leader>mres    <Esc>:action ExtractSuperclass<CR>
+
+" Generate getter and setter
+nnoremap <leader>mrG      :action GenerateGetterAndSetter<CR>
+vnoremap <leader>mrG      <Esc>:action GenerateGetterAndSetter<CR>
+
+" Select what to generate
+nnoremap <leader>mrg      :action Generate<CR>
+vnoremap <leader>mrg      <Esc>:action Generate<CR>
+
+" Implement Methods
+nnoremap <leader>mrI      :action ImplementMethods<CR>
+vnoremap <leader>mrI      <Esc>:action ImplementMethods<CR>
+
+" Optimize imports
+nnoremap <leader>mri      :action OptimizeImports<CR>
+vnoremap <leader>mri      <Esc>:action OptimizeImports<CR>
+
+" Create a new Element.
+nnoremap <leader>mrN      :action NewElement<CR>
+vnoremap <leader>mrN      :action NewElement<CR>
+
+" Create a new class. You can also create enum, interface and more.
+nnoremap <leader>mrn      :action NewClass<CR>
+vnoremap <leader>mrn      :action NewClass<CR>
+
+" Choose a refactoring action
+nnoremap <leader>mrR      :action Refactorings.QuickListPopupAction<CR>
+vnoremap <leader>mrR      <Esc>:action Refactorings.QuickListPopupAction<CR>
+
+" Rename symbol
+nnoremap <leader>mrr      :action RenameElement<CR>
+vnoremap <leader>mrr      :action RenameElement<CR>
+
+
+" Resolve error
+nnoremap <leader>er    :action ShowIntentionActions<CR>
+vnoremap <leader>er    :action ShowIntentionActions<CR>
+
+
+" Show Version control tool window
+nnoremap <leader>gG    :action ActivateVersionControlToolWindow<CR>
+vnoremap <leader>gG    :action ActivateVersionControlToolWindow<CR>
+
+" Select a VCS operation
+nnoremap <leader>gg    :action Vcs.QuickListPopupAction<CR>
+vnoremap <leader>gg    :action Vcs.QuickListPopupAction<CR>
+
+" Vcs push (git push)"
+nnoremap <leader>gp    :action Vcs.Push<cr>
+vnoremap <leader>gp    :action Vcs.Push<cr>
+
+
+" Jump to class
+nnoremap <leader>jc   :action GotoClass<CR>
+vnoremap <leader>jc   :action GotoClass<CR>
+
+" Jump to element in current file
+nnoremap <leader>je   :action FileStructurePopup<CR>
+vnoremap <leader>je   :action FileStructurePopup<CR>
+
+" Jump to symbol
+nnoremap <leader>js    :action GotoSymbol<CR>
+vnoremap <leader>js    :action GotoSymbol<CR>
+
+
+" Run Anything
+nnoremap <leader>Ra    :action RunAnything<CR>
+vnoremap <leader>Ra    :action RunAnything<CR>
+
+" Run class
+nnoremap <leader>Rc    :action RunClass<CR>
+vnoremap <leader>Rc    :action RunClass<CR>
+
+" Kill (Stop application)
+nnoremap <leader>Rk    :action Stop<CR>
+vnoremap <leader>Rk    :action Stop<CR>
+
+" Run
+nnoremap <leader>Rr    :action Run<CR>
+vnoremap <leader>Rr    :action Run<CR>
+
+" Select configuration and run
+nnoremap <leader>Rs    :action ChooseRunConfiguration<CR>
+vnoremap <leader>Rs    :action ChooseRunConfiguration<CR>
+
+" Search everywhere
+nnoremap <leader>sE    :action SearchEverywhere<CR>
+vnoremap <leader>sE    :action SearchEverywhere<CR>
+
+
+" Hide all windows except the ones with code
+nnoremap <leader>Tm    :action HideAllWindows<CR>
+vnoremap <leader>Tm    :action HideAllWindows<CR>
+
+" Toggle presentation mode
+nnoremap <leader>Tp    :action TogglePresentationMode<CR>
+vnoremap <leader>Tp    :action TogglePresentationMode<CR>
+
+" Toggle presentation or distraction free mode
+nnoremap <leader>TT    :action ChangeView<CR>
+vnoremap <leader>TT    :action ChangeView<CR>
