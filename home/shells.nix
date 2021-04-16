@@ -14,14 +14,14 @@
     "..." = "cd ../..";
     "reload!" = ". ~/.zshrc";
     S = "sudo";
+    e = "$EDITOR";
 
     cat = "${bat}/bin/bat";
     "cat!" = "command cat";
     find = "${fd}/bin/fd";
 
-    la = "ll -a";
     ll = "ls -l --time-style long-iso --icons";
-    l = "ll";
+    l = "ll -a";
     ls = "${exa}/bin/exa";
 
     g = "git";
