@@ -43,6 +43,8 @@
       jq
       lorri
       nixpkgs-fmt
+      nodejs
+      nodePackages.prettier
       peco
       python3
       ripgrep
