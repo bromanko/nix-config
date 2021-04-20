@@ -15,6 +15,7 @@
   homebrew.casks = [
     "alfred"
     "docker"
+    "espanso"
     "firefox"
     "istat-menus"
     "jetbrains-toolbox"
