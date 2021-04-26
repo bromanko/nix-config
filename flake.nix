@@ -88,7 +88,7 @@
         # Main work machine
         workMacbookPro = darwin.lib.darwinSystem {
           modules = nixDarwinCommonModules { user = "bromanko"; } ++ [{
-            environment.shellAliases.brew = "$HOME/homebrew/bin/brew";
+            environment.systemPath = [ "$HOME/homebrew/bin/" ];
             environment.variables.PROJECTS = "$HOME/Code";
           }];
         };
