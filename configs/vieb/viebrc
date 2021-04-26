@@ -1,0 +1,57 @@
+" Options
+set notificationforpermissions=false
+set firefoxmode=google
+colorscheme bigsur-dark
+
+" Permissions
+set permissioncamera=allow
+set permissionclipboardread=block
+set permissiongeolocation=ask
+set permissionmediadevices=allow
+set permissionmicrophone=allow
+set permissionnotifications=block
+set permissionpersistentstorage=allow
+
+" Search
+set searchwords+=fb~www.internalfb.com/intern/bunny/?q=%s
+set searchwords+=qp~fb.quip.com/search?q=%s
+set searchwords+=wb~fb.workplace.com/search/top?q=%s
+
+
+" Mappings
+nmap <Left> <action.scrollLeft>
+nmap <Down> <action.scrollDown>
+nmap <Up> <action.scrollUp>
+nmap <Right> <action.scrollRight>
+nmap <C-w><Left> <action.toLeftSplitWindow>
+nmap <C-w><Up> <action.toTopSplitWindow>
+nmap <C-w><Down> <action.toBottomSplitWindow>
+nmap <C-w><Right> <action.toRightSplitWindow>
+
+nmap M <action.backInHistory>
+nmap O <action.backInHistory>
+nmap <M-q> <:qa>
+
+pmap <Left> <pointer.moveLeft>
+pmap <S-Left> <pointer.startOfView>
+pmap <Down> <pointer.moveDown>
+pmap <S-Down> <pointer.scrollDown>
+pmap <Up> <pointer.moveUp>
+pmap <S-Up> <pointer.scrollUp>
+pmap <Right> <pointer.moveRight>
+pmap <S-Right> <pointer.endOfView>
+
+vmap <Left> <pointer.moveLeft>
+vmap <S-Left> <pointer.startOfView>
+vmap <Down> <pointer.moveDown>
+vmap <S-Down> <pointer.scrollDown>
+vmap <Up> <pointer.moveUp>
+vmap <S-Up> <pointer.scrollUp>
+vmap <Right> <pointer.moveRight>
+vmap <S-Right> <pointer.endOfView>
+
+" Commands
+command! in <action.toExploreMode>https://www.internalfb.com<Enter>
+command! cal <action.toExploreMode>https://www.internalfb.com/calendar<Enter>
+command! qp <action.toExploreMode>https://fb.quip.com<Enter>
+command! wp <action.toExploreMode>https://fb.workplace.com<Enter>

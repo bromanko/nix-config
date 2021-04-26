@@ -59,6 +59,9 @@
 
   home.file.".ideavimrc".source = ../configs/idea/ideavimrc;
 
+  home.file.".vieb/viebrc".source = ../configs/vieb/viebrc;
+  home.file.".vieb/colors/bigsur-dark.css".source = ../configs/vieb/bigsur-dark.css;
+
   home.activation = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin) {
     copyApplications =
       let
