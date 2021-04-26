@@ -10,18 +10,22 @@
     "homebrew/cask-versions"
     "homebrew/core"
     "homebrew/services"
+    "federico-terzi/espanso"
   ];
 
   homebrew.casks = [
     "alfred"
     "docker"
-    "espanso"
     "firefox"
     "istat-menus"
     "jetbrains-toolbox"
     "rectangle"
     "signal"
     "spotify"
+  ];
+
+  homebrew.brews = [
+    "espanso"
   ];
 
   homebrew.masApps = {
