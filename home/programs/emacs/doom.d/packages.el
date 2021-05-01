@@ -32,6 +32,3 @@
 ;; Quickly jump to words with letter combinations
 (package! evil-easymotion
   :recipe (:host github :repo "PythonNut/evil-easymotion"))
-
-;; Allow the browser "Edit in Emacs plugins"
-(package! edit-server)

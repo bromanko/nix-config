@@ -130,11 +130,9 @@ apps are not started from a shell."
 (setq treemacs-follow-mode t)
 
 ;; **************************************************
-;; edit server
+;; server
 ;; **************************************************
-(use-package! edit-server
-  :config
-  (edit-server-start))
+(server-start)
 
 ;; **************************************************
 ;; projectile
