@@ -42,7 +42,7 @@
       imagemagick
       jq
       lorri
-      nixpkgs-fmt
+      nixfmt
       nodejs
       nodePackages.prettier
       peco
