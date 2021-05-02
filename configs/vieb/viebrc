@@ -2,6 +2,7 @@
 set notificationforpermissions=false
 set firefoxmode=google
 colorscheme bigsur-dark
+set vimcommand="~/.nix-profile/.bin/emacsclient"
 
 " Permissions
 set permissioncamera=allow
