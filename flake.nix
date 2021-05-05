@@ -19,15 +19,8 @@
     nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
   };
 
-  outputs =
-    { self
-    , nixpkgs
-    , darwin
-    , home-manager
-    , flake-utils
-    , nix-doom-emacs
-    , ...
-    }@inputs:
+  outputs = { self, nixpkgs, darwin, home-manager, flake-utils, nix-doom-emacs
+    , ... }@inputs:
     let
       nixpkgsConfig = with inputs; {
         config = { allowUnfree = true; };
@@ -35,13 +28,11 @@
           (final: prev:
             let
               system = prev.stdenv.system;
-              nixpkgs-stable =
-                if system == "x86_64-darwin" then
-                  nixpkgs-stable-darwin
-                else
-                  nixos-stable;
-            in
-            {
+              nixpkgs-stable = if system == "x86_64-darwin" then
+                nixpkgs-stable-darwin
+              else
+                nixos-stable;
+            in {
               master = nixpkgs-master.legacyPackages.${system};
               stable = nixpkgs-stable.legacyPackages.${system};
             })
@@ -67,8 +58,7 @@
         }
       ];
 
-    in
-    {
+    in {
       darwinConfigurations = {
         # Minimal configuration to bootstrap systems
         bootstrap = darwin.lib.darwinSystem {
