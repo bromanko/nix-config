@@ -16,6 +16,7 @@
   homebrew.casks = [
     "alfred"
     "docker"
+    "dropbox"
     "firefox"
     "istat-menus"
     "jetbrains-toolbox"
