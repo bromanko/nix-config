@@ -132,7 +132,7 @@ apps are not started from a shell."
 ;; **************************************************
 ;; server
 ;; **************************************************
-(server-start)
+(unless (server-running-p) (server-start))
 
 ;; **************************************************
 ;; projectile
