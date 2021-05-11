@@ -14,9 +14,9 @@ set permissionnotifications=block
 set permissionpersistentstorage=allow
 
 " Search
-set searchwords+=fb~www.internalfb.com/intern/bunny/?q=%s
-set searchwords+=qp~fb.quip.com/search?q=%s
-set searchwords+=wb~fb.workplace.com/search/top?q=%s
+set searchwords+=b~www.internalfb.com/intern/bunny/?q=%s
+set searchwords+=q~fb.quip.com/search?q=%s
+set searchwords+=w~fb.workplace.com/search/top?q=%s
 
 
 " Mappings
