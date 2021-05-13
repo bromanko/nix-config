@@ -132,7 +132,9 @@ apps are not started from a shell."
 ;; **************************************************
 ;; server
 ;; **************************************************
-(unless (server-running-p) (server-start))
+(if (and (fboundp 'server-running-p)
+         (not (server-running-p)))
+    (server-start))
 
 ;; **************************************************
 ;; projectile
