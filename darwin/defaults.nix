@@ -19,7 +19,7 @@
   system.defaults.NSGlobalDomain.NSAutomaticSpellingCorrectionEnabled = false;
 
   # System - Turn off font smoothing.
-  system.defaults.NSGlobalDomain.AppleFontSmoothing = 1;
+  system.defaults.NSGlobalDomain.AppleFontSmoothing = 0;
 
   # Keyboard - Enable keyboard access for all controls.
   system.defaults.NSGlobalDomain.AppleKeyboardUIMode = 3;
