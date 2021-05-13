@@ -40,7 +40,7 @@ apps are not started from a shell."
   (let ((path-from-shell (replace-regexp-in-string
 			  "[ \t\n]*$" "" (shell-command-to-string
 					  "$SHELL --login -c 'echo $PATH'"
-						    ))))
+					  ))))
     (setenv "PATH" path-from-shell)
     (setq exec-path (split-string path-from-shell path-separator))))
 
@@ -119,7 +119,7 @@ apps are not started from a shell."
 
 ;; Set a variable-pith font for default face in markdown
 (add-hook 'markdown-mode-hook
-  (lambda () (display-fill-column-indicator-mode 0)))
+          (lambda () (display-fill-column-indicator-mode 0)))
 (add-hook 'markdown-mode-hook #'mixed-pitch-mode)
 
 ;; **************************************************
