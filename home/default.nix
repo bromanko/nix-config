@@ -22,9 +22,7 @@
 
   home.packages = with pkgs;
     [
-      aspell # For Emacs
-      aspellDicts.en
-      aspellDicts.en-computers
+      (aspellWithDicts (dicts: with dicts; [en en-computers en-science]))
       bat
       bottom
       coreutils # For Emacs
