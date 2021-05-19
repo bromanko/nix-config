@@ -34,6 +34,8 @@ matches:
     replace: "performance"
   - trigger: "/pd"
     replace: "physical device"
+  - trigger: "/tv"
+    replace: "Testing & Verification"
   - trigger: "/upv"
     replace: "Unified Prevention View"
   - trigger: "/vd"
