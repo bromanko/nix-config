@@ -1,0 +1,23 @@
+secure_input_notification: false
+
+matches:
+  - trigger: "/me"
+    replace: "Brian Romanko"
+  - trigger: "tldr"
+    replace: "TL;DR"
+
+  # Dates
+  - trigger: "/td"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%m/%d/%Y"
+  - trigger: "/tl"
+    replace: "{{mydate}}"
+    vars:
+      - name: mydate
+        type: date
+        params:
+          format: "%B %e, %Y"

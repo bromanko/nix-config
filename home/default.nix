@@ -60,6 +60,12 @@
   home.file.".vieb/viebrc".source = ../configs/vieb/viebrc;
   home.file.".vieb/colors/bigsur-dark.css".source = ../configs/vieb/bigsur-dark.css;
 
+  home.file."Library/Preferences/espanso/default.yml".source = ../configs/espanso/default.yml;
+  home.file."Library/Preferences/espanso/user" = {
+    recursive = true;
+    source = ../configs/espanso/user;
+  };
+
   home.activation = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin) {
     copyApplications =
       let
