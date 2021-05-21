@@ -67,6 +67,8 @@
 
   home.file.".iex.exs".source = ../configs/elixir/iex.exs;
 
+  home.file.".psqlrc".source = ../configs/psql/psqlrc;
+
   home.activation = lib.mkIf (pkgs.stdenv.hostPlatform.isDarwin) {
     copyApplications = let
       apps = pkgs.buildEnv {

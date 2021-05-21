@@ -1,0 +1,33 @@
+-- disable output temporarily
+\set QUIET on
+
+-- nicer rendering for null
+\pset null '❌ '
+
+-- ascii tables for speed
+\pset linestyle ascii
+
+-- enable timers
+\timing
+
+-- disable default pager
+\pset pager off
+
+-- automatically switch to \x for large outputs
+\x auto
+
+-- nicer prompt
+\set PROMPT1 '\n%[%033[1;31m%]> %[%033[2;37m%]%`\! date "+%F %I:%M %p %Z"`%[%033[0m%] %[%033[1;36m%]%n%[%033[34m%]@%[%033[1;36m%]%M:%>%[%033[1;33m%]/%/ %[%033[1;31m%]%x %[%033[K%]%[%033[0m%]\n%[%033[1;33m%]%R%#%[%033[0m%] '
+\set PROMPT2 '%[%033[1;33m%]%R%#%[%033[0m%] '
+
+-- better errors
+\set VERBOSITY verbose
+
+-- keep inputs in the history once
+\set HISTCONTROL ignoredups
+
+-- always auto complete in lowercase
+\set COMP_KEYWORD_CASE lower
+
+-- output back on
+\set QUIET off
