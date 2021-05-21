@@ -37,6 +37,8 @@
     gp = "git push origin HEAD";
     gs = "git status -sb";
 
+    iex = ''iex --erl "-kernal shell_history enabled"'';
+
     dc = "docker-compose";
     initgo = ''
       bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
