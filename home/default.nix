@@ -27,7 +27,6 @@
       coreutils # For Emacs
       curl
       delta
-      direnv
       exa
       fantasque-sans-mono-nerd-font
       fd
@@ -38,7 +37,6 @@
       httpie
       imagemagick
       jq
-      lorri
       nixfmt
       nodejs
       nodePackages.prettier

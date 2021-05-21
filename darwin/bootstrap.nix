@@ -2,7 +2,11 @@
 
 {
   nix.package = pkgs.nixFlakes;
-  nix.extraOptions = "experimental-features = nix-command flakes";
+  nix.extraOptions = ''
+    experimental-features = nix-command flakes
+    keep-derivations = true
+    keep-outputs = true
+  '';
 
   environment.shells = with pkgs; [ zsh bash ];
   programs.bash.enable = true;
