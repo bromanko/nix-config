@@ -137,3 +137,8 @@ apps are not started from a shell."
 ;; projectile
 ;; **************************************************
 (setq projectile-globally-ignored-files '("flake.lock"))
+
+;; **************************************************
+;; magit
+;; **************************************************
+(add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1)))
