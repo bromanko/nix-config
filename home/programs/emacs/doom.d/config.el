@@ -15,7 +15,7 @@
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
+(setq display-line-numbers-type 'relative)
 
 ;; Configure cursor for insert mode
 (unless (display-graphic-p)
@@ -68,9 +68,6 @@ apps are not started from a shell."
 ;; **************************************************
 ;; org mode
 ;; **************************************************
-
-;; wrap lines
-(setq org-startup-truncated nil)
 
 ;; agenda
 (setq org-agenda-files (list
