@@ -35,6 +35,7 @@
       git
       gnupg
       httpie
+      html-tidy
       imagemagick
       jq
       nixpkgs-fmt
