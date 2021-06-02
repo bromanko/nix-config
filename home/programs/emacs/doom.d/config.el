@@ -114,7 +114,7 @@ apps are not started from a shell."
 (setq markdown-marginalize-headers t)
 (setq markdown-indent-on-enter "indent-and-new-item")
 
-;; Set a variable-pith font for default face in markdown
+;; Set a variable-pitch font for default face in markdown
 (add-hook 'markdown-mode-hook
           (lambda () (display-fill-column-indicator-mode 0)))
 (add-hook 'markdown-mode-hook #'mixed-pitch-mode)
