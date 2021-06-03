@@ -140,6 +140,26 @@ apps are not started from a shell."
       projectile-project-search-path '("~/Code"))
 
 ;; **************************************************
+;; company
+;; **************************************************
+(after! company
+  (setq company-minimum-prefix-length 1)
+  ;; show completion results asap
+  (setq company-idle-delay 0.0))
+
+
+;; **************************************************
+;; lsp
+;; **************************************************
+(after! lsp-mode
+  (setq lsp-ui-doc-include-signature t)
+  (setq lsp-ui-doc-delay 0.75)
+  (setq lsp-ui-sideline-delay 0.75)
+  (setq lsp-headerline-breadcrumb-enable t)
+)
+
+
+;; **************************************************
 ;; magit
 ;; **************************************************
 (add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1)))
