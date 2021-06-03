@@ -1,18 +1,10 @@
 { config, pkgs, lib, ... }:
 
 {
-  programs.doom-emacs =
+  programs.emacs =
     {
       enable = true;
-      doomPrivateDir = ./programs/emacs/doom.d;
-      emacsPackage = if pkgs.stdenv.isDarwin then pkgs.emacsMacport else pkgs.emacs;
-      emacsPackagesOverlay = self: super: {
-        lsp-mode = super.lsp-mode.overrideattrs (esuper: {
-          buildinputs = esuper.buildinputs ++ [ pkgs.elixir_ls ];
-        });
-        magit-delta = super.magit-delta.overrideattrs (esuper: {
-          buildinputs = esuper.buildinputs ++ [ pkgs.git ];
-        });
-      };
+      package = if pkgs.stdenv.isDarwin then pkgs.emacsMacport else pkgs.emacs;
     };
+  home.file.".doom.d".source = ./programs/emacs/doom.d;
 }
