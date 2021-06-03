@@ -27,6 +27,7 @@
       coreutils # For Emacs
       curl
       delta
+      elixir_ls
       exa
       fantasque-sans-mono-nerd-font
       fd
