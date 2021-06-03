@@ -5,8 +5,8 @@
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-master.url = "github:nixos/nixpkgs/master";
-    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-20.09-darwin";
-    nixos-stable.url = "github:nixos/nixpkgs/nixos-20.09";
+    nixpkgs-stable-darwin.url = "github:nixos/nixpkgs/nixpkgs-21.05-darwin";
+    nixos-stable.url = "github:nixos/nixpkgs/nixos-21.05";
 
     # System management
     darwin.url = "github:hardselius/nix-darwin";
@@ -16,7 +16,7 @@
 
     # Other sources
     flake-utils.url = "github:numtide/flake-utils";
-    nix-doom-emacs.url = "github:vlaci/nix-doom-emacs";
+    nix-doom-emacs.url = "github:bromanko/nix-doom-emacs/upgrade-doom";
   };
 
   outputs = { self, nixpkgs, darwin, home-manager, flake-utils, nix-doom-emacs
