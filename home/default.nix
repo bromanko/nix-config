@@ -10,7 +10,7 @@
 
   programs.direnv = {
     enable = true;
-    enableNixDirenvIntegration = true;
+    nix-direnv.enable = true;
   };
 
   programs.fzf = {
@@ -27,6 +27,8 @@
       coreutils # For Emacs
       curl
       delta
+      duf
+      du-dust
       elixir_ls
       exa
       fantasque-sans-mono-nerd-font
