@@ -153,10 +153,9 @@ apps are not started from a shell."
 ;; **************************************************
 (after! lsp-mode
   (setq lsp-ui-doc-include-signature t)
+  (setq lsp-ui-peek-always-show t)
   (setq lsp-ui-doc-delay 0.75)
-  (setq lsp-ui-sideline-delay 0.75)
-  (setq lsp-headerline-breadcrumb-enable t)
-)
+  (setq lsp-ui-sideline-delay 0.75))
 
 
 ;; **************************************************
