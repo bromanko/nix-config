@@ -18,16 +18,16 @@
     "docker"
     "dropbox"
     "firefox"
+    "google-chrome"
     "istat-menus"
     "jetbrains-toolbox"
     "rectangle"
+    "raycast"
     "signal"
     "spotify"
   ];
 
-  homebrew.brews = [
-    "espanso"
-  ];
+  homebrew.brews = [ "espanso" ];
 
   homebrew.masApps = {
     "1Password" = 1333542190;
