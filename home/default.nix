@@ -24,6 +24,7 @@
       (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
       bat
       bottom
+      cmake
       coreutils # For Emacs
       curl
       delta
@@ -41,7 +42,7 @@
       html-tidy
       imagemagick
       jq
-      nixpkgs-fmt
+      nixfmt
       nodejs
       nodePackages.prettier
       openssh
