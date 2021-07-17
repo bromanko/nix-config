@@ -25,6 +25,7 @@
     "raycast"
     "signal"
     "spotify"
+    "vmware-fusion"
   ];
 
   homebrew.brews = [ "espanso" ];
