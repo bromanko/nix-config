@@ -6,7 +6,6 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
     nixpkgs-unstable.url = "github:nixos/nixpkgs/master";
     nixpkgs-darwin.url = "github:nixos/nixpkgs/nixpkgs-21.05-darwin";
-    # nixos-stable.url = "github:nixos/nixpkgs/nixos-21.05";
 
     # System management
     darwin.url = "github:hardselius/nix-darwin";
@@ -25,7 +24,7 @@
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-darwin, darwin
     , home-manager, flake-utils, ... }:
     let
-      inherit (lib.my) mapModules mapNixOsHosts mapDarwinHosts;
+      inherit (lib.my) mapModules mapHosts;
 
       mkPkgs = system: pkgs: extraOverlays:
         import pkgs {
@@ -81,12 +80,16 @@
       });
 
     in {
-      lib = lib.my;
+      # For repl debugging
+      passtru = { inherit lib; };
+
+      overlay = final: prev: { unstable = pkgs'; };
 
       overlays = mapModules ./overlays import;
 
-      nixosConfigurations = mapNixOsHosts ./hosts/nixos { };
-      darwinConfigurations = mapDarwinHosts ./hosts/darwin { };
+      # nixosConfigurations = mapHosts ./hosts/nixos { };
+      darwinConfigurations = lib.mapAttrs (n: v: (darwin.lib.darwinSystem v))
+        (mapHosts ./hosts/darwin);
 
       # Work dev server
       # workDevServer = home-manager.lib.homeManagerConfiguration {
