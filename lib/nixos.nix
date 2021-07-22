@@ -21,7 +21,7 @@ in {
       ];
     };
 
-  mapHosts = dir:
+  mapNixOsHosts = dir:
     attrs@{ system ? system, ... }:
     mapModules dir (hostPath: mkHost hostPath attrs);
 }

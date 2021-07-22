@@ -15,13 +15,17 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Other sources
+    flake-compat = {
+      url = "github:edolstra/flake-compat";
+      flake = false;
+    };
     flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-darwin, darwin
     , home-manager, flake-utils, ... }:
     let
-      inherit (lib.my) mapModules mapHosts;
+      inherit (lib.my) mapModules mapNixOsHosts mapDarwinHosts;
 
       mkPkgs = system: pkgs: extraOverlays:
         import pkgs {
@@ -81,8 +85,8 @@
 
       overlays = mapModules ./overlays import;
 
-      nixosConfigurations = mapHosts ./hosts/nixos { };
-      # darwinConfigurations = mapHosts ./hosts/darwin { darwin.lib.darwinSystem };
+      nixosConfigurations = mapNixOsHosts ./hosts/nixos { };
+      darwinConfigurations = mapDarwinHosts ./hosts/darwin { };
 
       # Work dev server
       # workDevServer = home-manager.lib.homeManagerConfiguration {
