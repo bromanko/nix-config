@@ -55,22 +55,6 @@
         "type": "github"
       }
     },
-    "nixos-stable": {
-      "locked": {
-        "lastModified": 1624522661,
-        "narHash": "sha256-BjkxYyGQYck5muCpPMfCtEQv/wRmD4kVEE7tiAQOS+Y=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "0b8b127125e5271f5c8636680b6fe274844aaa9d",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "nixos-21.05",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1624492865,
@@ -87,29 +71,13 @@
         "type": "github"
       }
     },
-    "nixpkgs-master": {
+    "nixpkgs-darwin": {
       "locked": {
-        "lastModified": 1624547840,
-        "narHash": "sha256-l/h3hsVBumiOUSFCEOYUkKet/3rW3LCei3jGSIDyM5s=",
+        "lastModified": 1626879649,
+        "narHash": "sha256-hzBMzhWv/atZfrjm2bEshILMScI1ye8nj6iZrIflU3M=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "21e25c659f62a010d057c54b3e8b04ee4f7fbfbe",
-        "type": "github"
-      },
-      "original": {
-        "owner": "nixos",
-        "ref": "master",
-        "repo": "nixpkgs",
-        "type": "github"
-      }
-    },
-    "nixpkgs-stable-darwin": {
-      "locked": {
-        "lastModified": 1624536883,
-        "narHash": "sha256-Oee1QHjrRDuLoqWBlsLc1+9ccUqi3lqr2dtyEGXUMEA=",
-        "owner": "nixos",
-        "repo": "nixpkgs",
-        "rev": "1301236557e5d266848b5cf650a87820ba40d18d",
+        "rev": "50df1c4a236ef1187f6c16244b2848bb05fce10a",
         "type": "github"
       },
       "original": {
@@ -119,15 +87,30 @@
         "type": "github"
       }
     },
+    "nixpkgs-unstable": {
+      "locked": {
+        "lastModified": 1626913595,
+        "narHash": "sha256-FysXgB4J1ASORSpRsZ5VPTgPeZgKVPR5nrCSVbkPrHw=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "a55ab60d5e79e8b3a64c89b3ee81f0372ed3bb16",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "master",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
     "root": {
       "inputs": {
         "darwin": "darwin",
         "flake-utils": "flake-utils",
         "home-manager": "home-manager",
-        "nixos-stable": "nixos-stable",
         "nixpkgs": "nixpkgs",
-        "nixpkgs-master": "nixpkgs-master",
-        "nixpkgs-stable-darwin": "nixpkgs-stable-darwin"
+        "nixpkgs-darwin": "nixpkgs-darwin",
+        "nixpkgs-unstable": "nixpkgs-unstable"
       }
     }
   },
