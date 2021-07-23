@@ -1,13 +1,13 @@
-{ config, pkgs, lib, home-manager, ... }:
+{ config, pkgs, lib, ... }:
 
 {
-  home-manager.home.sessionVariables = {
-    EDITOR = "vim";
+  # home-manager.home.sessionVariables = {
+  #   EDITOR = "vim";
 
-    # zsh-vim-mode
-    MODE_CURSOR_VIINS = "#ffffff steady bar";
-    MODE_CURSOR_VICMD = "#ffffff steady block";
-  };
+  #   # zsh-vim-mode
+  #   MODE_CURSOR_VIINS = "#ffffff steady bar";
+  #   MODE_CURSOR_VICMD = "#ffffff steady block";
+  # };
 
   programs.zsh.shellAliases = with pkgs; {
     ".." = "cd ..";

@@ -26,15 +26,14 @@
     let
       inherit (lib.my) mapModules mapDarwinHosts mapNixosHosts;
 
-      mkPkgs = system: pkgs: extraOverlays:
+      # TODO redo this to create the config and pass that to mapHosts
+      mkPkgs = pkgs: extraOverlays:
         import pkgs {
-          system = system;
           config.allowUnfree = true;
           overlays = extraOverlays ++ (lib.attrValues self.overlays);
         };
-      pkgs = mkPkgs "x86_64-linux" nixpkgs [ self.overlay ];
-      pkgsDarwin = mkPkgs "x86_64-darwin" nixpkgs-darwin [ self.overlay ];
-      pkgs' = mkPkgs "x86_64-linux" nixpkgs-unstable [ ];
+      pkgs = mkPkgs nixpkgs [ self.overlay ];
+      pkgs' = mkPkgs nixpkgs-unstable [ ];
 
       lib = nixpkgs.lib.extend (self: super: {
         my = import ./lib {
@@ -45,18 +44,13 @@
 
     in {
       # For repl debugging
-      passtru = { inherit lib inputs pkgs pkgsDarwin; };
+      passthru = { inherit lib inputs pkgs; };
 
-      overlay = final: prev: {
-        unstable = pkgs';
-        my = self.packages;
-      };
-
+      overlay = final: prev: { unstable = pkgs'; };
       overlays = mapModules ./overlays import;
 
-      packages = mapModules ./packages (p: pkgs.callPackage p { });
-
       nixosConfigurations = mapNixosHosts ./hosts/nixos;
-      darwinConfigurations = mapDarwinHosts ./hosts/darwin;
+      darwinConfigurations =
+        mapDarwinHosts ./hosts/darwin (lib.attrValues self.overlays);
     };
 }
