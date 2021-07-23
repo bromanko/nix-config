@@ -10,6 +10,7 @@ with inputs; {
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
+        ../darwin
         (import path)
       ];
     };
@@ -20,6 +21,7 @@ with inputs; {
       system = "x86_64-linux";
       modules = [
         {
+          nixpkgs.pkgs = pkgs;
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }

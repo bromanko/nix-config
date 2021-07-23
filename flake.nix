@@ -45,29 +45,18 @@
 
     in {
       # For repl debugging
-      passtru = { inherit lib inputs; };
+      passtru = { inherit lib inputs pkgs pkgsDarwin; };
 
-      overlay = final: prev: { unstable = pkgs'; };
+      overlay = final: prev: {
+        unstable = pkgs';
+        my = self.packages;
+      };
 
       overlays = mapModules ./overlays import;
 
+      packages = mapModules ./packages (p: pkgs.callPackage p { });
+
       nixosConfigurations = mapNixosHosts ./hosts/nixos;
       darwinConfigurations = mapDarwinHosts ./hosts/darwin;
-
-      # Work dev server
-      # workDevServer = home-manager.lib.homeManagerConfiguration {
-      #   system = "x86_64-linux";
-      #   homeDirectory = "/home/bromanko";
-      #   username = "bromanko";
-      #   configuration = {
-      #     imports = [ homeManagerCommonConfig ];
-      #     nixpkgs = nixpkgsConfig;
-      #   };
-      # };
-
-      # homeManagerModules = {
-      #   configs.starship.symbols = import ./home/configs/starship-symbols.nix;
-      # };
-
     };
 }

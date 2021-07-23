@@ -1,4 +1,4 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, home-manager, ... }:
 
 {
   programs.neovim.enable = true;
@@ -88,7 +88,8 @@
     sha256 = "0azmnxq82frs375k5b9yjdvsjfmzjv92ifqnmniar19d96yh6swa";
   } + "/plug.vim";
 
-  home.activation.neovim = lib.hm.dag.entryAfter [ "installPackages" ] ''
-    vim +'packal' +'PlugInstall --sync' +qa
-  '';
+  home-manager.home.activation.neovim =
+    lib.hm.dag.entryAfter [ "installPackages" ] ''
+      vim +'packal' +'PlugInstall --sync' +qa
+    '';
 }

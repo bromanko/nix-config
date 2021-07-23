@@ -1,7 +1,7 @@
-{ config, pkgs, lib, ... }:
+{ config, pkgs, lib, home-manager, ... }:
 
 {
-  home.sessionVariables = {
+  home-manager.home.sessionVariables = {
     EDITOR = "vim";
 
     # zsh-vim-mode
