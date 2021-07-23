@@ -1,7 +1,7 @@
 { config, pkgs, lib, ... }:
 
 {
-  imports = [ ./shells.nix ./neovim.nix ./emacs.nix ./kitty.nix ./darwin.nix ];
+  imports = [ ./shells.nix ./neovim.nix ./emacs.nix ./kitty.nix ];
 
   programs.bat = {
     enable = true;
@@ -59,10 +59,6 @@
     ] ++ lib.optionals stdenv.isDarwin [ m-cli ];
 
   home.file.".ideavimrc".source = ../configs/idea/ideavimrc;
-
-  home.file.".vieb/viebrc".source = ../configs/vieb/viebrc;
-  home.file.".vieb/colors/bigsur-dark.css".source =
-    ../configs/vieb/bigsur-dark.css;
 
   home.file.".iex.exs".source = ../configs/elixir/iex.exs;
 

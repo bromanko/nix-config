@@ -1,14 +1,11 @@
 { config, lib, pkgs, ... }:
 
 {
-  imports = [ ];
 
-  modules = {
-    # We expect to run the VM on hidpi machines.
-    hardware.video.hidpi.enable = true;
+  # We expect to run the VM on hidpi machines.
+  hardware.video.hidpi.enable = true;
 
-    # Use the systemd-boot EFI boot loader.
-    boot.loader.systemd-boot.enable = true;
-    boot.loader.efi.canTouchEfiVariables = true;
-  };
+  # Use the systemd-boot EFI boot loader.
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.efi.canTouchEfiVariables = true;
 }

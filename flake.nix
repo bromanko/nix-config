@@ -24,7 +24,7 @@
   outputs = inputs@{ self, nixpkgs, nixpkgs-unstable, nixpkgs-darwin, darwin
     , home-manager, flake-utils, ... }:
     let
-      inherit (lib.my) mapModules mapHosts;
+      inherit (lib.my) mapModules mapDarwinHosts mapNixosHosts;
 
       mkPkgs = system: pkgs: extraOverlays:
         import pkgs {
@@ -36,42 +36,6 @@
       pkgsDarwin = mkPkgs "x86_64-darwin" nixpkgs-darwin [ self.overlay ];
       pkgs' = mkPkgs "x86_64-linux" nixpkgs-unstable [ ];
 
-      # nixpkgsConfig = with inputs; {
-      #   config.allowUnfree = true;
-      #   overlays = self.overlays ++ [
-      #     (final: prev:
-      #       let
-      #         system = prev.stdenv.system;
-      #         nixpkgs-stable = if system == "x86_64-darwin" then
-      #           nixpkgs-stable-darwin
-      #         else
-      #           nixos-stable;
-      #       in {
-      #         master = nixpkgs-master.legacyPackages.${system};
-      #         stable = nixpkgs-stable.legacyPackages.${system};
-      #       })
-      #   ];
-      # };
-
-      # Modules shared between nix-darwin and plain home-manager
-      # homeManagerCommonConfig = with self.homeManagerModules; {
-      #   imports = [ ./home configs.starship.symbols ];
-      # };
-
-      # Modules shared by nix-darwin configurations
-      # nixDarwinCommonModules = { user }: [
-      #   ./darwin
-      #   home-manager.darwinModules.home-manager
-      #   {
-      #     nixpkgs = nixpkgsConfig;
-      #     # Hack to support legacy workflows that use <nixpkgs>
-      #     nix.nixPath = { nixpkgs = "$HOME/.config/nixpkgs/nixpkgs.nix"; };
-      #     users.users.${user}.home = "/Users/${user}";
-      #     home-manager.useGlobalPkgs = true;
-      #     home-manager.users.${user} = homeManagerCommonConfig;
-      #   }
-      # ];
-
       lib = nixpkgs.lib.extend (self: super: {
         my = import ./lib {
           inherit pkgs inputs;
@@ -81,15 +45,14 @@
 
     in {
       # For repl debugging
-      passtru = { inherit lib; };
+      passtru = { inherit lib inputs; };
 
       overlay = final: prev: { unstable = pkgs'; };
 
       overlays = mapModules ./overlays import;
 
-      # nixosConfigurations = mapHosts ./hosts/nixos { };
-      darwinConfigurations = lib.mapAttrs (n: v: (darwin.lib.darwinSystem v))
-        (mapHosts ./hosts/darwin);
+      nixosConfigurations = mapNixosHosts ./hosts/nixos;
+      darwinConfigurations = mapDarwinHosts ./hosts/darwin;
 
       # Work dev server
       # workDevServer = home-manager.lib.homeManagerConfiguration {
