@@ -1,10 +1,6 @@
 { config, pkgs, lib, ... }:
 
 {
-  programs.bat = {
-    enable = true;
-    config = { theme = "Monokai Extended"; };
-  };
 
   programs.direnv = {
     enable = true;

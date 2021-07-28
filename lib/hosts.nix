@@ -1,6 +1,7 @@
 { inputs, lib, pkgs, ... }:
 
-with lib;
+let user = builtins.getEnv "USER";
+in with lib;
 with lib.my;
 with inputs; {
   mkDarwinHost = overlays: path:
@@ -8,27 +9,26 @@ with inputs; {
       modules = [
         {
           nix.package = pkgs.nixFlakes;
-          nixpkgs = {
-            config.allowUnfree = true;
-            overlays = overlays;
-          };
-
           nix.extraOptions = ''
             experimental-features = nix-command flakes
             keep-derivations = true
             keep-outputs = true
           '';
 
+          nixpkgs = {
+            config.allowUnfree = true;
+            overlays = overlays;
+          };
+
           # Used for backwards compatibility, please read the changelog before changing.
           # $ darwin-rebuild changelog
           system.stateVersion = 4;
         }
+        { users.users.${user}.home = builtins.getEnv "HOME"; }
         {
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
-        # ../modules/home-manager.nix
-        # ../darwin
         (import path)
       ];
     };
