@@ -16,14 +16,18 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    flake-utils.url = "github:numtide/flake-utils";
   };
 
-  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, flake-utils, darwin, home-manager, ... }:
     let
       inherit (lib.my) mapModules;
 
+      system = "x86_64-linux";
+
       mkPkgs = pkgs: extraOverlays:
         import pkgs {
+          inherit system;
           config.allowUnfree = true;
           overlays = extraOverlays ++ (lib.attrValues self.overlays);
         };
@@ -39,23 +43,26 @@
     in {
       # For debugging
       passthru = {
-        inherit pkgs lib;
+        inherit pkgs lib nixpkgs;
         packages = self.packages;
       };
 
-      lib = lib.my;
+      packages.${system} = mapModules ./packages (p: pkgs.callPackage p { });
 
-      overlay = final: prev: { my = self.packages; };
+      overlay = final: prev: { my = self.packages.${system}; };
 
       overlays = mapModules ./overlays import;
-
-      packages = mapModules ./packages (p: pkgs.callPackage p { });
 
       darwinConfigurations = {
         personal-mbp = darwin.lib.darwinSystem {
           modules = [
-            { nixpkgs.config = { packageOverrides = pkgs: import pkgs; }; }
-            (import ./modules/darwin)
+            {
+              nixpkgs = {
+                config = pkgs.config;
+                overlays = pkgs.overlays;
+              };
+            }
+            ./modules/darwin
             home-manager.darwinModule
             {
 
