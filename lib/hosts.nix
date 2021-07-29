@@ -1,35 +1,27 @@
 { inputs, lib, pkgs, ... }:
 
-let user = builtins.getEnv "USER";
-in with lib;
+with lib;
 with lib.my;
 with inputs; {
-  mkDarwinHost = overlays: path:
+  mkDarwinHost = path:
     darwin.lib.darwinSystem {
       modules = [
         {
-          nix.package = pkgs.nixFlakes;
-          nix.extraOptions = ''
-            experimental-features = nix-command flakes
-            keep-derivations = true
-            keep-outputs = true
-          '';
-
           nixpkgs = {
-            config.allowUnfree = true;
-            overlays = overlays;
+            config = pkgs.config;
+            overlays = pkgs.overlays;
           };
-
-          # Used for backwards compatibility, please read the changelog before changing.
-          # $ darwin-rebuild changelog
-          system.stateVersion = 4;
         }
-        { users.users.${user}.home = builtins.getEnv "HOME"; }
         {
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
+        ../modules/darwin
         (import path)
+        # home-manager.darwinModule
+        # {
+
+        # }
       ];
     };
 
@@ -47,9 +39,9 @@ with inputs; {
       ];
     };
 
-  mapHosts = mkHost: dir: mapModules dir (hostPath: mkHost hostPath);
+  # mapHosts = mkHost: dir: mapModules dir (hostPath: mkHost hostPath);
 
-  mapDarwinHosts = dir: overlays: mapHosts (mkDarwinHost overlays) dir;
+  mapDarwinHosts = dir: mapModules dir (hostPath: mkDarwinHost hostPath);
 
-  mapNixosHosts = dir: (mapHosts (mkNixosHost dir));
+  # mapNixosHosts = dir: (mapHosts (mkNixosHost dir));
 }

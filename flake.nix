@@ -16,7 +16,6 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
-    flake-utils.url = "github:numtide/flake-utils";
   };
 
   outputs = inputs@{ self, nixpkgs, flake-utils, darwin, home-manager, ... }:
@@ -53,22 +52,6 @@
 
       overlays = mapModules ./overlays import;
 
-      darwinConfigurations = {
-        personal-mbp = darwin.lib.darwinSystem {
-          modules = [
-            {
-              nixpkgs = {
-                config = pkgs.config;
-                overlays = pkgs.overlays;
-              };
-            }
-            ./modules/darwin
-            home-manager.darwinModule
-            {
-
-            }
-          ];
-        };
-      };
+      darwinConfigurations = lib.my.mapDarwinHosts ./hosts/darwin;
     };
 }
