@@ -5,8 +5,6 @@ with lib.my; {
   imports = [ inputs.home-manager.darwinModules.home-manager ]
     ++ (mapModulesRec' ../../modules import);
 
-  systemType = "darwin";
-
   nix = {
     package = pkgs.nixFlakes;
     registry.nixpkgs.flake = inputs.nixpkgs;
@@ -19,6 +17,7 @@ with lib.my; {
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [ my.fantasque-sans-mono-nerd-font ];
 
+  systemType = "darwin";
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
   system.stateVersion = 4;
