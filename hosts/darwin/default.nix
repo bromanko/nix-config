@@ -3,7 +3,9 @@
 with lib;
 with lib.my; {
   imports = [ inputs.home-manager.darwinModules.home-manager ]
-    ++ (mapModulesRec' (toString ../../modules/darwin) import);
+    ++ (mapModulesRec' ../../modules import);
+
+  systemType = "darwin";
 
   nix = {
     package = pkgs.nixFlakes;

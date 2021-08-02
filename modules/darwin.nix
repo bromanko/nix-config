@@ -4,7 +4,7 @@ with lib;
 with lib.my; {
   options = with types; { user = mkOpt attrs { }; };
 
-  config = {
+  config = mkIf (config.systemType == "darwin") {
     user = let
       user = builtins.getEnv "USER";
       name = if elem user [ "" "root" ] then "bromanko" else user;
