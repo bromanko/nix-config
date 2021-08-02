@@ -1,4 +1,4 @@
-{ config, options, lib, ststs, ... }:
+{ config, options, lib, ... }:
 
 with lib;
 with lib.my; {
@@ -15,5 +15,7 @@ with lib.my; {
     };
 
     users.users.${config.user.name} = mkAliasDefinitions options.user;
+
+    home-manager = { useGlobalPkgs = true; };
   };
 }

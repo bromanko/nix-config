@@ -44,12 +44,6 @@ with lib.my; {
         "Unsplash Wallpapers" = 1284863847;
         Xcode = 497799835;
       };
-
     };
-  };
-
-  home-manager = {
-    useGlobalPkgs = true;
-    # users.${config.user.name} = { };
   };
 }
