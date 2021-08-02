@@ -1,9 +1,13 @@
-{ pkgs, config, lib, home-manager, ... }:
+{ pkgs, config, lib, ... }:
 
 with lib;
 with lib.my; {
   modules = {
-    shell.zsh.enable = true;
+    shell = {
+      zsh.enable = true;
+      starship.enable = true;
+    };
+
     darwin.homebrew = {
       enable = true;
       taps = [
@@ -44,5 +48,8 @@ with lib.my; {
     };
   };
 
-  home-manager.users.${config.user.name} = { };
+  home-manager = {
+    useGlobalPkgs = true;
+    # users.${config.user.name} = { };
+  };
 }
