@@ -1,5 +1,6 @@
 { inputs, lib, pkgs, ... }:
 
+with lib;
 with lib.my;
 with inputs; {
   mkDarwinHost = path:
