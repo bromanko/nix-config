@@ -1,27 +1,22 @@
 { inputs, lib, pkgs, ... }:
 
-with lib;
 with lib.my;
 with inputs; {
   mkDarwinHost = path:
     darwin.lib.darwinSystem {
+      specialArgs = { inherit lib inputs; };
       modules = [
+        (import ../hosts/darwin/default.nix)
         {
           nixpkgs = {
             config = pkgs.config;
             overlays = pkgs.overlays;
           };
-        }
-        {
+
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
-        ../modules/darwin
         (import path)
-        # home-manager.darwinModule
-        # {
-
-        # }
       ];
     };
 

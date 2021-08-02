@@ -1,4 +1,4 @@
-{ inputs, lib, pkgs, ... }:
+{ inputs, lib, pkgs, home-manager, ... }:
 
 let
   inherit (lib) makeExtensible attrValues foldr;

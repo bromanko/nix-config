@@ -1,6 +1,7 @@
-{ config, options, lib, pkgs, ... }:
+{ config, options, lib, ststs, ... }:
 
-with lib; {
+with lib;
+with lib.my; {
   options = with types; { user = mkOpt attrs { }; };
 
   config = {
@@ -10,10 +11,9 @@ with lib; {
     in {
       inherit name;
       description = "The primary user account";
-      isNormalUser = true;
       home = "/home/${name}";
-      group = "users";
-      uid = 1000;
     };
+
+    users.users.${config.user.name} = mkAliasDefinitions options.user;
   };
 }

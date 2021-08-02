@@ -20,7 +20,7 @@
 
   outputs = inputs@{ self, nixpkgs, flake-utils, darwin, home-manager, ... }:
     let
-      inherit (lib.my) mapModules;
+      inherit (lib.my) mapModules mapModulesRec;
 
       system = "x86_64-linux";
 
@@ -35,7 +35,7 @@
 
       lib = nixpkgs.lib.extend (self: super: {
         my = import ./lib {
-          inherit pkgs inputs;
+          inherit pkgs inputs home-manager;
           lib = self;
         };
       });
