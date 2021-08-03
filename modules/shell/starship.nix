@@ -11,10 +11,15 @@ in {
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}".programs.starship = {
       enable = true;
+
       enableZshIntegration = config.modules.shell.zsh.enable;
       enableFishIntegration = false;
       enableBashIntegration = false;
+
+      # See docs at https://starship.rs/config
       settings = {
+        gcloud.disabled = true;
+
         aws.symbol = mkDefault " ";
         cmake.symbol = mkDefault "△ ";
         conda.symbol = mkDefault " ";

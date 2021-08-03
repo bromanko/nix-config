@@ -4,6 +4,7 @@ with lib;
 with lib.my; {
   modules = {
     shell = {
+      bat.enable = true;
       zsh.enable = true;
       starship.enable = true;
       fzf.enable = true;
