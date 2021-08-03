@@ -21,6 +21,7 @@ with lib.my; {
       idea.enable = true;
       psql.enable = true;
     };
+    term = { kitty.enable = true; };
 
     darwin.homebrew = {
       enable = true;
