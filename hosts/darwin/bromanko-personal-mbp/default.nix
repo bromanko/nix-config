@@ -22,7 +22,10 @@ with lib.my; {
       psql.enable = true;
     };
     term = { kitty.enable = true; };
-    editor = { neovim.enable = true; };
+    editor = {
+      neovim.enable = true;
+      emacs.enable = true;
+    };
 
     darwin.homebrew = {
       enable = true;
