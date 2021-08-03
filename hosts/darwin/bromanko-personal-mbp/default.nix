@@ -15,6 +15,7 @@ with lib.my; {
         espanso.enable = true;
       };
     };
+    dev = { elixir.enable = true; };
 
     darwin.homebrew = {
       enable = true;
