@@ -18,11 +18,11 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, flake-utils, darwin, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
     let
       inherit (lib.my) mapModules mapModulesRec;
 
-      system = "x86_64-linux";
+      system = "x86_64-darwin";
 
       mkPkgs = pkgs: extraOverlays:
         import pkgs {

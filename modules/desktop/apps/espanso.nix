@@ -10,7 +10,7 @@ in {
     home-manager.users."${config.user.name}".home.file."Library/Preferences/espanso/user" =
       {
         recursive = true;
-        source = ../configs/espanso/user;
+        source = ../../../configs/espanso/user;
       };
   };
 }
