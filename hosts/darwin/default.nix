@@ -20,6 +20,10 @@ with lib.my; {
   fonts.enableFontDir = true;
   fonts.fonts = with pkgs; [ my.fantasque-sans-mono-nerd-font ];
 
+  home-manager.users."${config.user.name}".home = {
+    packages = with pkgs; [ m-cli ];
+  };
+
   systemType = "darwin";
   # Used for backwards compatibility, please read the changelog before changing.
   # $ darwin-rebuild changelog
