@@ -2,17 +2,6 @@
 
 {
 
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-  };
-
-  programs.fzf = {
-    enable = true;
-    enableZshIntegration = true;
-    defaultCommand = "fd --type f --hidden --follow --exclude .git";
-  };
-
   home.packages = with pkgs;
     [
       (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))

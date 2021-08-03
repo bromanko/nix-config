@@ -7,7 +7,7 @@ with inputs; {
     darwin.lib.darwinSystem {
       specialArgs = { inherit lib inputs; };
       modules = [
-        (import ../hosts/darwin/default.nix)
+        ../hosts/darwin/default.nix
         {
           nixpkgs = {
             config = pkgs.config;

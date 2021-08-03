@@ -6,6 +6,14 @@ with lib.my; {
     shell = {
       zsh.enable = true;
       starship.enable = true;
+      fzf.enable = true;
+      direnv.enable = true;
+    };
+    desktop = {
+      apps = {
+        raycast.enable = true;
+        espanso.enable = true;
+      };
     };
 
     darwin.homebrew = {

@@ -38,6 +38,7 @@
           inherit pkgs inputs home-manager;
           lib = self;
         };
+        hm = home-manager.lib.hm;
       });
     in {
       # For debugging
