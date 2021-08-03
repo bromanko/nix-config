@@ -49,9 +49,7 @@ let
       MODE_CURSOR_VIINS = "#ffffff steady bar";
       MODE_CURSOR_VICMD = "#ffffff steady block";
     };
-  };
 
-  darwinCfg = {
     programs.zsh = {
       enable = true;
 
@@ -87,7 +85,9 @@ let
         }
       ];
     };
+  };
 
+  darwinCfg = {
     environment.shells = [ pkgs.zsh ];
     environment.loginShell = pkgs.zsh;
     environment.variables.SHELL = "${pkgs.zsh}/bin/zsh";
