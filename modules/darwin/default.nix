@@ -11,7 +11,7 @@ with lib.my; {
     in {
       inherit name;
       description = "The primary user account";
-      home = "/home/${name}";
+      home = "/Users/${name}";
     };
 
     users.users.${config.user.name} = mkAliasDefinitions options.user;
