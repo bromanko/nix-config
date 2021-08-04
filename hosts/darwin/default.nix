@@ -5,7 +5,7 @@ with lib.my; {
   imports = [
     inputs.home-manager.darwinModules.home-manager
   ]
-  # Must toSting the path so that nix doesn't attempt to import it to the store
+  # Must toString the path so that nix doesn't attempt to import it to the store
     ++ (mapModulesRec' (toString ../../modules) import);
 
   nix = {

@@ -16,14 +16,21 @@ will set those up.
 You can now build a system configuration by running `nix build` and specifying the configuration target:
 
 For `nix-darwin` (macOS):
+
 ```sh
-nix build .#darwinConfigurations.personalMacbookPro.system
+nix build .#darwinConfigurations.bromanko-personal-mbp.system
 ```
 
 For `home-manager` (Linux):
 
-``` sh
+```sh
 nix build .#workDevServer.activationPackage
+```
+
+For `nixos`:
+
+```sh
+# todo
 ```
 
 Results will be placed in the `result` folder.
@@ -34,16 +41,16 @@ Once the derivation is build you can apply it via the `nix-darwin` or `home-mana
 
 For `nix-darwin` (macOS):
 
-``` sh
-./result/sw/bin/darwin-rebuild switch --flake .#personalMacbookPro
+```sh
+./result/sw/bin/darwin-rebuild switch --flake .#bromanko-personal-mbp
 ```
 
 For `home-manager` (Linux):
 
-``` sh
-./result/sw/bin/activate 
+```sh
+./result/sw/bin/activate
 ```
 
 ## References
 
-This setup is heavily inspired by [malob's](https://github.com/malob/nixpkgs) excellent nixpkgs configuration. 
+This setup is heavily inspired by [malob's](https://github.com/malob/nixpkgs) excellent nixpkgs configuration.
