@@ -37,6 +37,7 @@ with lib.my; {
 
             # .app dirs need to be actual directories for Finder to detect them as Apps.
             # The files inside them can be symlinks though.
+            echo "Linking Home Manager Apps to $HM_APPS..."
             $DRY_RUN_CMD cp --recursive --symbolic-link --no-preserve=mode -H ${apps}/Applications/* "$HM_APPS"
             # Modes need to be stripped because otherwise the dirs wouldn't have +w,
             # preventing us from deleting them again
