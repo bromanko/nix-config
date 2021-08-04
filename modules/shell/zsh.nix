@@ -15,30 +15,6 @@ let
     S = "sudo";
     e = "$EDITOR";
 
-    cat = "${bat}/bin/bat";
-    "cat!" = "command cat";
-    find = "${fd}/bin/fd";
-
-    ll = "ls -l --time-style long-iso --icons";
-    l = "ll -a";
-    ls = "${exa}/bin/exa";
-
-    g = "git";
-    ga = "git add";
-    gb = "git branch";
-    gc = "git commit";
-    gcm = "git checkout main";
-    gco = "git checkout";
-    gcp = "git cherry-pick";
-    gd = "git diff";
-    ggpush = "git push origin $(current_branch)";
-    gl = "git pull --prune";
-    gp = "git push origin HEAD";
-    gs = "git status -sb";
-
-    iex = ''iex --erl "-kernal shell_history enabled"'';
-
-    dc = "docker-compose";
     initgo = ''
       bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
   };
@@ -88,6 +64,7 @@ let
           }
         ];
       };
+      home.packages = [ pkgs.zsh-fast-syntax-highlighting ];
     };
   };
 

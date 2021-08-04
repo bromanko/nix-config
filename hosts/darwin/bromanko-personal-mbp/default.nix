@@ -5,10 +5,13 @@ with lib.my; {
   modules = {
     shell = {
       bat.enable = true;
+      git.enable = true;
       zsh.enable = true;
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
+      exa.enable = true;
+      fd.enable = true;
     };
     desktop = {
       apps = {
@@ -20,6 +23,7 @@ with lib.my; {
       elixir.enable = true;
       idea.enable = true;
       psql.enable = true;
+      docker.enable = true;
     };
     term = { kitty.enable = true; };
     editor = {
@@ -65,4 +69,30 @@ with lib.my; {
       };
     };
   };
+
+  home-manager.users."${config.user.name}".home.packages = with pkgs; [
+    bottom
+    cmake
+    curl
+    delta
+    duf
+    du-dust
+    gnupg
+    httpie
+    html-tidy
+    jq
+    # nixfmt
+    # nodejs
+    # nodePackages.prettier
+    openssh
+    peco
+    # python3
+    ripgrep
+    shellcheck
+    shfmt
+    tldr
+    tmux
+    tree
+    yq
+  ];
 }

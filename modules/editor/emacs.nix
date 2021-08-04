@@ -17,6 +17,12 @@ in {
           pkgs.emacs;
       };
       home.file.".doom.d".source = ../../configs/emacs/doom.d;
+      home.packages = with pkgs; [
+        (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
+        coreutils
+        fontconfig
+        imagemagick
+      ];
     };
   };
 }
