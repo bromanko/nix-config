@@ -11,7 +11,7 @@ in {
       home.packages = [ pkgs.fd ];
 
       programs.zsh.shellAliases =
-        mkIf config.shell.zsh.enable { find = "${pkgs.fd}/bin/fd"; };
+        mkIf config.modules.shell.zsh.enable { find = "${pkgs.fd}/bin/fd"; };
     };
   };
 }

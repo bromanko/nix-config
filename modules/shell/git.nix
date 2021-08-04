@@ -10,7 +10,7 @@ in {
     home-manager.users."${config.user.name}" = {
       home.packages = [ pkgs.git pkgs.gh ];
 
-      programs.zsh.shellAliases = mkIf config.shell.zsh.enable {
+      programs.zsh.shellAliases = mkIf config.modules.shell.zsh.enable {
         g = "git";
         ga = "git add";
         gb = "git branch";

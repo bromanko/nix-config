@@ -10,7 +10,7 @@ in {
     home-manager.users."${config.user.name}" = {
       home.packages = [ pkgs.exa ];
 
-      programs.zsh.shellAliases = mkIf config.shell.zsh.enable {
+      programs.zsh.shellAliases = mkIf config.modules.shell.zsh.enable {
         ls = "${pkgs.exa}/bin/exa";
         ll = "ls -l --time-style long-iso --icons";
         l = "ll -a";

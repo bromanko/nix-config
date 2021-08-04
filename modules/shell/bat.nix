@@ -14,8 +14,8 @@ in {
         config = { theme = "Monokai Extended"; };
       };
 
-      programs.zsh.shellAliases = mkIf config.shell.zsh.enable {
-        cat = "${bat}/bin/bat";
+      programs.zsh.shellAliases = mkIf config.modules.shell.zsh.enable {
+        cat = "${pkgs.bat}/bin/bat";
         "cat!" = "command cat";
       };
     };

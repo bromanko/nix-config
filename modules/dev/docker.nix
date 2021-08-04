@@ -14,7 +14,7 @@ in {
 
     home-manager.users."${config.user.name}" = {
       programs.zsh.shellAliases =
-        mkIf config.shell.zsh.enable { dc = "docker-compose"; };
+        mkIf config.modules.shell.zsh.enable { dc = "docker-compose"; };
     };
   };
 }
