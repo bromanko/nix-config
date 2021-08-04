@@ -69,6 +69,7 @@ let
   };
 
   darwinCfg = {
+    programs.zsh.enable = true;
     environment.shells = [ pkgs.zsh ];
     environment.loginShell = pkgs.zsh;
 
