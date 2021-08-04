@@ -100,7 +100,7 @@ in {
       } + "/plug.vim";
 
       home.activation.neovim = lib.hm.dag.entryAfter [ "installPackages" ] ''
-        vim +'packal' +'PlugInstall --sync' +qa
+        ${pkgs.neovim}/bin/nvim +'packal' +'PlugInstall --sync' +qa
       '';
     };
   };
