@@ -49,6 +49,10 @@ in {
   };
 
   config = mkIf cfg.enable {
+    home-manager.users."${config.user.name}".home = {
+      packages = with pkgs; [ m-cli ];
+    };
+
     homebrew = {
       enable = true;
       autoUpdate = true;
