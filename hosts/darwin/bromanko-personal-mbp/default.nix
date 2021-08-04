@@ -24,6 +24,8 @@ with lib.my; {
       idea.enable = true;
       psql.enable = true;
       docker.enable = true;
+      nix.enable = true;
+      nodejs.enable = true;
     };
     term = { kitty.enable = true; };
     editor = {
@@ -81,12 +83,9 @@ with lib.my; {
     httpie
     html-tidy
     jq
-    # nixfmt
-    # nodejs
-    # nodePackages.prettier
     openssh
     peco
-    # python3
+    python3
     ripgrep
     shellcheck
     shfmt
