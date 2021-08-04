@@ -7,16 +7,15 @@ with inputs; {
     darwin.lib.darwinSystem {
       specialArgs = { inherit lib inputs; };
       modules = [
-        ../hosts/darwin/default.nix
         {
           nixpkgs = {
             config = pkgs.config;
             overlays = pkgs.overlays;
           };
-
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
+        ../hosts/darwin/default.nix
         (import path)
       ];
     };
@@ -34,8 +33,6 @@ with inputs; {
         (import path)
       ];
     };
-
-  # mapHosts = mkHost: dir: mapModules dir (hostPath: mkHost hostPath);
 
   mapDarwinHosts = dir: mapModules dir (hostPath: mkDarwinHost hostPath);
 
