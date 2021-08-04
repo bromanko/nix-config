@@ -40,7 +40,7 @@ with lib.my; {
         "homebrew/cask-versions"
         "homebrew/core"
         "homebrew/services"
-        "frederico-terzi/espanso"
+        "federico-terzi/espanso"
       ];
       casks = [
         "docker"
