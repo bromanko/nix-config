@@ -11,10 +11,8 @@ in {
     home-manager.users."${config.user.name}" = {
       programs.emacs = {
         enable = true;
-        package = if config.systemType == "darwin" then
-          pkgs.emacsMacport
-        else
-          pkgs.emacs;
+        package =
+          if pkgs.hostPlatform.isDarwin then pkgs.emacsMacport else pkgs.emacs;
       };
       home.file.".doom.d".source = ../../configs/emacs/doom.d;
       home.packages = with pkgs; [

@@ -3,7 +3,7 @@
 with lib;
 with lib.my;
 let
-  isDarwin = config.systemType == "darwin";
+  isDarwin = pkgs.hostPlatform.isDarwin;
   isNotDarwin = !isDarwin;
 
   cfg = config.modules.shell.zsh;
