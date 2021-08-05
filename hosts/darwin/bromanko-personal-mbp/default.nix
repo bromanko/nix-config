@@ -4,9 +4,9 @@ with lib;
 with lib.my; {
   modules = {
     shell = {
+      zsh.enable = true;
       bat.enable = true;
       git.enable = true;
-      zsh.enable = true;
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
@@ -14,6 +14,7 @@ with lib.my; {
       fd.enable = true;
     };
     desktop = {
+      fonts.enable = true;
       apps = {
         raycast.enable = true;
         espanso.enable = true;

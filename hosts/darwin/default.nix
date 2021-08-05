@@ -17,9 +17,6 @@ with lib.my; {
       keep-outputs = true'';
   };
 
-  fonts.enableFontDir = true;
-  fonts.fonts = with pkgs; [ my.fantasque-sans-mono-nerd-font ];
-
   home-manager = {
     useGlobalPkgs = true;
     backupFileExtension = "orig";
