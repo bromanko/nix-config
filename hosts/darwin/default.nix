@@ -20,7 +20,6 @@ with lib.my; {
   home-manager = {
     useGlobalPkgs = true;
     backupFileExtension = "orig";
-    verbose = true;
 
     users."${config.user.name}".home = {
       activation = {
