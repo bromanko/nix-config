@@ -23,6 +23,7 @@ let
     home-manager.users."${config.user.name}" = {
       home.sessionVariables = {
         SHELL = "${pkgs.zsh}/bin/zsh";
+        PROJECTS = cfg.projectsPath;
 
         # zsh-vim-mode
         MODE_CURSOR_VIINS = "#ffffff steady bar";
@@ -79,7 +80,11 @@ let
 
   nixosCfg = { };
 in {
-  options.modules.shell.zsh = with types; { enable = mkBoolOpt false; };
+  options.modules.shell.zsh = with types; {
+    enable = mkBoolOpt false;
+    projectsPath =
+      mkOpt' str "$HOME/Code" "Directory containing project files.";
+  };
 
   config = mkIf cfg.enable (mkMerge [
     commonCfg
