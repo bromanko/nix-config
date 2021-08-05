@@ -53,32 +53,24 @@ let
               sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
             };
           }
-          {
-            name = "zsh-fast-syntax-highlighting";
-            file = "fast-syntax-highlighting.plugin.zsh";
-            src = pkgs.fetchFromGitHub {
-              owner = "zdharma";
-              repo = "fast-syntax-highlighting";
-              rev = "v1.55";
-              sha256 = "019hda2pj8lf7px4h1z07b9l6icxx4b2a072jw36lz9bh6jahp32";
-            };
-          }
         ];
       };
-      home.packages = [ pkgs.zsh-fast-syntax-highlighting ];
+      home.packages =
+        [ pkgs.zsh-fast-syntax-highlighting pkgs.zsh-history-substring-search ];
     };
   };
 
   darwinCfg = {
-    programs.zsh.enable = true;
+    programs.zsh = { enable = true; };
+
     environment.shells = [ pkgs.zsh ];
     environment.loginShell = pkgs.zsh;
+  };
 
+  nixosCfg = {
     # Completion for system packages
     environment.pathsToLink = [ "/share/zsh" ];
   };
-
-  nixosCfg = { };
 in {
   options.modules.shell.zsh = with types; {
     enable = mkBoolOpt false;
