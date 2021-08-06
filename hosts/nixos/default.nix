@@ -22,6 +22,10 @@ with lib.my; {
     useGlobalPkgs = true;
     backupFileExtension = "orig";
 
+    # Workaround to enable installing via `nixos-install`
+    # https://github.com/nix-community/home-manager/issues/1262
+    sharedModules = [{ manual.manpages.enable = false; }];
+
     users."${config.user.name}".home = {
 
       # This value determines the Home Manager release that your configuration
