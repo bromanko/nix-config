@@ -11,10 +11,6 @@ with lib.my; {
     in {
       inherit name;
       description = "The primary user account";
-      home = if pkgs.hostPlatform.isDarwin then
-        "/Users/${name}"
-      else
-        "/home/${name}";
     };
 
     users.users.${config.user.name} = mkAliasDefinitions options.user;
