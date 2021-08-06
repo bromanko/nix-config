@@ -9,8 +9,8 @@ with inputs; {
       modules = [
         {
           nixpkgs = {
-            config = pkgs.config;
-            overlays = pkgs.overlays;
+            config = pkgs.x86_64-darwin.config;
+            overlays = pkgs.x86_64-darwin.overlays;
           };
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
@@ -26,7 +26,7 @@ with inputs; {
       system = "x86_64-linux";
       modules = [
         {
-          nixpkgs.pkgs = pkgs;
+          nixpkgs.pkgs = pkgs.x86_64-linux;
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
@@ -37,5 +37,5 @@ with inputs; {
 
   mapDarwinHosts = dir: mapModules dir (hostPath: mkDarwinHost hostPath);
 
-  mapNixosHosts = dir: mapModules dir (hostPath: mkNixosHost dir);
+  mapNixosHosts = dir: mapModules dir (hostPath: mkNixosHost hostPath);
 }

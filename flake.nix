@@ -22,16 +22,17 @@
     let
       inherit (lib.my) mapModules mapModulesRec;
 
-      system = "x86_64-darwin";
+      supportedSystems = [ "x86_64-darwin" "x86_64-linux" ];
 
-      mkPkgs = pkgs: extraOverlays:
-        import pkgs {
+      forAllSystems = f:
+        nixpkgs.lib.genAttrs supportedSystems (system: f system);
+
+      pkgs = forAllSystems (system:
+        import nixpkgs {
           inherit system;
           config.allowUnfree = true;
-          overlays = extraOverlays ++ (lib.attrValues self.overlays);
-        };
-
-      pkgs = mkPkgs nixpkgs [ self.overlay ];
+          overlays = [ self.overlay ] ++ (lib.attrValues self.overlays);
+        });
 
       lib = nixpkgs.lib.extend (self: super: {
         my = import ./lib {
@@ -47,9 +48,10 @@
         packages = self.packages;
       };
 
-      packages.${system} = mapModules ./packages (p: pkgs.callPackage p { });
+      packages = forAllSystems
+        (system: mapModules ./packages (p: pkgs.${system}.callPackage p { }));
 
-      overlay = final: prev: { my = self.packages.${system}; };
+      overlay = final: prev: { my = self.packages.${prev.system}; };
 
       overlays = mapModules ./overlays import;
 
