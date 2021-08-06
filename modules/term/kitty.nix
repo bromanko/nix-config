@@ -90,5 +90,10 @@ in {
         color15 = "#e3e1e4";
       };
     };
+
+    home-manager.users."${config.user.name}" = {
+      programs.zsh.shellAliases =
+        mkIf config.modules.shell.zsh.enable { ssh = "kitty +kitten ssh"; };
+    };
   };
 }
