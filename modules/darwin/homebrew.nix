@@ -2,9 +2,11 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.darwin.homebrew;
+let
+  cfg = config.modules.homebrew;
+  enabled = cfg.enable && pkgs.hostPlatform.isDarwin;
 in {
-  options.modules.darwin.homebrew = with types; {
+  options.modules.homebrew = with types; {
     enable = mkBoolOpt false;
     taps = mkOption {
       type = listOf str;
@@ -48,7 +50,7 @@ in {
     };
   };
 
-  config = mkIf cfg.enable {
+  config = mkIf enabled {
     home-manager.users."${config.user.name}".home = {
       packages = with pkgs; [ m-cli ];
     };

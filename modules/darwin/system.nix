@@ -1,7 +1,6 @@
 { config, lib, pkgs, ... }:
 
-with lib;
-{ } // mkIf pkgs.hostPlatform.isDarwin {
+with lib; {
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
   # System - Always show scroll bars.

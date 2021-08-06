@@ -8,7 +8,7 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}".home = {
-      file.".ideavimrc".source = ../../configs/idea/ideavimrc;
+      file.".ideavimrc".source = ../../../configs/idea/ideavimrc;
     };
   };
 }

@@ -8,7 +8,7 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}".home = {
-      file.".psqlrc".source = ../../configs/psql/psqlrc;
+      file.".psqlrc".source = ../../../configs/psql/psqlrc;
     };
   };
 }

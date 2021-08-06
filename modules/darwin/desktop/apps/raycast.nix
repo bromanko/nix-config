@@ -7,9 +7,14 @@ in {
   options.modules.desktop.apps.raycast = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
+    modules.homebrew = {
+      taps = [ "homebrew/cask" ];
+      casks = [ "raycast" ];
+    };
+
     home-manager.users."${config.user.name}".home.file.".config/raycast" = {
       recursive = true;
-      source = ../../../configs/raycast;
+      source = ../../../../configs/raycast;
     };
   };
 }

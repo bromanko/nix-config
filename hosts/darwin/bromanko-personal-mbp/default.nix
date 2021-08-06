@@ -34,7 +34,7 @@ with lib.my; {
       emacs.enable = true;
     };
 
-    darwin.homebrew = {
+    homebrew = {
       enable = true;
       taps = [
         "homebrew/cask"

@@ -10,7 +10,7 @@ in {
     home-manager.users."${config.user.name}" = {
       home = {
         packages = with pkgs; [ elixir_ls ];
-        file.".iex.exs".source = ../../configs/elixir/iex.exs;
+        file.".iex.exs".source = ../../../configs/elixir/iex.exs;
       };
 
       programs.zsh.shellAliases = {

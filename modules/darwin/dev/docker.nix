@@ -7,7 +7,7 @@ in {
   options.modules.dev.docker = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
-    modules.darwin.homebrew = mkIf pkgs.hostPlatform.isDarwin {
+    modules.homebrew = {
       taps = [ "homebrew/cask" ];
       casks = [ "docker" ];
     };

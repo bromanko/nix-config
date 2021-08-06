@@ -18,6 +18,5 @@ with lib.my; {
     };
 
     users.users.${config.user.name} = mkAliasDefinitions options.user;
-
   };
 }
