@@ -15,6 +15,10 @@ This is s VMWare virtual machine used for development work.
 - Check "Use full resolution for Retina display"
 - Choose "All View Modes" for "Scaled high resolution"
 
+#### Hard Disk
+
+- 30 GB
+
 #### Advanced
 
 - Check "Synchronize time"
@@ -51,3 +55,11 @@ mkdir -p /mnt/boot
 mount /dev/disk/by-label/boot /mnt/boot
 swapon /dev/sda2
 ```
+
+### Installing nixos
+
+- `nix-shell -p git nixFlakes neovim`
+- `git clone https://github.com/bromanko/nix-config /mnt/etc/nixos`
+- Install NixOS: `nixos-install --root /mnt --flake /mnt/etc/nixos#XYZ`, where XYZ is the host you want to install.
+- Reboot!
+- Change your root and $USER passwords!

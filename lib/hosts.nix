@@ -30,11 +30,12 @@ with inputs; {
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
+        ../hosts/nixos/default.nix
         (import path)
       ];
     };
 
   mapDarwinHosts = dir: mapModules dir (hostPath: mkDarwinHost hostPath);
 
-  # mapNixosHosts = dir: (mapHosts (mkNixosHost dir));
+  mapNixosHosts = dir: mapModules dir (hostPath: mkNixosHost dir);
 }

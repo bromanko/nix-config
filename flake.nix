@@ -54,5 +54,7 @@
       overlays = mapModules ./overlays import;
 
       darwinConfigurations = lib.my.mapDarwinHosts ./hosts/darwin;
+
+      nixosConfigurations = lib.my.mapNixosHosts ./hosts/nixos;
     };
 }
