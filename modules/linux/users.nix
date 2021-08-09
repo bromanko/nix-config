@@ -5,5 +5,6 @@
     isNormalUser = true;
     extraGroups = [ "wheel" ];
     home = "/home/${config.user.name}";
+    shell = pkgs.zsh;
   };
 }
