@@ -10,7 +10,8 @@ in {
   config = mkIf cfg.enable {
     fonts = {
       enableFontDir = true;
-      fonts = with pkgs; [ my.fantasque-sans-mono-nerd-font ];
+      fonts = with pkgs;
+        [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
     };
   };
 }
