@@ -63,12 +63,12 @@ with lib.my; {
       exa.enable = true;
       fd.enable = true;
     };
-    # desktop = {
-    #   fonts.enable = true;
-    #   apps = {
-    #     espanso.enable = true;
-    #   };
-    # };
+    desktop = {
+      fonts.enable = true;
+      #   apps = {
+      #     espanso.enable = true;
+      #   };
+    };
     dev = {
       elixir.enable = true;
       idea.enable = true;
