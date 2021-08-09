@@ -78,7 +78,9 @@ with lib.my; {
     videoDrivers = [ "vmware" "vesa" "modesetting" ];
   };
 
-  env.TERMINAL = "kitty";
+  home-manager.users."${config.user.name}" = {
+    home.sessionVariables = { TERMINAL = pkgs.kitty; };
+  };
 
   modules = {
     shell = {
