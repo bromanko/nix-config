@@ -79,7 +79,7 @@ with lib.my; {
   };
 
   home-manager.users."${config.user.name}" = {
-    home.sessionVariables = { TERMINAL = pkgs.kitty; };
+    home.sessionVariables = { TERMINAL = "${pkgs.kitty}/bin/kitty"; };
   };
 
   modules = {
