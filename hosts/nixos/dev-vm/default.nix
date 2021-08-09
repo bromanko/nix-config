@@ -52,7 +52,37 @@ with lib.my; {
     permitRootLogin = "yes";
   };
 
-  modules = { shell = { zsh.enable = true; }; };
+  modules = {
+    shell = {
+      zsh.enable = true;
+      bat.enable = true;
+      git.enable = true;
+      starship.enable = true;
+      fzf.enable = true;
+      direnv.enable = true;
+      exa.enable = true;
+      fd.enable = true;
+    };
+    # desktop = {
+    #   fonts.enable = true;
+    #   apps = {
+    #     espanso.enable = true;
+    #   };
+    # };
+    dev = {
+      elixir.enable = true;
+      idea.enable = true;
+      psql.enable = true;
+      # docker.enable = true;
+      nix.enable = true;
+      nodejs.enable = true;
+    };
+    term = { kitty.enable = true; };
+    editor = {
+      neovim.enable = true;
+      emacs.enable = true;
+    };
+  };
 
   # This value determines the NixOS release from which the default
   # settings for stateful data, like file locations and database versions
