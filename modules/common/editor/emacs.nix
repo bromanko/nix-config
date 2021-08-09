@@ -20,6 +20,7 @@ in {
         coreutils
         fontconfig
         imagemagick
+        sqlite
       ];
     };
   };
