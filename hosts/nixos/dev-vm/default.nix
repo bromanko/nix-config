@@ -78,6 +78,8 @@ with lib.my; {
     videoDrivers = [ "vmware" "vesa" "modesetting" ];
   };
 
+  env.TERMINAL = "kitty";
+
   modules = {
     shell = {
       zsh.enable = true;
