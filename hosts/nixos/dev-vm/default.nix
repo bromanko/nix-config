@@ -65,6 +65,8 @@ with lib.my; {
     displayManager = {
       defaultSession = "none+i3";
       lightdm.enable = true;
+      autoLogin.enable = true;
+      autoLogin.user = config.user.name;
 
       sessionCommands = ''
         ${pkgs.xlibs.xset}/bin/xset r rate 200 40
@@ -72,6 +74,8 @@ with lib.my; {
     };
 
     windowManager = { i3.enable = true; };
+
+    videoDrivers = [ "vmware" "vesa" "modesetting" ];
   };
 
   modules = {
