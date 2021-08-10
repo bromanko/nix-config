@@ -78,6 +78,9 @@ with lib.my; {
     videoDrivers = [ "vmware" "vesa" "modesetting" ];
   };
 
+  home-manager.users."${config.user.name}".home = {
+    file.".psqlrc".source = ../../../configs/psql/psqlrc;
+  };
   xdg.configFile."i3/config".text =
     builtins.readFile ../../../configs/i3/config;
 

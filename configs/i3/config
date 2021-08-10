@@ -1,1 +1,2 @@
+# i3 config file (v4)
 bindsym $mod+Return exec kitty
