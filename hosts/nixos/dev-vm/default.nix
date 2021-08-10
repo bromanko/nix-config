@@ -73,14 +73,12 @@ with lib.my; {
       '';
     };
 
-    windowManager = { i3.enable = true; };
+    windowManager = { i3 = { enable = true; }; };
 
     videoDrivers = [ "vmware" "vesa" "modesetting" ];
   };
 
-  home-manager.users."${config.user.name}" = {
-    home.sessionVariables = { TERMINAL = "kitty"; };
-  };
+  xdg.configFile."i3/config".text = builtins.readFile ../../../config/i3/config;
 
   modules = {
     shell = {
