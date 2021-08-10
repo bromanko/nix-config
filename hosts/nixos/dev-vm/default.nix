@@ -79,10 +79,8 @@ with lib.my; {
   };
 
   home-manager.users."${config.user.name}".home = {
-    file.".psqlrc".source = ../../../configs/psql/psqlrc;
+    file.".config/i3/config".source = ../../../configs/i3/config;
   };
-  xdg.configFile."i3/config".text =
-    builtins.readFile ../../../configs/i3/config;
 
   modules = {
     shell = {
