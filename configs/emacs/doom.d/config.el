@@ -7,7 +7,7 @@
 ;; UI Settings
 ;; **************************************************
 (setq doom-font (font-spec :family "FantasqueSansMono Nerd Font" :size 17)
-      doom-variable-pitch-font (font-spec :family "Avenir Next" :size 17))
+      doom-variable-pitch-font (font-spec :family "Open Sans" :size 17))
 
 (setq-default line-spacing 0.15)
 

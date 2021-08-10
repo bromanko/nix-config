@@ -9,9 +9,10 @@ in {
 
   config = mkIf cfg.enable {
     fonts = {
-      enableFontDir = true;
-      fonts = with pkgs;
-        [ (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; }) ];
+      fonts = with pkgs; [
+        (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+        open-sans
+      ];
     };
   };
 }
