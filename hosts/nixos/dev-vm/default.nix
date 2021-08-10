@@ -78,7 +78,8 @@ with lib.my; {
     videoDrivers = [ "vmware" "vesa" "modesetting" ];
   };
 
-  xdg.configFile."i3/config".text = builtins.readFile ../../../config/i3/config;
+  xdg.configFile."i3/config".text =
+    builtins.readFile ../../../configs/i3/config;
 
   modules = {
     shell = {
