@@ -52,6 +52,17 @@ with lib.my; {
     permitRootLogin = "yes";
   };
 
+  # todo make this a module
+  programs.ssh = {
+    startAgent = true;
+    extraConfig = ''
+      Host github.com
+        IdentitiesOnly yes
+        AddKeysToAgent yes
+        IdentityFile ~/.ssh/github
+    '';
+  };
+
   services.xserver = {
     enable = true;
     layout = "us";
