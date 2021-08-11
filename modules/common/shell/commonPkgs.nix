@@ -1,4 +1,4 @@
-{ config, lib, pkgs, ... }:
+{ config, options, lib, pkgs, ... }:
 
 with lib;
 with lib.my;
@@ -7,7 +7,7 @@ in {
   options.modules.shell.commonPkgs = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
-    users."${config.user.name}".home = {
+    home-manager.users."${config.user.name}".home = {
       packages = with pkgs; [
         bottom
         curl
@@ -18,7 +18,6 @@ in {
         httpie
         jq
         openssh
-        peco
         python3
         ripgrep
         shellcheck
