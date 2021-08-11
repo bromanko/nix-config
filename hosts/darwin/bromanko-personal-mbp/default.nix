@@ -4,6 +4,7 @@ with lib;
 with lib.my; {
   modules = {
     shell = {
+      commonPkgs = true;
       zsh.enable = true;
       bat.enable = true;
       git.enable = true;
@@ -72,27 +73,4 @@ with lib.my; {
       };
     };
   };
-
-  home-manager.users."${config.user.name}".home.packages = with pkgs; [
-    bottom
-    cmake
-    curl
-    delta
-    duf
-    du-dust
-    gnupg
-    httpie
-    html-tidy
-    jq
-    openssh
-    peco
-    python3
-    ripgrep
-    shellcheck
-    shfmt
-    tldr
-    tmux
-    tree
-    yq
-  ];
 }

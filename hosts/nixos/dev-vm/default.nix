@@ -95,6 +95,7 @@ with lib.my; {
 
   modules = {
     shell = {
+      commonPkgs = true;
       zsh.enable = true;
       bat.enable = true;
       git.enable = true;
