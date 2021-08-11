@@ -10,6 +10,11 @@ in {
     home-manager.users."${config.user.name}" = {
       home.packages = [ pkgs.git pkgs.gh ];
 
+      xdg.configFile = {
+        "git/config".source = ../../../configs/git/config;
+        "git/ignore".source = ../../../configs/git/ignore;
+      };
+
       programs.zsh.shellAliases = mkIf config.modules.shell.zsh.enable {
         g = "git";
         ga = "git add";
