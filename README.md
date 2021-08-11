@@ -53,4 +53,7 @@ For `home-manager` (Linux):
 
 ## References
 
-This setup is heavily inspired by [malob's](https://github.com/malob/nixpkgs) excellent nixpkgs configuration.
+This setup is heavily inspired by:
+
+- [malob's](https://github.com/malob/nixpkgs) excellent nixpkgs configuration.
+- [hlissner's dotfiles](https://github.com/hlissner/dotfiles)
