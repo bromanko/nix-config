@@ -12,6 +12,7 @@
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     # Other sources
+    emacs-overlay.url = "github:nix-community/emacs-overlay";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;

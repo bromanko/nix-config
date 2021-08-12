@@ -9,12 +9,8 @@ in {
 
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}" = {
-      programs.emacs = {
-        enable = true;
-        package =
-          if pkgs.hostPlatform.isDarwin then pkgs.emacsMacport else pkgs.emacs;
-      };
       home.file.".doom.d".source = ../../../configs/emacs/doom.d;
+
       home.packages = with pkgs; [
         (aspellWithDicts (dicts: with dicts; [ en en-computers en-science ]))
         cmake
