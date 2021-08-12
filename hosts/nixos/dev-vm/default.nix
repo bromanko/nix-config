@@ -89,7 +89,7 @@ with lib.my; {
     videoDrivers = [ "vmware" "vesa" "modesetting" ];
   };
 
-  services.randr = {
+  services.autorandr = {
     enable = true;
   };
 
