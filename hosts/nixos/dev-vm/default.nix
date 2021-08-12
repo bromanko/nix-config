@@ -91,8 +91,7 @@ with lib.my; {
 
   services.randr = {
     enable = true;
-
-  }
+  };
 
   home-manager.users."${config.user.name}".home = {
     file.".config/i3/config".source = ../../../configs/i3/config;
