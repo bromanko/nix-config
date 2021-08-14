@@ -1,7 +1,9 @@
 { config, lib, pkgs, ... }:
 
 with lib;
-with lib.my; {
+with lib.my;
+let dpi = 163;
+in {
   imports = [ ./hardware-configuration.nix ];
 
   # Use the systemd-boot EFI boot loader.
@@ -63,10 +65,20 @@ with lib.my; {
     '';
   };
 
+  programs.chromium = {
+    enable = true;
+    defaultSearchProviderSearchURL = "https://duckduckgo.com/?q={searchTerms}";
+    defaultSearchProviderSuggestURL =
+      "https://ac.duckduckgo.com/ac/?q={searchTerms}&type=list";
+    extensions = [
+
+    ];
+  };
+
   services.xserver = {
     enable = true;
     layout = "us";
-    dpi = 220;
+    dpi = dpi;
 
     desktopManager = {
       xterm.enable = false;
@@ -91,10 +103,19 @@ with lib.my; {
 
   services.autorandr = { enable = true; };
 
-  home-manager.users."${config.user.name}".home = {
-    file.".config/i3/config".source = ../../../configs/i3/config;
+  home-manager.users."${config.user.name}" = {
+    home = {
+      file.".config/i3/config".source = ../../../configs/i3/config;
 
-    packages = with pkgs; [ xorg.xdpyinfo ];
+      packages = with pkgs; [ xorg.xdpyinfo chromium ];
+    };
+
+    xresources.properties = { "Xft.dpi" = dpi; };
+
+    services.polybar = {
+      enable = true;
+      script = "polybar main &";
+    };
   };
 
   modules = {
