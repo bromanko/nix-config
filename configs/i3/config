@@ -5,6 +5,7 @@ set $mod Mod4
 default_border none
 default_floating_border none
 hide_edge_borders none
+
 font pango:FantasqueSansMono Nerd Font 10
 
 # start a terminal
@@ -107,8 +108,11 @@ bindsym $mod+Shift+r restart
 # exit i3 (logs you out of your X session)
 bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcut. Do you really want to exit i3? This will end your X session.' -b 'Yes, exit i3' 'i3-msg exit'"
 
+# disable titlebars to prevent glitches
+for_window [class=.*] border pixel 0
+
 # Set inner/outer gaps
-gaps inner 32
+gaps inner 4
 gaps outer 4
 
 # Smart gaps (gaps used if only more than one container on the workspace)
