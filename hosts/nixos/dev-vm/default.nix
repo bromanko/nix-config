@@ -109,17 +109,17 @@ in {
   services.autorandr = { enable = true; };
 
   home-manager.users."${config.user.name}" = {
-    home = {
-      file.".config/i3/config".source = ../../../configs/i3/config;
+    home = { packages = with pkgs; [ xorg.xdpyinfo chromium ]; };
 
-      packages = with pkgs; [ xorg.xdpyinfo chromium ];
-    };
+    xdg.configFile = { "i3/config".source = ../../../configs/i3/config; };
 
     xresources.properties = { "Xft.dpi" = dpi; };
 
     services.polybar = {
       enable = true;
-      script = "polybar main &";
+      package = pkgs.polybar.override { i3GapsSupport = true; };
+      config = ../../../configs/polybar/config.ini;
+      script = "polybar -r main &";
     };
   };
 
