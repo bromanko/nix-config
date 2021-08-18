@@ -82,7 +82,7 @@ in {
 
     desktopManager = {
       xterm.enable = false;
-      wallpaper.mode = "scale";
+      wallpaper.mode = "fill";
     };
 
     displayManager = {
@@ -109,10 +109,15 @@ in {
   services.autorandr = { enable = true; };
 
   home-manager.users."${config.user.name}" = {
-    home = { packages = with pkgs; [ xorg.xdpyinfo chromium ]; };
+    home = {
+      packages = with pkgs; [ chromium ];
+      file."Pictures/Wallpapers" = {
+        recursive = true;
+        source = ../../../configs/wallpapers;
+      };
+    };
 
     xdg.configFile = { "i3/config".source = ../../../configs/i3/config; };
-
     xresources.properties = { "Xft.dpi" = dpi; };
 
     services.polybar = {
@@ -121,6 +126,8 @@ in {
       config = ../../../configs/polybar/config.ini;
       script = "polybar -r main &";
     };
+
+    programs.feh.enable = true;
   };
 
   modules = {

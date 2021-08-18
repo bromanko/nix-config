@@ -18,6 +18,8 @@ with lib.my; {
       keep-outputs = true'';
   };
 
+  environment.systemPackages = with pkgs; [ xorg.xdpyinfo killall git ];
+
   home-manager = {
     useGlobalPkgs = true;
     backupFileExtension = "orig";
