@@ -4,7 +4,7 @@ set $mod Mod4
 
 # Autostart applications
 exec --no-startup-id feh --bg-fill ~/Pictures/Wallpapers/rural-explorer-oWS_3i0Y5sI-unsplash.jpg
-exec_always killall polybar; polybar -r main
+exec_always killall .polybar-wrappe; polybar -r main
 
 default_border none
 default_floating_border none
