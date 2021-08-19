@@ -5,15 +5,23 @@ with lib.my;
 let cfg = config.modules.term.kitty;
 
 in {
-  options.modules.term.kitty = with types; { enable = mkBoolOpt false; };
+  options.modules.term.kitty = with types; {
+    enable = mkBoolOpt false;
+    fontSize = mkOption {
+      type = int;
+      example = "16";
+      description = "The size of the font.";
+      default = 16;
+    };
+  };
 
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}" = {
       programs.kitty = {
         enable = true;
         font = {
-          name = "FantasqueSansMono Nerd Font";
-          size = 16;
+          name = "FantasqueSansMono Nerd Font Mono";
+          size = config.modules.term.kitty.fontSize;
         };
         keybindings = {
           "cmd+up" = "scroll_line_up";

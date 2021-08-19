@@ -156,7 +156,12 @@ in {
       nix.enable = true;
       nodejs.enable = true;
     };
-    term = { kitty.enable = true; };
+    term = {
+      kitty = {
+        enable = true;
+        fontSize = 15;
+      };
+    };
     editor = {
       neovim.enable = true;
       emacs.enable = true;
