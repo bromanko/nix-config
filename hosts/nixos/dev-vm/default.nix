@@ -144,6 +144,7 @@ in {
     };
     desktop = {
       fonts.enable = true;
+      picom.enable = true;
       #   apps = {
       #     espanso.enable = true;
       #   };

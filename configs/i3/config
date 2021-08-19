@@ -104,7 +104,7 @@ bindsym $mod+Shift+e exec "i3-nagbar -t warning -m 'You pressed the exit shortcu
 for_window [class=.*] border pixel 0
 
 # Set inner/outer gaps
-gaps inner 4
+gaps inner 8
 gaps outer 4
 
 # Smart gaps (gaps used if only more than one container on the workspace)
