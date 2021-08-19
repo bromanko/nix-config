@@ -145,22 +145,18 @@ in {
     desktop = {
       fonts.enable = true;
       picom.enable = true;
-      #   apps = {
-      #     espanso.enable = true;
-      #   };
     };
     dev = {
       elixir.enable = true;
       idea.enable = true;
       psql.enable = true;
-      # docker.enable = true;
       nix.enable = true;
       nodejs.enable = true;
     };
     term = {
       kitty = {
         enable = true;
-        fontSize = 15;
+        fontSize = 13;
       };
     };
     editor = {
