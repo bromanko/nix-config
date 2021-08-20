@@ -12,7 +12,8 @@ in {
         enable = true;
 
         experimentalBackends = true;
-        backend = "glx";
+        backend = "xrender";
+        vSync = true;
 
         shadow = true;
         shadowExclude = [
@@ -22,11 +23,11 @@ in {
           "class_g = 'Polybar'"
           # "class_g ?= 'i3-frame'"
         ];
-        shadowOpacity = "0.4";
-        shadowOffsets = [ (0 - 12) (0 - 6) ];
+        shadowOpacity = "0.5";
+        shadowOffsets = [ (0 - 18) (0 - 12) ];
 
         fade = true;
-        fadeSteps = [ "055.0" "0.066" ];
+        fadeSteps = [ "0.07" "0.07" ];
 
         extraOptions = ''
           glx-no-stencil = true;
@@ -34,11 +35,13 @@ in {
           no-fading-openclose = false;
           detect-client-opacity = true;
 
-          shadow-radius = 12;
-          corner-radius = 12;
+          shadow-radius = 15;
+          corner-radius = 15;
           round-borders = 1;
           detect-rounded-corners = true;
-          rounded-corners-exclude = [ "class_g = 'Polybar'" ];
+          rounded-corners-exclude = [
+            "class_g = 'Polybar'"
+          ];
 
           focus-exclude = [ "class_g = 'Polybar'" ];
         '';
