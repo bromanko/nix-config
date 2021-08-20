@@ -119,6 +119,11 @@ in {
 
     xdg.configFile = { "i3/config".source = ../../../configs/i3/config; };
     xresources.properties = { "Xft.dpi" = dpi; };
+    xsession.pointerCursor = {
+      name = "Vanilla-DMZ";
+      package = pkgs.vanilla-dmz;
+      size = 128;
+    };
 
     programs.feh.enable = true;
   };
