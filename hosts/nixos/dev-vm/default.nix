@@ -142,10 +142,7 @@ in {
       exa.enable = true;
       fd.enable = true;
     };
-    desktop = {
-      fonts.enable = true;
-      picom.enable = true;
-    };
+    desktop = { fonts.enable = true; };
     dev = {
       elixir.enable = true;
       idea.enable = true;
