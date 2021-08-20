@@ -12,38 +12,15 @@ in {
         enable = true;
 
         experimentalBackends = true;
-        backend = "xrender";
         vSync = true;
 
-        shadow = true;
-        shadowExclude = [
-          "name = 'Polybar'"
-          "name *= 'compton'"
-          "name *= 'picom'"
-          "class_g = 'Polybar'"
-          # "class_g ?= 'i3-frame'"
-        ];
-        shadowOpacity = "0.5";
-        shadowOffsets = [ (0 - 18) (0 - 12) ];
-
-        fade = true;
-        fadeSteps = [ "0.07" "0.07" ];
-
         extraOptions = ''
-          glx-no-stencil = true;
-          shadow-ignore-shaped = false;
-          no-fading-openclose = false;
-          detect-client-opacity = true;
-
-          shadow-radius = 15;
-          corner-radius = 15;
+          corner-radius = 20;
           round-borders = 1;
           detect-rounded-corners = true;
           rounded-corners-exclude = [
             "class_g = 'Polybar'"
           ];
-
-          focus-exclude = [ "class_g = 'Polybar'" ];
         '';
       };
     };
