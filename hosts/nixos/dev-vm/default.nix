@@ -110,7 +110,12 @@ in {
 
   home-manager.users."${config.user.name}" = {
     home = {
-      packages = with pkgs; [ chromium ];
+      packages = with pkgs; [
+        chromium
+        # below needed for host clipboard
+        xclip
+        gtkmm3
+      ];
       file."Pictures/Wallpapers" = {
         recursive = true;
         source = ../../../configs/wallpapers;
