@@ -143,6 +143,7 @@ in {
     desktop = {
       fonts.enable = true;
       polybar.enable = true;
+      rofi.enable = true;
     };
     dev = {
       elixir.enable = true;
