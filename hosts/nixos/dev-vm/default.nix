@@ -120,13 +120,6 @@ in {
     xdg.configFile = { "i3/config".source = ../../../configs/i3/config; };
     xresources.properties = { "Xft.dpi" = dpi; };
 
-    services.polybar = {
-      enable = true;
-      package = pkgs.polybar.override { i3GapsSupport = true; };
-      config = ../../../configs/polybar/config.ini;
-      script = "polybar -r main &";
-    };
-
     programs.feh.enable = true;
   };
 
@@ -142,7 +135,10 @@ in {
       exa.enable = true;
       fd.enable = true;
     };
-    desktop = { fonts.enable = true; };
+    desktop = {
+      fonts.enable = true;
+      polybar.enable = true;
+    };
     dev = {
       elixir.enable = true;
       idea.enable = true;
