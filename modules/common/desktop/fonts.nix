@@ -12,6 +12,7 @@ in {
       fonts = with pkgs; [
         (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
         open-sans
+        montserrat
       ];
     };
   };

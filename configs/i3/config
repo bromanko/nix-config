@@ -19,7 +19,7 @@ bindsym $mod+Return exec kitty
 bindsym $mod+Shift+q kill
 
 # start rofi
-bindsym $mod+d exec --no-startup-id "rofi -show combi -modi \\"window,run,calc,combi\\" -combi-mode \\"window,run\\""
+bindsym $mod+d exec --no-startup-id "rofi -show combi -combi-mode \\"window,run\\""
 
 
 # you can use the cursor keys:
