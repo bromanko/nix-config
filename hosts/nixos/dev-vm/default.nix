@@ -10,8 +10,6 @@ in {
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
 
-  time.timeZone = "America/Los_Angeles";
-
   # The global useDHCP flag is deprecated, therefore explicitly set to false here.
   # Per-interface useDHCP will be mandatory in the future, so this generated config
   # replicates the default behaviour.
@@ -30,6 +28,7 @@ in {
   virtualisation = { vmware.guest.enable = true; };
 
   i18n.defaultLocale = "en_US.UTF-8";
+  time.timeZone = "America/Los_Angeles";
 
   # shared folder with host
   # fileSystems."/host" = {
@@ -47,14 +46,12 @@ in {
 
   users.mutableUsers = false;
 
-  # todo make this a module
   services.openssh = {
     enable = true;
     passwordAuthentication = true;
     permitRootLogin = "yes";
   };
 
-  # todo make this a module
   programs.ssh = {
     startAgent = true;
     extraConfig = ''
@@ -63,16 +60,6 @@ in {
         AddKeysToAgent yes
         IdentityFile ~/.ssh/github
     '';
-  };
-
-  programs.chromium = {
-    enable = true;
-    defaultSearchProviderSearchURL = "https://duckduckgo.com/?q={searchTerms}";
-    defaultSearchProviderSuggestURL =
-      "https://ac.duckduckgo.com/ac/?q={searchTerms}&type=list";
-    extensions = [
-
-    ];
   };
 
   services.xserver = {
@@ -111,7 +98,6 @@ in {
   home-manager.users."${config.user.name}" = {
     home = {
       packages = with pkgs; [
-        chromium
         # below needed for host clipboard
         xclip
         gtkmm3
@@ -124,6 +110,7 @@ in {
 
     xdg.configFile = { "i3/config".source = ../../../configs/i3/config; };
     xresources.properties = { "Xft.dpi" = dpi; };
+
     xsession.pointerCursor = {
       name = "Vanilla-DMZ";
       package = pkgs.vanilla-dmz;
@@ -149,6 +136,7 @@ in {
       fonts.enable = true;
       polybar.enable = true;
       rofi.enable = true;
+      chromium.enable = true;
     };
     dev = {
       elixir.enable = true;
