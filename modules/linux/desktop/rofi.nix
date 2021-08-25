@@ -18,7 +18,6 @@ in {
       programs.rofi = {
         enable = true;
         plugins = with pkgs; [ rofi-calc ];
-        extraConfig = { modi = "window,run,combi,calc"; };
         theme = "spotlight";
       };
     };
