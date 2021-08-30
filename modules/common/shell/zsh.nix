@@ -40,20 +40,21 @@ in {
             bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
         };
 
-        plugins = [{
-          name = "zsh-bromanko-functions";
-          src = ../../../configs/zsh/plugins/zsh-bromanko-functions;
-        }
-        # {
-        #   name = "zsh-vim-mode";
-        #   src = pkgs.fetchFromGitHub {
-        #     owner = "softmoth";
-        #     repo = "zsh-vim-mode";
-        #     rev = "1f9953b";
-        #     sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
-        #   };
-        # }
-          ];
+        plugins = [
+          {
+            name = "zsh-bromanko-functions";
+            src = ../../../configs/zsh/plugins/zsh-bromanko-functions;
+          }
+          {
+            name = "zsh-vim-mode";
+            src = pkgs.fetchFromGitHub {
+              owner = "softmoth";
+              repo = "zsh-vim-mode";
+              rev = "1f9953b";
+              sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
+            };
+          }
+        ];
 
         initExtra = ''
           # zsh-history-substring-search
