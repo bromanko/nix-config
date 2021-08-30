@@ -25,10 +25,11 @@ in {
         enable = true;
 
         enableAutosuggestions = true;
+        enableSyntaxHighlighting = true;
         enableCompletion = true;
         history.extended = true;
 
-        shellAliases = with pkgs; {
+        shellAliases = {
           ".." = "cd ..";
           "..." = "cd ../..";
           "reload!" = ". ~/.zshrc";
@@ -39,24 +40,36 @@ in {
             bash -c "$(curl -sS https://raw.githubusercontent.com/bromanko/dot-slash-go/master/install)"'';
         };
 
-        plugins = [
-          {
-            name = "zsh-bromanko-functions";
-            src = ../../../configs/zsh/plugins/zsh-bromanko-functions;
-          }
-          {
-            name = "zsh-vim-mode";
-            src = pkgs.fetchFromGitHub {
-              owner = "softmoth";
-              repo = "zsh-vim-mode";
-              rev = "1f9953b";
-              sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
-            };
-          }
-        ];
+        plugins = [{
+          name = "zsh-bromanko-functions";
+          src = ../../../configs/zsh/plugins/zsh-bromanko-functions;
+        }
+        # {
+        #   name = "zsh-vim-mode";
+        #   src = pkgs.fetchFromGitHub {
+        #     owner = "softmoth";
+        #     repo = "zsh-vim-mode";
+        #     rev = "1f9953b";
+        #     sha256 = "a+6EWMRY1c1HQpNtJf5InCzU7/RphZjimLdXIXbO6cQ=";
+        #   };
+        # }
+          ];
+
+        initExtra = ''
+          # zsh-history-substring-search
+          source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+          bindkey '^[[A' history-substring-search-up
+          bindkey '^[[B' history-substring-search-down
+          bindkey "$terminfo[kcuu1]" history-substring-search-up
+          bindkey "$terminfo[kcud1]" history-substring-search-down
+          bindkey '^ ' autosuggest-accept
+          HISTORY_SUBSTRING_SEARCH_ENSURE_UNIQUE=1
+          HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND="fg=blue,bold"
+          HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND="fg=red,bold"
+          ZSH_AUTOSUGGEST_STRATEGY=( history )
+        '';
       };
-      home.packages =
-        [ pkgs.zsh-fast-syntax-highlighting pkgs.zsh-history-substring-search ];
+      home.packages = with pkgs; [ zsh-history-substring-search ];
     };
 
     environment.shells = [ pkgs.zsh ];
