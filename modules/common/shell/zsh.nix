@@ -12,13 +12,17 @@ in {
 
   config = {
     home-manager.users."${config.user.name}" = {
-      home.sessionVariables = {
-        SHELL = "${pkgs.zsh}/bin/zsh";
-        PROJECTS = cfg.projectsPath;
+      home = {
+        packages = with pkgs; [ zsh-history-substring-search ];
 
-        # zsh-vim-mode
-        MODE_CURSOR_VIINS = "#ffffff steady bar";
-        MODE_CURSOR_VICMD = "#ffffff steady block";
+        sessionVariables = {
+          SHELL = "${pkgs.zsh}/bin/zsh";
+          PROJECTS = cfg.projectsPath;
+
+          # zsh-vim-mode
+          MODE_CURSOR_VIINS = "#ffffff steady bar";
+          MODE_CURSOR_VICMD = "#ffffff steady block";
+        };
       };
 
       programs.zsh = {
@@ -70,7 +74,6 @@ in {
           ZSH_AUTOSUGGEST_STRATEGY=( history )
         '';
       };
-      home.packages = with pkgs; [ zsh-history-substring-search ];
     };
 
     environment.shells = [ pkgs.zsh ];
