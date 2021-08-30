@@ -10,7 +10,10 @@ in {
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}".programs.direnv = {
       enable = true;
-      nix-direnv.enable = true;
+      nix-direnv = {
+        enable = true;
+        enableFlakes = true;
+      };
     };
   };
 }
