@@ -98,6 +98,9 @@ in {
   home-manager.users."${config.user.name}" = {
     home = {
       packages = with pkgs; [
+        _1password
+        _1password-gui
+
         # below needed for host clipboard
         xclip
         gtkmm3
