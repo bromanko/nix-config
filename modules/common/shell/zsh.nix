@@ -6,8 +6,16 @@ let cfg = config.modules.shell.zsh;
 in {
   options.modules.shell.zsh = with types; {
     enable = mkBoolOpt false;
+
     projectsPath =
       mkOpt' str "$HOME/Code" "Directory containing project files.";
+
+    extraPaths = mkOption {
+      type = listOf str;
+      example = "$HOME/bin";
+      default = [ ];
+      description = "Additional paths to add to <envar>PATH</envar.";
+    };
   };
 
   config = {
@@ -63,6 +71,10 @@ in {
         ];
 
         initExtra = ''
+          ${concatStrings (map (path: ''
+            path+="${path}"
+          '') cfg.extraPaths)}
+
           # zsh-history-substring-search
           source ${pkgs.zsh-history-substring-search}/share/zsh-history-substring-search/zsh-history-substring-search.zsh
           bindkey '^[[A' history-substring-search-up
