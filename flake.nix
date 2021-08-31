@@ -54,7 +54,7 @@
 
       overlay = final: prev: { my = self.packages.${prev.system}; };
 
-      overlays = mapModules ./overlays import;
+      overlays = {}; # mapModules ./overlays import;
 
       darwinConfigurations = lib.my.mapDarwinHosts ./hosts/darwin;
 
