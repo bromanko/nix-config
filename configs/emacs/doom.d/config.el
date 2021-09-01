@@ -12,7 +12,7 @@
 ;; Increase the font-size relative to what Emacs defaulted
 ;; I prefer this to hard-coding the font size because it works better across
 ;; macOS and Linux with HiDPI
-(add-hook 'window-setup-hook 
+(add-hook 'emacs-startup-hook
           (lambda () (doom/increase-font-size 1)))
 
 (setq-default line-spacing 0.15)
