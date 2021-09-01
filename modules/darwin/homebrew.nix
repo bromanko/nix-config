@@ -8,6 +8,15 @@ let
 in {
   options.modules.homebrew = with types; {
     enable = mkBoolOpt false;
+
+    brewPrefix = mkOption {
+      type = str;
+      default = "/usr/local/bin";
+      description = ''
+        Customize path prefix where executable of <command>brew</command> is searched for.
+      '';
+    };
+
     taps = mkOption {
       type = listOf str;
       default = [ ];
@@ -64,6 +73,7 @@ in {
         noLock = true;
       };
 
+      brewPrefix = cfg.brewPrefix;
       taps = cfg.taps;
       brews = cfg.brews;
       casks = cfg.casks;

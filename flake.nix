@@ -6,7 +6,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # System management
-    darwin.url = "github:hardselius/nix-darwin";
+    darwin.url = "github:LnL7/nix-darwin";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -54,7 +54,7 @@
 
       overlay = final: prev: { my = self.packages.${prev.system}; };
 
-      overlays = {}; # mapModules ./overlays import;
+      overlays = { }; # mapModules ./overlays import;
 
       darwinConfigurations = lib.my.mapDarwinHosts ./hosts/darwin;
 

@@ -36,6 +36,7 @@ with lib.my; {
 
     homebrew = {
       enable = true;
+      brewPrefix = "$HOME/homebrew/bin";
       taps = [
         "homebrew/cask"
         "homebrew/cask-versions"
