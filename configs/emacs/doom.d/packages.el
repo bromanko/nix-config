@@ -16,3 +16,6 @@
 
 ;; Better diff views in magit
 (package! magit-delta)
+
+;; Unpin some packages to get the latest goodies
+(unpin! web-mode)
