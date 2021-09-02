@@ -20,7 +20,7 @@ in {
         openssh
         python3
         ripgrep
-        shellcheck
+        # shellcheck
         shfmt
         tldr
         tmux

@@ -4,7 +4,7 @@ with lib;
 with lib.my; {
   modules = {
     shell = {
-      # commonPkgs.enable = true;
+      commonPkgs.enable = true;
       zsh = {
         enable = true;
         extraPaths = [ "$HOME/homebrew/bin" ];
@@ -29,9 +29,9 @@ with lib.my; {
       nodejs.enable = true;
     };
     # term = { kitty.enable = true; };
-     editor = {
+    editor = {
       neovim.enable = true;
-    #   emacs.enable = true;
+      # emacs.enable = true;
     };
 
     homebrew = {
