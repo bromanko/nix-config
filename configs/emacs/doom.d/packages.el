@@ -18,4 +18,5 @@
 (package! magit-delta)
 
 ;; Unpin some packages to get the latest goodies
+(unpin! lsp-mode)
 (unpin! web-mode)
