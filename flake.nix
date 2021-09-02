@@ -32,7 +32,9 @@
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
-          overlays = [ self.overlay ] ++ (lib.attrValues self.overlays);
+          overlays = [ self.overlay ]
+            ++ (lib.attrValues self.overlays)
+            ++ (lib.optional (system == "aarch64-darwin") self.aarch64Overlays);
         });
 
       lib = nixpkgs.lib.extend (self: super: {
@@ -55,6 +57,11 @@
       overlay = final: prev: { my = self.packages.${prev.system}; };
 
       overlays = mapModules ./overlays import;
+
+      aarch64Overlays =
+        self: super: {
+          shellcheck = pkgs.x86_64-darwin.shellcheck;
+        };
 
       darwinConfigurations = lib.my.mapDarwinHosts ./hosts/darwin;
 
