@@ -5,17 +5,17 @@ with lib.my; {
   modules = {
     shell = {
       # commonPkgs.enable = true;
-      # zsh = {
-      #   enable = true;
-      #   extraPaths = [ "$HOME/homebrew/bin" ];
-      # };
-      # bat.enable = true;
-      # git.enable = true;
-      # starship.enable = true;
-      # fzf.enable = true;
+      zsh = {
+        enable = true;
+        extraPaths = [ "$HOME/homebrew/bin" ];
+      };
+      bat.enable = true;
+      git.enable = true;
+      starship.enable = true;
+      fzf.enable = true;
       # direnv.enable = true;
-      # exa.enable = true;
-      # fd.enable = true;
+      exa.enable = true;
+      fd.enable = true;
     };
     # desktop = {
     #   fonts.enable = true;
@@ -62,4 +62,3 @@ with lib.my; {
     sharedModules = [{ manual.manpages.enable = false; }];
   };
 }
-
