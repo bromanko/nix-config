@@ -6,7 +6,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # System management
-    darwin.url = "github:hackworthltd/nix-darwin/darwinSystem";
+    darwin.url = "github:bromanko/nix-darwin/darwinSystem";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";

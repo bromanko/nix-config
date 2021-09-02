@@ -7,15 +7,15 @@
         ]
       },
       "locked": {
-        "lastModified": 1617963187,
-        "narHash": "sha256-VOrq9lzV8nkCKDNBUQN4UDIbAImBl96udUePgdsfx9o=",
-        "owner": "hackworthltd",
+        "lastModified": 1630599522,
+        "narHash": "sha256-pDhHBnJqwEgFn+/vSXapYFXO5uVpZsEX4jlPSQ4d0aI=",
+        "owner": "bromanko",
         "repo": "nix-darwin",
-        "rev": "4ff3177212c52f23cf49424c2809c902da762a31",
+        "rev": "0b375c8cdb9bce0ec91ef87a9bdcb32793938146",
         "type": "github"
       },
       "original": {
-        "owner": "hackworthltd",
+        "owner": "bromanko",
         "ref": "darwinSystem",
         "repo": "nix-darwin",
         "type": "github"
