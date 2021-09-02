@@ -5,8 +5,8 @@ with lib.my; {
   imports = [
     inputs.home-manager.darwinModules.home-manager
   ]
-  # # Must toString the path so that nix doesn't attempt to import it to the store
-  #   ++ (mapModulesRec' (toString ../../modules/darwin) import)
+  # Must toString the path so that nix doesn't attempt to import it to the store
+     ++ (mapModulesRec' (toString ../../modules/darwin) import)
      ++ (mapModulesRec' (toString ../../modules/common) import);
 
   nix = {
@@ -42,8 +42,10 @@ with lib.my; {
 
           # .app dirs need to be actual directories for Finder to detect them as Apps.
           # The files inside them can be symlinks though.
-          echo "Linking Home Manager Apps to $HM_APPS..."
-          $DRY_RUN_CMD cp --recursive --symbolic-link --no-preserve=mode -H ${apps}/Applications/* "$HM_APPS"
+          if [ -d "${apps}Applications" ]; then
+            echo "Linking Home Manager Apps to $HM_APPS..."
+            $DRY_RUN_CMD cp --recursive --symbolic-link --no-preserve=mode -H ${apps}/Applications/* "$HM_APPS"
+          fi
           # Modes need to be stripped because otherwise the dirs wouldn't have +w,
           # preventing us from deleting them again
           # In the env of Apps we build, the .apps are symlinks. We pass all of them as
