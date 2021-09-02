@@ -16,8 +16,8 @@ with inputs; {
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
-        # ../hosts/darwin/default.nix
-        # (import path)
+        ../hosts/darwin/default.nix
+        (import path)
       ];
     };
 
