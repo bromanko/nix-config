@@ -25,13 +25,13 @@ with lib.my; {
       };
     };
     dev = {
-      # nix.enable = true;
+      nix.enable = true;
       nodejs.enable = true;
     };
-    # term = { kitty.enable = true; };
+    term = { kitty.enable = true; };
     editor = {
       neovim.enable = true;
-      # emacs.enable = true;
+      emacs.enable = true;
     };
 
     homebrew = {
@@ -58,7 +58,5 @@ with lib.my; {
     };
   };
 
-  home-manager = {
-    sharedModules = [{ manual.manpages.enable = false; }];
-  };
+  home-manager = { sharedModules = [{ manual.manpages.enable = false; }]; };
 }
