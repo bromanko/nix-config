@@ -6,7 +6,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # System management
-    darwin.url = "github:LnL7/nix-darwin";
+    darwin.url = "github:hackworthltd/nix-darwin/darwinSystem";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -23,7 +23,7 @@
     let
       inherit (lib.my) mapModules mapModulesRec;
 
-      supportedSystems = [ "x86_64-darwin" "x86_64-linux" ];
+      supportedSystems = [ "x86_64-darwin" "aarch64-darwin" "x86_64-linux" ];
 
       forAllSystems = f:
         nixpkgs.lib.genAttrs supportedSystems (system: f system);

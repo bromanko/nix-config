@@ -5,18 +5,19 @@ with lib.my;
 with inputs; {
   mkDarwinHost = path:
     darwin.lib.darwinSystem {
+      system = "aarch64-darwin";
       specialArgs = { inherit lib inputs; };
       modules = [
         {
           nixpkgs = {
-            config = pkgs.x86_64-darwin.config;
-            overlays = pkgs.x86_64-darwin.overlays;
+            config = pkgs.aarch64-darwin.config;
+            overlays = pkgs.aarch64-darwin.overlays;
           };
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
-        ../hosts/darwin/default.nix
-        (import path)
+        # ../hosts/darwin/default.nix
+        # (import path)
       ];
     };
 
