@@ -3,20 +3,21 @@
 with lib;
 with lib.my;
 with inputs; {
-  mkDarwinHost = path:
+  mkDarwinHost = system: path:
     darwin.lib.darwinSystem {
-      system = "aarch64-darwin";
+      system = system;
       specialArgs = { inherit lib inputs; };
       modules = [
         {
           nixpkgs = {
-            config = pkgs.aarch64-darwin.config;
-            overlays = pkgs.aarch64-darwin.overlays;
+            config = pkgs.${system}.config;
+            overlays = pkgs.${system}.overlays;
           };
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
-        ../hosts/darwin/default.nix
+        # This code is same on all architectures
+        ../hosts/x86_64-darwin/default.nix
         (import path)
       ];
     };
@@ -36,7 +37,8 @@ with inputs; {
       ];
     };
 
-  mapDarwinHosts = dir: mapModules dir (hostPath: mkDarwinHost hostPath);
+  mapDarwinHosts = system: dir:
+    mapModules dir (hostPath: mkDarwinHost system hostPath);
 
   mapNixosHosts = dir: mapModules dir (hostPath: mkNixosHost hostPath);
 }

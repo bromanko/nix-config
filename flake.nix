@@ -32,7 +32,8 @@
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
-          overlays = [ self.overlay ] ++ (lib.attrValues self.overlays);
+          overlays = [ self.overlay ] ++ (lib.attrValues self.overlays)
+            ++ (lib.optional (system == "aarch64-darwin") self.aarch64Overlays);
         });
 
       lib = nixpkgs.lib.extend (self: super: {
@@ -56,7 +57,22 @@
 
       overlays = mapModules ./overlays import;
 
-      darwinConfigurations = lib.my.mapDarwinHosts ./hosts/darwin;
+      aarch64Overlays = self: super: {
+        # Need ghc
+        shellcheck = pkgs.x86_64-darwin.shellcheck;
+        nixfmt = pkgs.x86_64-darwin.nixfmt;
+
+        # https://github.com/NixOS/nixpkgs/issues/127902
+        emacsMacport = pkgs.x86_64-darwin.emacsMacport;
+
+        # Can't compile on Monterey
+        kitty = super.kitty.overrideAttrs
+          (old: rec { preBuild = "MACOSX_DEPLOYMENT_TARGET=10.16"; });
+      };
+
+      darwinConfigurations =
+        (lib.my.mapDarwinHosts "x86_64-darwin" ./hosts/x86_64-darwin)
+        // (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
       nixosConfigurations = lib.my.mapNixosHosts ./hosts/nixos;
     };

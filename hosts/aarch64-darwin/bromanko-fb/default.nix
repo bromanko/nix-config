@@ -58,8 +58,6 @@ with lib.my; {
     # };
   };
 
-  home-manager = {
-    sharedModules = [{ manual.manpages.enable = false; }];
-  };
+  home-manager = { sharedModules = [{ manual.manpages.enable = false; }]; };
 }
 
