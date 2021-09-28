@@ -5,6 +5,7 @@ with lib.my; {
   modules = {
     shell = {
       commonPkgs.enable = true;
+      openssh.enable = true;
       zsh.enable = true;
       bat.enable = true;
       git.enable = true;
