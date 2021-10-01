@@ -3,7 +3,8 @@
 with lib;
 with lib.my; {
 
-  imports = [ ../modules/linux/editor/emacs.nix ];
+  imports = [ ../modules/common/users.nix ]
+    ++ (mapModulesRec' (toString ../modules/home-manager) import);
   # Must toString the path so that nix doesn't attempt to import it to the store
   # ++ (mapModulesRec' (toString ../modules/linux) import)
   # ++ (mapModulesRec' (toString ../modules/common) import);

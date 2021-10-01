@@ -75,5 +75,8 @@
         // (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
       nixosConfigurations = lib.my.mapNixosHosts ./hosts/nixos;
+
+      homeManagerConfigurations =
+        lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux;
     };
 }
