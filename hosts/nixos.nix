@@ -7,6 +7,7 @@ with lib.my; {
   ]
   # Must toString the path so that nix doesn't attempt to import it to the store
     ++ (mapModulesRec' (toString ../modules/linux) import)
+    ++ (mapModulesRec' (toString ../modules/home-manager) import)
     ++ (mapModulesRec' (toString ../modules/common) import);
 
   nix = {
