@@ -19,6 +19,8 @@ with lib.my; {
       keep-outputs = true'';
   };
 
+  users.users.${config.user.name} = mkAliasDefinitions config.user;
+
   environment.systemPackages = with pkgs; [ xorg.xdpyinfo killall git ];
 
   home-manager = {

@@ -12,7 +12,5 @@ with lib.my; {
       inherit name;
       description = "The primary user account";
     };
-
-    users.users.${config.user.name} = mkAliasDefinitions options.user;
   };
 }

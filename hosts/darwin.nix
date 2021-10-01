@@ -20,6 +20,8 @@ with lib.my; {
       keep-outputs = true'';
   };
 
+  users.users.${config.user.name} = mkAliasDefinitions config.user;
+
   home-manager = {
     useGlobalPkgs = true;
     backupFileExtension = "orig";
