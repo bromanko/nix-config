@@ -17,7 +17,6 @@ in {
         gnupg
         httpie
         jq
-        openssh
         python3
         ripgrep
         shellcheck
