@@ -6,8 +6,8 @@ with lib.my; {
     inputs.home-manager.nixosModules.home-manager
   ]
   # Must toString the path so that nix doesn't attempt to import it to the store
-    ++ (mapModulesRec' (toString ../../modules/linux) import)
-    ++ (mapModulesRec' (toString ../../modules/common) import);
+    ++ (mapModulesRec' (toString ../modules/linux) import)
+    ++ (mapModulesRec' (toString ../modules/common) import);
 
   nix = {
     package = pkgs.nixFlakes;

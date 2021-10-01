@@ -2,7 +2,7 @@
 
 with lib;
 with lib.my; {
-  config = {
+  config = mkIf cfg.enable {
     home-manager.users."${config.user.name}" = {
       programs.zsh = {
         shellAliases = {
@@ -12,7 +12,10 @@ with lib.my; {
       };
     };
 
-    # Completion for system packages
-    environment.pathsToLink = [ "/share/zsh" ];
+    environment = {
+      # Completion for system packages
+      pathsToLink = [ "/share/zsh" ];
+      shells = [ pkgs.zsh ];
+    };
   };
 }

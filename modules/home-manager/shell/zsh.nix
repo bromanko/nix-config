@@ -89,7 +89,5 @@ in {
         '';
       };
     };
-
-    environment.shells = [ pkgs.zsh ];
   };
 }

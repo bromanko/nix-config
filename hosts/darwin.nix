@@ -6,8 +6,9 @@ with lib.my; {
     inputs.home-manager.darwinModules.home-manager
   ]
   # Must toString the path so that nix doesn't attempt to import it to the store
-    ++ (mapModulesRec' (toString ../../modules/darwin) import)
-    ++ (mapModulesRec' (toString ../../modules/common) import);
+    ++ (mapModulesRec' (toString ../modules/darwin) import)
+    ++ (mapModulesRec' (toString ../modules/home-manager) import)
+    ++ (mapModulesRec' (toString ../modules/common) import);
 
   nix = {
     package = pkgs.nixFlakes;

@@ -5,5 +5,9 @@ with lib.my;
 
 let cfg = config.modules.shell.zsh;
 in {
-  config = mkIf cfg.enable { programs.zsh = { enable = true; }; };
+  config = mkIf cfg.enable {
+    programs.zsh = { enable = true; };
+
+    environment.shells = [ pkgs.zsh ];
+  };
 }
