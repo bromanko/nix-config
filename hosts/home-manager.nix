@@ -2,10 +2,11 @@
 
 with lib;
 with lib.my; {
-
-  imports = [ ../modules/common/users.nix ]
-    ++ (mapModulesRec' (toString ../modules/home-manager) import);
+  imports = [
+    ../modules/common/users.nix
+  ]
   # Must toString the path so that nix doesn't attempt to import it to the store
+    ++ (mapModulesRec' (toString ../modules/home-manager) import);
   # ++ (mapModulesRec' (toString ../modules/linux) import)
   # ++ (mapModulesRec' (toString ../modules/common) import);
 

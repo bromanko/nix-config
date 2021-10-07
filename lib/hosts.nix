@@ -38,22 +38,23 @@ with inputs; {
     };
 
   mkHmHost = system: path:
+    # convert all of the home-manager config to be bare (no users.foo)
+    # Then, import it directly here
+    # Then, change the way that the home-manager config is set in nix and darwin
+    # so that it is using an alias definition?
+    # home-manager.users.foo = mkAliasDefinitions options.hm
     home-manager.lib.homeManagerConfiguration {
       inherit system;
       pkgs = pkgs.${system};
       extraSpecialArgs = { inherit lib inputs; };
-      extraModules = [
-        ../hosts/home-manager.nix
-        # (import path)
-      ];
       homeDirectory = "/home/bromanko";
       username = "bromanko";
       configuration = {
+        imports = [ ../hosts/home-manager.nix (import path) ];
         nixpkgs = {
           config = pkgs.${system}.config;
           overlays = pkgs.${system}.overlays;
         };
-        # imports = [ ];
       };
     };
 
