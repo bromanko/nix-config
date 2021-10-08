@@ -51,6 +51,10 @@ For `home-manager` (Linux):
 ./result/sw/bin/activate
 ```
 
+### Home Manager Configuration
+
+The home-manager configuration is decoupled from the nixos or Darwin modules. This allows me to use the same config for both environments managed by nixos/nix-darwin and plain home-manager. Unfortunately it makes the organization of modules messy. The modules defining home-manager options must be in separate files from the config itself. This is because I need to import the home-manager config manually outside of the module loading process.
+
 ## References
 
 This setup is heavily inspired by:

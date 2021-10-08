@@ -1,6 +1,9 @@
 { config, lib, pkgs, ... }:
 
 {
+  modules.shell.zsh.enable = true;
+  modules.desktop.apps.espanso.enable = true;
+
   home = {
     sessionVariables = {
       NIX_CURL_FLAGS =
