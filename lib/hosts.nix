@@ -16,7 +16,6 @@ with inputs; {
           networking.hostName =
             mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
-        # This code is same on all architectures
         ../hosts/darwin.nix
         (import path)
       ];
@@ -38,11 +37,6 @@ with inputs; {
     };
 
   mkHmHost = system: path:
-    # convert all of the home-manager config to be bare (no users.foo)
-    # Then, import it directly here
-    # Then, change the way that the home-manager config is set in nix and darwin
-    # so that it is using an alias definition?
-    # home-manager.users.foo = mkAliasDefinitions options.hm
     home-manager.lib.homeManagerConfiguration {
       inherit system;
       pkgs = pkgs.${system};

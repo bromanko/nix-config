@@ -2,5 +2,8 @@
 
 with lib;
 with lib.my; {
-  modules = { desktop.apps.espanso.enable = true; };
+  modules = {
+    shell.zsh.enable = true;
+    desktop.apps.espanso.enable = true;
+  };
 }

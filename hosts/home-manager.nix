@@ -3,7 +3,7 @@
 with lib;
 with lib.my; {
   imports = [
-    ../modules/common/users.nix
+    ../modules/users.nix
     ../home-manager
   ]
   # Must toString the path so that nix doesn't attempt to import it to the store

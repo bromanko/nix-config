@@ -4,6 +4,7 @@ with lib;
 with lib.my; {
   imports = [
     inputs.home-manager.darwinModules.home-manager
+    ../modules/users.nix
     ../modules/home-manager.nix
   ]
   # Must toString the path so that nix doesn't attempt to import it to the store
