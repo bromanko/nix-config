@@ -2,5 +2,5 @@
 
 with lib;
 with lib.my; {
-  options.modules.editors = { default = mkOpt types.str "vim"; };
+  options.modules.editor = { default = mkOpt types.str "vim"; };
 }
