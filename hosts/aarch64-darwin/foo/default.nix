@@ -6,5 +6,6 @@ with lib.my; {
     shell.zsh.enable = true;
     desktop.apps.espanso.enable = true;
     desktop.fonts.enable = true;
+    editors.default = "foop";
   };
 }
