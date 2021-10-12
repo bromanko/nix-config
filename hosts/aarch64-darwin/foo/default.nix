@@ -9,5 +9,6 @@ with lib.my; {
     editor.default = "foop";
     editor.neovim.enable = true;
     editor.emacs.enable = true;
+    shell = { openssh.enable = true; };
   };
 }

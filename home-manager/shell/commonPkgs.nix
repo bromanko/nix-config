@@ -1,13 +1,11 @@
-{ config, options, lib, pkgs, ... }:
+{ config, lib, pkgs, ... }:
 
 with lib;
 with lib.my;
 let cfg = config.modules.shell.commonPkgs;
 in {
-  options.modules.shell.commonPkgs = { enable = mkBoolOpt false; };
-
   config = mkIf cfg.enable {
-    home-manager.users."${config.user.name}".home = {
+    home = {
       packages = with pkgs; [
         bottom
         curl
