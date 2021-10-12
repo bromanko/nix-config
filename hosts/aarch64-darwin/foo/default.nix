@@ -10,5 +10,6 @@ with lib.my; {
     editor.neovim.enable = true;
     editor.emacs.enable = true;
     shell = { openssh.enable = true; };
+    term = { kitty.enable = true; };
   };
 }

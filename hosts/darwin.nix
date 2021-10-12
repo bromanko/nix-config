@@ -10,8 +10,7 @@ with lib.my; {
   ]
   # Must toString the path so that nix doesn't attempt to import it to the store
     ++ (mapModulesRec' (toString ../modules/home-manager) import)
-    ++ (mapModulesRec' (toString ../modules/darwin) import)
-    ++ (mapModulesRec' (toString ../modules/common) import);
+    ++ (mapModulesRec' (toString ../modules/darwin) import);
 
   config = {
     nix = {
