@@ -3,19 +3,19 @@
 {
   modules = {
     shell = {
-      # commonPkgs.enable = true;
+      commonPkgs.enable = true;
       zsh.enable = true;
-      # bat.enable = true;
-      # git.enable = true;
-      # starship.enable = true;
-      # fzf.enable = true;
-      # exa.enable = true;
-      # fd.enable = true;
+      bat.enable = true;
+      git.enable = true;
+      starship.enable = true;
+      fzf.enable = true;
+      exa.enable = true;
+      fd.enable = true;
     };
-    # dev = {
-    #   nix.enable = true;
-    #   nodejs.enable = true;
-    # };
+    dev = {
+      nix.enable = true;
+      nodejs.enable = true;
+    };
     editor = {
       neovim.enable = true;
       emacs.enable = true;
