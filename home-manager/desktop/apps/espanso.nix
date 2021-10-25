@@ -4,9 +4,9 @@ with lib;
 let cfg = config.modules.desktop.apps.espanso;
 in {
   config = mkIf cfg.enable {
-    home.file."Library/Preferences/espanso/user" = {
+    home.file."Library/Preferences/espanso" = {
       recursive = true;
-      source = ../../../configs/espanso/user;
+      source = ../../../configs/espanso;
     };
   };
 }
