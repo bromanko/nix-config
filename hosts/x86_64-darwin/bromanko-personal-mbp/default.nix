@@ -56,6 +56,7 @@ with lib.my; {
         "signal"
         "spotify"
         "vmware-fusion"
+        "notion"
       ];
       brews = [ "espanso" ];
       masApps = {
