@@ -26,6 +26,8 @@ matches:
     replace: "Instagram"
   - trigger: "//io"
     replace: "iOS"
+  - trigger: "//it"
+    replace: "Incident Tracker"
   - trigger: "//ml"
     replace: "MobileLab"
   - trigger: "//msg"
