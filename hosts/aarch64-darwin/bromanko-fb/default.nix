@@ -44,7 +44,7 @@ with lib.my; {
         "homebrew/services"
         "federico-terzi/espanso"
       ];
-      casks = [ "istat-menus" "raycast" "signal" "krisp" "viscosity" ];
+      casks = [ "istat-menus" "raycast" "signal" "krisp" "viscosity" "notion" ];
       brews = [ "espanso" ];
       masApps = {
         "1Password" = 1333542190;
