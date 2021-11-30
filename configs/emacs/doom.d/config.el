@@ -6,13 +6,15 @@
 ;; **************************************************
 ;; UI Settings
 ;; **************************************************
+(setq doom-font (font-spec :family "FantasqueSansMono Nerd Font")
       doom-variable-pitch-font (font-spec :family "Open Sans"))
 
 ;; Increase the font-size relative to what Emacs defaulted
 ;; I prefer this to hard-coding the font size because it works better across
 ;; macOS and Linux with HiDPI
-(add-hook 'emacs-startup-hook
-          (lambda () (doom/increase-font-size 1)))
+(unless (display-graphic-p)
+  (add-hook 'emacs-startup-hook
+            (lambda () (doom/increase-font-size 1))))
 
 (setq-default line-spacing 0.15)
 
