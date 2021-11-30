@@ -162,7 +162,11 @@ apps are not started from a shell."
   (setq lsp-ui-doc-include-signature t)
   (setq lsp-ui-peek-always-show t)
   (setq lsp-ui-doc-delay 0.75)
-  (setq lsp-ui-sideline-delay 0.75))
+  (setq lsp-ui-sideline-delay 0.75)
+
+  ; configure web-mode languages
+  (add-to-list 'lsp-language-id-configuration
+               '(".*\\.[lh]eex$" . "html")))
 
 
 ;; **************************************************
@@ -171,5 +175,7 @@ apps are not started from a shell."
 (add-hook 'magit-mode-hook (lambda () (magit-delta-mode +1)))
 
 ;; **************************************************
-;;
+;; web mode
 ;; **************************************************
+(add-hook 'web-mode-hook
+          (lambda () (setq web-mode-markup-indent-offset 2)))
