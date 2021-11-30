@@ -9,12 +9,12 @@
 (setq doom-font (font-spec :family "FantasqueSansMono Nerd Font")
       doom-variable-pitch-font (font-spec :family "Open Sans"))
 
-;; Increase the font-size relative to what Emacs defaulted
+;; Increase the font-size relative to what Emacs defaults
 ;; I prefer this to hard-coding the font size because it works better across
 ;; macOS and Linux with HiDPI
 (if (display-graphic-p)
-  (add-hook 'emacs-startup-hook
-            (lambda () (doom/increase-font-size 1))))
+    (add-hook 'emacs-startup-hook
+              (lambda () (doom/increase-font-size 1))))
 
 (setq-default line-spacing 0.15)
 
@@ -24,7 +24,7 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type 'relative)
 
-;; Configure cursor for insert mode
+;; Configure cursor for insert mode in the terminal
 (unless (display-graphic-p)
   (require 'evil-terminal-cursor-changer)
   (evil-terminal-cursor-changer-activate))
