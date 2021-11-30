@@ -6,7 +6,10 @@ with lib.my; {
     shell = {
       commonPkgs.enable = true;
       openssh.enable = true;
-      zsh.enable = true;
+      zsh = {
+        enable = true;
+        extraPaths = [ "$HOME/.emacs.d/bin" ];
+      };
       bat.enable = true;
       git.enable = true;
       starship.enable = true;
