@@ -12,7 +12,7 @@
 ;; Increase the font-size relative to what Emacs defaulted
 ;; I prefer this to hard-coding the font size because it works better across
 ;; macOS and Linux with HiDPI
-(unless (display-graphic-p)
+(if (display-graphic-p)
   (add-hook 'emacs-startup-hook
             (lambda () (doom/increase-font-size 1))))
 
