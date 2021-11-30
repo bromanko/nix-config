@@ -17,7 +17,8 @@
 (doom! :input
 
        :completion
-       (company +tng)      ; the ultimate code completion backend
+       (company
+         +childframe)      ; the ultimate code completion backend
        (ivy                ; a search engine for love and life
         +fuzzy
         +icons
