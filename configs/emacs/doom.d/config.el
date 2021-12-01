@@ -21,7 +21,7 @@
 ;; I use different themes for normal and zen mode.
 ;; The zen-theme is toggled in the write-room hook below.
 (defvar default-theme 'monokai-pro)
-(defvar zen-theme 'leuven)
+(defvar zen-theme 'white)
 (load-theme default-theme t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line

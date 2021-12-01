@@ -7,8 +7,9 @@
 ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; My prefered color theme
+;; My prefered color themes
 (package! monokai-pro-theme)
+(package! white-theme)
 
 ;; Better diff views in magit
 (package! magit-delta)
