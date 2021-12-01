@@ -191,12 +191,14 @@ apps are not started from a shell."
 (defun switch-writeroom-theme (arg)
   (cond
    ((= arg 1)
+    (disable-theme default-theme)
     (enable-theme zen-theme))
    ((= arg -1)
     (disable-theme zen-theme)
-    (enable-theme default-theme))))
+    (enable-theme default-theme)
+    )))
 
 (after! writeroom-mode
   (load-theme zen-theme t t)
-  (setq +zen-text-scale 1)
+  (setq +zen-text-scale 0)
   (add-to-list 'writeroom-global-effects 'switch-writeroom-theme))
