@@ -188,6 +188,15 @@ apps are not started from a shell."
 ;; **************************************************
 ;; writeroom
 ;; **************************************************
+
+;; When switching themes we want to also switch the cursor
+(defadvice! fix-+evil-default-cursor-fn ()
+  :override #'+evil-default-cursor-fn
+  (evil-set-cursor-color (face-background 'cursor)))
+(defadvice! fix-+evil-emacs-cursor-fn ()
+  :override #'+evil-emacs-cursor-fn
+  (evil-set-cursor-color (face-foreground 'warning)))
+
 (defun switch-writeroom-theme (arg)
   (cond
    ((= arg 1)
