@@ -198,4 +198,5 @@ apps are not started from a shell."
 
 (after! writeroom-mode
   (load-theme zen-theme t t)
+  (setq +zen-text-scale 1)
   (add-to-list 'writeroom-global-effects 'switch-writeroom-theme))
