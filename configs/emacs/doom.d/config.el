@@ -18,7 +18,11 @@
 
 (setq-default line-spacing 0.15)
 
-(load-theme 'monokai-pro t)
+;; I use different themes for normal and zen mode.
+;; The zen-theme is toggled in the write-room hook below.
+(defvar default-theme 'monokai-pro)
+(defvar zen-theme 'leuven)
+(load-theme default-theme t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -164,7 +168,7 @@ apps are not started from a shell."
   (setq lsp-ui-doc-delay 0.75)
   (setq lsp-ui-sideline-delay 0.75)
 
-  ; configure web-mode languages
+                                        ; configure web-mode languages
   (add-to-list 'lsp-language-id-configuration
                '(".*\\.[lh]eex$" . "html")))
 
@@ -179,3 +183,19 @@ apps are not started from a shell."
 ;; **************************************************
 (add-hook 'web-mode-hook
           (lambda () (setq web-mode-markup-indent-offset 2)))
+
+
+;; **************************************************
+;; writeroom
+;; **************************************************
+(defun switch-writeroom-theme (arg)
+  (cond
+   ((= arg 1)
+    (enable-theme zen-theme))
+   ((= arg -1)
+    (disable-theme zen-theme)
+    (enable-theme default-theme))))
+
+(after! writeroom-mode
+  (load-theme zen-theme t t)
+  (add-to-list 'writeroom-global-effects 'switch-writeroom-theme))
