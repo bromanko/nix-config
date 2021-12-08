@@ -17,3 +17,6 @@
 ;; Unpin some packages to get the latest goodies
 (unpin! lsp-mode)
 (unpin! web-mode)
+
+;; monky for Mercurial repos
+(package! monky)

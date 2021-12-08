@@ -151,7 +151,6 @@ apps are not started from a shell."
       projectile-project-search-path '("~/Code"))
 
 
-
 ;; **************************************************
 ;; lsp
 ;; **************************************************
@@ -204,3 +203,9 @@ apps are not started from a shell."
   (load-theme zen-theme t t)
   (setq +zen-text-scale 0)
   (add-to-list 'writeroom-global-effects 'switch-writeroom-theme))
+
+
+;; **************************************************
+;; monky
+;; **************************************************
+(setq monky-process-type 'cmdserver)
