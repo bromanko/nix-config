@@ -150,13 +150,6 @@ apps are not started from a shell."
 (setq projectile-globally-ignored-files '("flake.lock")
       projectile-project-search-path '("~/Code"))
 
-;; **************************************************
-;; company
-;; **************************************************
-(after! company
-  (setq company-minimum-prefix-length 1)
-  ;; show completion results asap
-  (setq company-idle-delay 0.0))
 
 
 ;; **************************************************
