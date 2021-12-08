@@ -7,7 +7,8 @@ with lib.my; {
       commonPkgs.enable = true;
       zsh = {
         enable = true;
-        extraPaths = [ "$HOME/homebrew/bin" ];
+        extraPaths =
+          [ "$HOME/homebrew/bin" "/opt/facebook/bin" "/opt/facebook/hg/bin" ];
       };
       bat.enable = true;
       git.enable = true;
@@ -54,6 +55,7 @@ with lib.my; {
         Numbers = 409203825;
         Pages = 409201541;
         "Unsplash Wallpapers" = 1284863847;
+        Vimari = 1480933944;
       };
     };
   };
