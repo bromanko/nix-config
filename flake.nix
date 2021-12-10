@@ -3,10 +3,11 @@
 
   inputs = {
     # Package sets
-    nixpkgs.url = "github:nixos/nixpkgs/nixpkgs-unstable";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-21.11";
+    nixpkgs-unstable.url = "github:nixos/nixpkgs/nixpkgs-unstable";
 
     # System management
-    darwin.url = "github:bromanko/nix-darwin/darwinSystem";
+    darwin.url = "github:LnL7/nix-darwin/master";
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
@@ -19,7 +20,8 @@
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, darwin, home-manager, ... }:
+  outputs =
+    inputs@{ self, nixpkgs, nixpkgs-unstable, darwin, home-manager, ... }:
     let
       inherit (lib.my) mapModules mapModulesRec;
 
@@ -46,14 +48,17 @@
     in {
       # For debugging
       passthru = {
-        inherit pkgs lib nixpkgs;
+        inherit pkgs lib nixpkgs nixpkgs-unstable;
         packages = self.packages;
       };
 
       packages = forAllSystems
         (system: mapModules ./packages (p: pkgs.${system}.callPackage p { }));
 
-      overlay = final: prev: { my = self.packages.${prev.system}; };
+      overlay = final: prev: {
+        unstable = nixpkgs-unstable.legacyPackages.${prev.system};
+        my = self.packages.${prev.system};
+      };
 
       overlays = mapModules ./overlays import;
 

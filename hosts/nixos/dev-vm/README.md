@@ -58,7 +58,7 @@ swapon /dev/sda2
 
 ### Installing nixos
 
-- `nix-shell -p git nixFlakes neovim`
+- `nix-shell -p git nix neovim`
 - `git clone https://github.com/bromanko/nix-config /mnt/etc/nixos`
 - Install NixOS: `nixos-install --root /mnt --flake /mnt/etc/nixos#XYZ`, where XYZ is the host you want to install.
 - Reboot!

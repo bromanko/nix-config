@@ -14,8 +14,7 @@ with lib.my; {
 
   config = {
     nix = {
-      package = pkgs.nixFlakes;
-      registry.nixpkgs.flake = inputs.nixpkgs;
+      package = pkgs.unstable.nix;
       extraOptions = ''
         extra-platforms = x86_64-darwin aarch64-darwin
         experimental-features = nix-command flakes
