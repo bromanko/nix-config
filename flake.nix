@@ -63,15 +63,8 @@
       overlays = mapModules ./overlays import;
 
       aarch64Overlays = self: super: {
-        # Need ghc
-        shellcheck = pkgs.x86_64-darwin.shellcheck;
-        nixfmt = pkgs.x86_64-darwin.nixfmt;
-
         # https://github.com/NixOS/nixpkgs/issues/127902
         emacsMacport = pkgs.x86_64-darwin.emacsMacport;
-
-        # Can't compile on Monterey
-        kitty = super.kitty.overrideAttrs (old: rec { });
       };
 
       darwinConfigurations =
