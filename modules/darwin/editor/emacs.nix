@@ -8,7 +8,8 @@ in {
     home-manager.users."${config.user.name}" = {
       programs.emacs = {
         enable = true;
-        package = pkgs.emacsMacport;
+        package = pkgs.emacs;
+        extraPackages = epkgs: [ epkgs.vterm ];
       };
     };
   };

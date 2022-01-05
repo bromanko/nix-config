@@ -62,11 +62,6 @@
 
       overlays = mapModules ./overlays import;
 
-      aarch64Overlays = self: super: {
-        # https://github.com/NixOS/nixpkgs/issues/127902
-        emacsMacport = pkgs.x86_64-darwin.emacsMacport;
-      };
-
       darwinConfigurations =
         (lib.my.mapDarwinHosts "x86_64-darwin" ./hosts/x86_64-darwin)
         // (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
