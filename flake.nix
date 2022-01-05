@@ -71,8 +71,7 @@
         emacsMacport = pkgs.x86_64-darwin.emacsMacport;
 
         # Can't compile on Monterey
-        kitty = super.kitty.overrideAttrs
-          (old: rec { preBuild = "MACOSX_DEPLOYMENT_TARGET=10.16"; });
+        kitty = super.kitty.overrideAttrs (old: rec { });
       };
 
       darwinConfigurations =
