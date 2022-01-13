@@ -11,6 +11,7 @@ self: super: rec {
 
     buildInputs = old.buildInputs ++ [ super.pkgs.librsync ];
 
+    # TODO This should only be set for aarch64
     preBuild = "MACOSX_DEPLOYMENT_TARGET=10.16";
   });
 }
