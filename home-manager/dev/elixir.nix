@@ -11,7 +11,7 @@ in {
     };
 
     programs.zsh.shellAliases = {
-      iex = ''iex --erl "-kernal shell_history enabled"'';
+      iex = ''iex --erl "-kernel shell_history enabled"'';
     };
   };
 }
