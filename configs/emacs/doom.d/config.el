@@ -125,10 +125,30 @@ apps are not started from a shell."
 (setq markdown-marginalize-headers t)
 (setq markdown-indent-on-enter "indent-and-new-item")
 
-;; Set a variable-pitch font for default face in markdown
 (add-hook 'markdown-mode-hook
-          (lambda () (display-fill-column-indicator-mode 0)))
+          (lambda ()
+            ;; Set a variable-pitch font for default face in markdown
+            (display-fill-column-indicator-mode 0)))
 (add-hook 'markdown-mode-hook #'mixed-pitch-mode)
+
+
+;; **************************************************
+;; company
+;; **************************************************
+
+;; disable company for certain modes
+(after! company
+  ;; ensure the first element is `not' so that the list is negated
+  (unless (eq (car company-global-modes) 'not)
+    ;; remove existing not, just in case
+    (setq company-global-modes (remove 'not company-global-modes))
+    ;; set the first element to not)
+    (setcar company-global-modes 'not)
+  ;; add modes in which to disable company-mode to the list, passing `t' for the
+  ;; APPEND argument, which will ensure they are added to the end of the list
+  ;; to not interfere with negation
+  (add-to-list 'company-global-modes 'markdown-mode t)
+  (add-to-list 'company-global-modes 'gfm-mode t)))
 
 ;; **************************************************
 ;; treemacs
