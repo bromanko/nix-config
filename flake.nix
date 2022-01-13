@@ -34,8 +34,7 @@
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
-          overlays = [ self.overlay ] ++ (lib.attrValues self.overlays)
-            ++ (lib.optional (system == "aarch64-darwin") self.aarch64Overlays);
+          overlays = [ self.overlay ] ++ (lib.attrValues self.overlays);
         });
 
       lib = nixpkgs.lib.extend (self: super: {
