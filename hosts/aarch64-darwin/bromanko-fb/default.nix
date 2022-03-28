@@ -28,6 +28,7 @@ with lib.my; {
     dev = {
       nix.enable = true;
       nodejs.enable = true;
+      idea.enable = true;
     };
     term = { kitty.enable = true; };
     editor = {
@@ -45,7 +46,16 @@ with lib.my; {
         "homebrew/services"
         "federico-terzi/espanso"
       ];
-      casks = [ "istat-menus" "raycast" "signal" "krisp" "viscosity" "notion" ];
+      casks = [
+        "istat-menus"
+        "jetbrains-toolbox"
+        "raycast"
+        "signal"
+        "krisp"
+        "viscosity"
+        "notion"
+        "spotify"
+      ];
       brews = [ "espanso" ];
       masApps = {
         "1Password" = 1333542190;
