@@ -1,15 +1,13 @@
-source ~/.config/nvim/init.vim
+let mapleader=" "
 
-# plugins
-set ideajoin
-set surround
-set easymotion
+" plugins
+Plug 'easymotion/vim-easymotion'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-commentary'
+Plug 'machakann/vim-highlightedyank'
 
-" Show current vim mode
-set showmode
-
-" Search as characters are entered
-set incsearch
+" Search g by default
+set gdefault
 
 " Highlight search results
 set hlsearch
@@ -19,9 +17,33 @@ set hlsearch
 set ignorecase
 set smartcase
 
+" Search as characters are entered
+set incsearch
+
+" Show relative line number
+set relativenumber
+
+" Show a few lines of context around the cursor. Note that this makes the
+" text scroll if you mouse-click near the start or end of the window.
+set scrolloff=5
+
+" Refactor when joining lines
+set ideajoin
+
+" Show current vim mode in status bar
+set showmode
+
+" Show partial command in status bar
+set showcmd
+
 " Use the clipboard register '*' for all yank, delete, change and put operations
 " which would normally go to the unnamed register.
 set clipboard+=unnamed
+
+" which-key configuration
+set which-key
+set notimeout
+set g:WhichKey_ShowVimActions = "true"
 
 "
 " Spacemacs style mappings
