@@ -4,7 +4,7 @@ self: super: rec {
 
     src = super.fetchFromGitHub {
       owner = "kovidgoyal";
-      repo = "kittyt";
+      repo = "kitty";
       rev = "v${version}";
       sha256 = "sha256-w5debDPQ5y6Aib7mg7JSPBMnErLSF2bUl94wt58NDF0=";
     };
