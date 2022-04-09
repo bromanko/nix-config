@@ -76,6 +76,20 @@ apps are not started from a shell."
 ;; Disable quit confirmation
 (setq confirm-kill-emacs nil)
 
+
+
+;; **************************************************
+;; Performance
+;; **************************************************
+
+;; 15 is the original setting, but it seems like it's down to 0.5 via doom or
+;; something, so try setting it back up to avoid GC pauses
+(setq gcmh-idle-delay 10)
+
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1 mb
+
+
 ;; **************************************************
 ;; org mode
 ;; **************************************************
