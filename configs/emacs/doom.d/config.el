@@ -7,7 +7,7 @@
 ;; UI Settings
 ;; **************************************************
 (setq doom-font (font-spec :family "FantasqueSansMono Nerd Font" :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "Open Sans"))
+      doom-variable-pitch-font (font-spec :family "Avenir Next"))
 
 ;; Increase the font-size relative to what Emacs defaults
 ;; I prefer this to hard-coding the font size because it works better across
