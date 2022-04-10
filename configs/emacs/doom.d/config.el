@@ -18,11 +18,8 @@
 
 (setq-default line-spacing 0.15)
 
-;; I use different themes for normal and zen mode.
-;; The zen-theme is toggled in the write-room hook below.
 (defvar default-theme 'monokai-pro)
-(defvar zen-theme 'white)
-(load-theme default-theme t)
+(load-theme 'monokai-pro t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -209,34 +206,6 @@ apps are not started from a shell."
 ;; **************************************************
 (add-hook 'web-mode-hook
           (lambda () (setq web-mode-markup-indent-offset 2)))
-
-
-;; **************************************************
-;; writeroom
-;; **************************************************
-
-;; When switching themes we want to also switch the cursor
-(defadvice! fix-+evil-default-cursor-fn ()
-  :override #'+evil-default-cursor-fn
-  (evil-set-cursor-color (face-background 'cursor)))
-(defadvice! fix-+evil-emacs-cursor-fn ()
-  :override #'+evil-emacs-cursor-fn
-  (evil-set-cursor-color (face-foreground 'warning)))
-
-(defun switch-writeroom-theme (arg)
-  (cond
-   ((= arg 1)
-    (disable-theme default-theme)
-    (enable-theme zen-theme))
-   ((= arg -1)
-    (disable-theme zen-theme)
-    (enable-theme default-theme)
-    )))
-
-(after! writeroom-mode
-  (load-theme zen-theme t t)
-  (setq +zen-text-scale 0)
-  (add-to-list 'writeroom-global-effects 'switch-writeroom-theme))
 
 
 ;; **************************************************
