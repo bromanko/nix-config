@@ -9,7 +9,7 @@
 
 ;; My prefered color themes
 (package! monokai-pro-theme)
-(package! white-theme)
+(package! spacemacs-theme)
 
 ;; Better diff views in magit
 (package! magit-delta)
@@ -20,3 +20,6 @@
 
 ;; monky for Mercurial repos
 (package! monky)
+
+;; Highlight by sentence
+(package! hl-sentence)

@@ -7,7 +7,7 @@
 ;; UI Settings
 ;; **************************************************
 (setq doom-font (font-spec :family "FantasqueSansMono Nerd Font" :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "Avenir Next"))
+      doom-variable-pitch-font (font-spec :family "Open Sans"))
 
 ;; Increase the font-size relative to what Emacs defaults
 ;; I prefer this to hard-coding the font size because it works better across
@@ -19,7 +19,7 @@
 (setq-default line-spacing 0.15)
 
 (defvar default-theme 'monokai-pro)
-(load-theme 'monokai-pro t)
+(load-theme default-theme t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -207,6 +207,25 @@ apps are not started from a shell."
 (add-hook 'web-mode-hook
           (lambda () (setq web-mode-markup-indent-offset 2)))
 
+;; **************************************************
+;; zen writing mode
+;; **************************************************
+(defun y/zen ()
+  (interactive)
+  (setq doom-theme 'spacemacs-light)
+  (load-theme doom-theme t)
+  (hl-sentence-mode +1))
+
+(defun y/unzen ()
+  (interactive)
+  (hl-sentence-mode -1)
+  (setq doom-theme default-theme)
+  (load-theme doom-theme t))
+
+(map! :leader
+      (:prefix ("t z" . "Zen Writer")
+       :desc "Zen Writer" "z" #'y/zen
+       :desc "un-Zen Writer" "q" #'y/unzen))
 
 ;; **************************************************
 ;; monky
