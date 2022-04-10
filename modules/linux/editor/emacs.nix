@@ -10,7 +10,7 @@ in {
     home-manager.users."${config.user.name}" = {
       home.packages = with pkgs; [
         binutils # native-comp needs "as", provided here
-        ((emacsPackagesNgGen emacsPgtkGcc).emacsWithPackages
+        ((emacsPackagesFor emacsPgtkGcc).emacsWithPackages
           (epkgs: [ epkgs.vterm ]))
       ];
     };
