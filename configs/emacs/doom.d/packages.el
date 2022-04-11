@@ -21,5 +21,6 @@
 ;; monky for Mercurial repos
 (package! monky)
 
-;; Highlight by sentence
+;; zen mode packages
 (package! hl-sentence)
+(package! mixed-pitch)

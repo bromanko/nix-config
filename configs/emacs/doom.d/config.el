@@ -18,8 +18,8 @@
 
 (setq-default line-spacing 0.15)
 
-(defvar default-theme 'monokai-pro)
-(load-theme default-theme t)
+(defvar br-default-theme 'monokai-pro)
+(load-theme br-default-theme t)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -210,22 +210,29 @@ apps are not started from a shell."
 ;; **************************************************
 ;; zen writing mode
 ;; **************************************************
-(defun y/zen ()
+(defun br-zen ()
+  "Enable zen mode."
   (interactive)
   (setq doom-theme 'spacemacs-light)
   (load-theme doom-theme t)
   (hl-sentence-mode +1))
 
-(defun y/unzen ()
+(defun br-unzen ()
+  "Disable zen mode."
   (interactive)
   (hl-sentence-mode -1)
-  (setq doom-theme default-theme)
+  (setq doom-theme br-default-theme)
   (load-theme doom-theme t))
 
+(defun br-toggle-zen ()
+  "Toggle zen mode."
+  (interactive)
+  (if (eql doom-theme br-default-theme) (br-zen) (br-unzen)))
+
+
 (map! :leader
-      (:prefix ("y z" . "Zen Writer")
-       :desc "Zen Writer" "z" #'y/zen
-       :desc "un-Zen Writer" "q" #'y/unzen))
+      (:prefix ("t" . "toggle")
+       :desc "zen writing mode" "z" #'br-toggle-zen))
 
 ;; **************************************************
 ;; monky
