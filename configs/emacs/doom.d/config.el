@@ -7,7 +7,7 @@
 ;; UI Settings
 ;; **************************************************
 (setq doom-font (font-spec :family "FantasqueSansMono Nerd Font" :weight 'medium)
-      doom-variable-pitch-font (font-spec :family "Open Sans"))
+      doom-variable-pitch-font (font-spec :family "Avenir Next" :weight 'medium))
 
 ;; Increase the font-size relative to what Emacs defaults
 ;; I prefer this to hard-coding the font size because it works better across
@@ -223,7 +223,7 @@ apps are not started from a shell."
   (load-theme doom-theme t))
 
 (map! :leader
-      (:prefix ("t z" . "Zen Writer")
+      (:prefix ("y z" . "Zen Writer")
        :desc "Zen Writer" "z" #'y/zen
        :desc "un-Zen Writer" "q" #'y/unzen))
 
