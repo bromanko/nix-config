@@ -228,6 +228,7 @@ apps are not started from a shell."
   (interactive)
   (if (eql doom-theme br-default-theme) (br-zen) (br-unzen)))
 
+(setq +zen-text-scale 1)
 (add-hook 'writeroom-mode-enable-hook #'br-zen)
 (add-hook 'writeroom-mode-disable-hook #'br-unzen)
 
