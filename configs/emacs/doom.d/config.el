@@ -91,6 +91,7 @@ apps are not started from a shell."
 ;; org mode
 ;; **************************************************
 
+
 ;; agenda
 (setq org-agenda-files (list
                         "~/org/todo.org"
@@ -138,9 +139,7 @@ apps are not started from a shell."
 
 (add-hook 'markdown-mode-hook
           (lambda ()
-            ;; Set a variable-pitch font for default face in markdown
             (display-fill-column-indicator-mode 0)))
-(add-hook 'markdown-mode-hook #'mixed-pitch-mode)
 
 
 ;; **************************************************
@@ -228,11 +227,6 @@ apps are not started from a shell."
   "Toggle zen mode."
   (interactive)
   (if (eql doom-theme br-default-theme) (br-zen) (br-unzen)))
-
-
-(map! :leader
-      (:prefix ("t" . "toggle")
-       :desc "zen writing mode" "z" #'br-toggle-zen))
 
 ;; **************************************************
 ;; monky
