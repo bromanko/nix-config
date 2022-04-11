@@ -1,7 +1,7 @@
 self: super: rec {
   kitty = super.kitty.overrideAttrs (old: rec {
-    # TODO This should only be set for aarch64
     preBuild =
-      old.lib.optional old.stdenv.isDarwin "MACOSX_DEPLOYMENT_TARGET=10.16";
+      super.lib.optional (super.stdenv.isDarwin && super.stdenv.isAarch64)
+      "MACOSX_DEPLOYMENT_TARGET=10.16";
   });
 }
