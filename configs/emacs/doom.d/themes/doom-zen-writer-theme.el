@@ -1,4 +1,4 @@
-;;; zen-theme.el --- -*- lexical-binding: t; no-byte-compile: t; -*-
+;;; doom-zen-writer-theme.el --- -*- lexical-binding: t; no-byte-compile: t; -*-
 ;;
 ;; Author: Yann Esposito <https://github.com/yogsototh>
 ;; Created: October 24, 2021
@@ -151,4 +151,4 @@ Can be an integer to determine the exact padding."
     :background modeline-bg-inactive-alt
     :box (if -modeline-pad `(:line-width ,-modeline-pad :color ,modeline-bg-inactive-alt)))))
 
-;;; zen-theme.el ends here
+;;; doom-zen-writer-theme.el ends here

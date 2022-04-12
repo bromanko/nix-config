@@ -209,17 +209,22 @@ apps are not started from a shell."
 ;; **************************************************
 ;; zen writing mode
 ;; **************************************************
+
+(defvar br-zen-theme 'doom-zen-writer)
+
 (defun br-zen ()
   "Enable zen mode."
   (interactive)
-  (setq doom-theme 'spacemacs-light)
+  (setq doom-theme br-zen-theme)
   (load-theme doom-theme t)
+  (display-line-numbers-mode -1)
   (hl-sentence-mode +1))
 
 (defun br-unzen ()
   "Disable zen mode."
   (interactive)
   (hl-sentence-mode -1)
+  (display-line-numbers-mode +1)
   (setq doom-theme br-default-theme)
   (load-theme doom-theme t))
 
@@ -228,9 +233,10 @@ apps are not started from a shell."
   (interactive)
   (if (eql doom-theme br-default-theme) (br-zen) (br-unzen)))
 
-(setq +zen-text-scale 1)
 (add-hook 'writeroom-mode-enable-hook #'br-zen)
 (add-hook 'writeroom-mode-disable-hook #'br-unzen)
+
+(setq +zen-text-scale 0)
 
 ;; **************************************************
 ;; monky
