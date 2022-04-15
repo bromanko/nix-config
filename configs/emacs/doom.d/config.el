@@ -92,14 +92,16 @@ apps are not started from a shell."
 ;; **************************************************
 
 
+(setq org-directory "~/org/")
+
 ;; agenda
 (setq org-agenda-files (list
                         "~/org/todo.org"
-                        "~/org/facebook/todo.org"))
-
+                        "~/org/meta/todo.org"))
+(setq org-refile-targets (quote ((nil :maxlevel . 9)
+                                 (org-agenda-files :maxlevel . 9))))
 ;; org-export settings
 (after! org
-  (setq org-directory "~/org/")
   ;; don't add section numbers to headings on export
   (setq org-export-with-section-numbers nil)
   ;; don't automatically use smart quotes
@@ -158,6 +160,8 @@ apps are not started from a shell."
   ;; APPEND argument, which will ensure they are added to the end of the list
   ;; to not interfere with negation
   (add-to-list 'company-global-modes 'markdown-mode t)
+  (add-to-list 'company-global-modes 'org-mode t)
+  (add-to-list 'company-global-modes 'git-commit-mode t)
   (add-to-list 'company-global-modes 'gfm-mode t))
 
 ;; **************************************************
