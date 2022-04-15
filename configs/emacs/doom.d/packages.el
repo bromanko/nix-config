@@ -24,3 +24,6 @@
 ;; zen mode packages
 (package! hl-sentence)
 (package! mixed-pitch)
+
+;; Better org agenda
+(package! org-super-agenda)

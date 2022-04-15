@@ -94,14 +94,66 @@ apps are not started from a shell."
 
 (setq org-directory "~/org/")
 
+(load-library "find-lisp")
+(setq org-agenda-files
+      (find-lisp-find-files org-directory "\.org$"))
+
 ;; agenda
-(setq org-agenda-files (list
-                        "~/org/todo.org"
-                        "~/org/meta/todo.org"))
-(setq org-refile-targets (quote ((nil :maxlevel . 9)
-                                 (org-agenda-files :maxlevel . 9))))
-;; org-export settings
+(setq bromanko/org-agenda-directory "~/org/gtd/")
+
+(defun bromanko/org-agenda-process-inbox-item ()
+  "Process a single item in the org-agenda."
+  (org-with-wide-buffer
+   (org-agenda-set-tags)
+   (org-agenda-priority)
+   (org-agenda-refile nil nil t)))
+
+(defun bromanko/org-archive-done-tasks ()
+  "Archive all done tasks."
+  (interactive)
+  (org-map-entries 'org-archive-subtree "/DONE" 'file))
+
+;; TODO add map for these funs
+
 (after! org
+  ;;
+  ;; agenda
+  ;;
+  (setq org-agenda-block-separator nil
+        org-agenda-compact-blocks t)
+
+  (org-super-agenda-mode)
+
+  (setq org-capture-templates
+        `(("i" "inbox" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
+           "* [ ] %?\%i\n%a" :prepend t)
+          ("n" "note" entry (file ,(concat bromanko/org-agenda-directory "notes.org"))
+           "* %u %?\n%i\n%a" :prepend t)
+          ("l" "link" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
+           "* TODO %(org-cliplink-capture)" :immediate-finish t)
+          ("c" "org-protocol-capture" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
+           "* TODO [[%:link][%:description]]\n\n %i" :immediate-finish t)))
+
+  (setq org-refile-allow-creating-parent-nodes 'confirm)
+  (setq org-refile-targets '(("next.org" :level . 0)
+                             ("someday.org" :level . 0)
+                             ("projects.org" :maxlevel . 1)))
+
+  (setq org-agenda-custom-commands
+        '(("d" "Agenda"
+           ((agenda "" (
+                        (org-agenda-overriding-header "")
+                        (org-agenda-format-date "%A, %-e %B %Y")
+                        (org-agenda-show-log t)
+                        (org-super-agenda-groups '(
+                                                   (:name "📅 Today"
+                                                    :anything t
+                                                    :order 1)
+                                                   ))))))))
+
+  ;;
+  ;; org-export settings
+  ;;
   ;; don't add section numbers to headings on export
   (setq org-export-with-section-numbers nil)
   ;; don't automatically use smart quotes
