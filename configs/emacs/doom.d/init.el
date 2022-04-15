@@ -134,7 +134,7 @@
        nix                 ; I hereby declare "nix geht mehr!"
        ;;ocaml             ; an objective camel
        (org                ; organize your plain life in plain text
-        +roam              ; roam notes
+        +roam2             ; roam notes
         +present           ; org-reveal
         +pretty)           ; enable unicode chars (might get slow)
        php                 ; perl's insecure younger brother
