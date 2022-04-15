@@ -8,6 +8,7 @@ in {
   config = mkIf cfg.enable {
     programs.kitty = {
       enable = true;
+      package = pkgs.unstable.kitty;
       font = {
         name = "FantasqueSansMono Nerd Font Mono";
         size = config.modules.term.kitty.fontSize;
