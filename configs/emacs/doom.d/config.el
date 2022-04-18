@@ -99,21 +99,74 @@ apps are not started from a shell."
       (find-lisp-find-files org-directory "\.org$"))
 
 ;; agenda
-(setq bromanko/org-agenda-directory "~/org/gtd/")
-
 (defun bromanko/org-agenda-process-inbox-item ()
   "Process a single item in the org-agenda."
+  (interactive)
   (org-with-wide-buffer
    (org-agenda-set-tags)
    (org-agenda-priority)
    (org-agenda-refile nil nil t)))
 
+(defun bromanko/bulk-process-entries ()
+  (if (not (null org-agenda-bulk-marked-entries))
+      (let ((entries (reverse org-agenda-bulk-marked-entries))
+            (processed 0)
+            (skipped 0))
+        (dolist (e entries)
+          (let ((pos (text-property-any (point-min) (point-max) 'org-hd-marker e)))
+            (if (not pos)
+                (progn (message "Skipping removed entry at %s" e)
+                       (cl-incf skipped))
+              (goto-char pos)
+              (let (org-loop-over-headlines-in-active-region) (funcall 'bromanko/org-agenda-process-inbox-item))
+              ;; `post-command-hook' is not run yet.  We make sure any
+              ;; pending log note is processed.
+              (when (or (memq 'org-add-log-note (default-value 'post-command-hook))
+                        (memq 'org-add-log-note post-command-hook))
+                (org-add-log-note))
+              (cl-incf processed))))
+        (org-agenda-redo)
+        (unless org-agenda-persistent-marks (org-agenda-bulk-unmark-all))
+        (message "Acted on %d entries%s%s"
+                 processed
+                 (if (= skipped 0)
+                     ""
+                   (format ", skipped %d (disappeared before their turn)"
+                           skipped))
+                 (if (not org-agenda-persistent-marks) "" " (kept marked)")))))
+
+(defun bromanko/org-agenda-bulk-mark-regexp-category (regexp)
+  "Mark entries whose category matches REGEXP for future agenda bulk action."
+  (interactive "sMark entries with category matching regexp: ")
+  (let ((entries-marked 0) txt-at-point)
+    (save-excursion
+      (goto-char (point-min))
+      (goto-char (next-single-property-change (point) 'org-hd-marker))
+      (while (and (re-search-forward regexp nil t)
+                  (setq category-at-point
+                        (get-text-property (match-beginning 0) 'org-category)))
+        (if (get-char-property (point) 'invisible)
+            (beginning-of-line 2)
+          (when (string-match-p regexp category-at-point)
+            (setq entries-marked (1+ entries-marked))
+            (call-interactively 'org-agenda-bulk-mark)))))
+    (unless entries-marked
+      (message "No entry matching this regexp."))))
+
+(defun bromanko/org-process-inbox ()
+  "Called in org-agenda-mode, processes all inbox items."
+  (interactive)
+  (org-agenda-bulk-unmark-all)
+  (bromanko/org-agenda-bulk-mark-regexp-category "inbox")
+  (bromanko/bulk-process-entries))
+
+(define-key org-agenda-mode-map "r" 'bromanko/org-process-inbox)
+
+
 (defun bromanko/org-archive-done-tasks ()
   "Archive all done tasks."
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
-
-;; TODO add map for these funs
 
 (after! org
   ;;
@@ -124,32 +177,62 @@ apps are not started from a shell."
 
   (org-super-agenda-mode)
 
-  (setq org-capture-templates
-        `(("i" "inbox" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
-           "* [ ] %?\%i\n%a" :prepend t)
-          ("n" "note" entry (file ,(concat bromanko/org-agenda-directory "notes.org"))
-           "* %u %?\n%i\n%a" :prepend t)
-          ("l" "link" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
-           "* TODO %(org-cliplink-capture)" :immediate-finish t)
-          ("c" "org-protocol-capture" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
-           "* TODO [[%:link][%:description]]\n\n %i" :immediate-finish t)))
+  (add-to-list 'org-capture-templates
+               `("i" "inbox" entry (file ,(concat org-directory "inbox.org"))
+                 "* TODO %?" :prepend t))
+  ;; ("n" "note" entry (file ,(concat bromanko/org-agenda-directory "notes.org"))
+  ;;  "* %u %?\n%i\n%a" :prepend t)
+  ;; ("l" "link" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
+  ;;  "* TODO %(org-cliplink-capture)" :immediate-finish t)
+  ;; ("c" "org-protocol-capture" entry (file ,(concat bromanko/org-agenda-directory "inbox.org"))
+  ;;  "* TODO [[%:link][%:description]]\n\n %i" :immediate-finish t)))
 
   (setq org-refile-allow-creating-parent-nodes 'confirm)
-  (setq org-refile-targets '(("next.org" :level . 0)
-                             ("someday.org" :level . 0)
-                             ("projects.org" :maxlevel . 1)))
 
   (setq org-agenda-custom-commands
-        '(("d" "Agenda"
+        '(("a" "Agenda for current day"
            ((agenda "" (
-                        (org-agenda-overriding-header "")
+                        (org-agenda-span 'day)
                         (org-agenda-format-date "%A, %-e %B %Y")
                         (org-agenda-show-log t)
                         (org-super-agenda-groups '(
                                                    (:name "📅 Today"
-                                                    :anything t
+                                                    :time-grid t
+                                                    :todo "TODAY"
+                                                    :scheduled today
+                                                    :order 0)
+                                                   (:name "⏰ Due Today"
+                                                    :deadline today
+                                                    :order 2)
+                                                   (:name "🗓 Due Soon"
+                                                    :deadline future
+                                                    :order 3)
+                                                   (:name "Overdue"
+                                                    :deadline past
                                                     :order 1)
-                                                   ))))))))
+                                                   ))))
+            (todo "" (
+                      (org-agenda-overriding-header "")
+                      (org-super-agenda-groups '(
+                                                 (:name "📂 To Refile"
+                                                  :file-path "inbox\\.org"
+                                                  :order 1)
+                                                 (:auto-category t
+                                                  :order 9)
+                                                 ))
+                      ))))
+          ("t" "Todo"
+           ((todo "" (
+                      (org-agenda-overriding-header "")
+                      (org-super-agenda-groups '(
+                                                 (:name "📂 To Refile"
+                                                  :file-path "inbox\\.org"
+                                                  :order 1)
+                                                 (:auto-category t
+                                                  :order 9)
+                                                 ))
+                      )))))
+        )
 
   ;;
   ;; org-export settings
