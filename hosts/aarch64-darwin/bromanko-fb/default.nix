@@ -7,8 +7,12 @@ with lib.my; {
       commonPkgs.enable = true;
       zsh = {
         enable = true;
-        extraPaths =
-          [ "$HOME/homebrew/bin" "/opt/facebook/bin" "/opt/facebook/hg/bin" ];
+        extraPaths = [
+          "$HOME/homebrew/bin"
+          "/opt/facebook/bin"
+          "/opt/facebook/hg/bin"
+          "$HOME/.emacs.d/bin"
+        ];
       };
       bat.enable = true;
       git.enable = true;
