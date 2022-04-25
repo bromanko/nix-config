@@ -27,6 +27,7 @@ with lib.my; {
       apps = {
         raycast.enable = true;
         espanso.enable = true;
+        vimari.enable = true;
       };
     };
     dev = {
@@ -51,6 +52,7 @@ with lib.my; {
         "federico-terzi/espanso"
       ];
       casks = [
+        "choosy"
         "istat-menus"
         "jetbrains-toolbox"
         "raycast"
@@ -69,7 +71,6 @@ with lib.my; {
         Numbers = 409203825;
         Pages = 409201541;
         "Unsplash Wallpapers" = 1284863847;
-        Vimari = 1480933944;
       };
     };
   };
