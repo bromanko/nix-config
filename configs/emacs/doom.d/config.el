@@ -160,8 +160,6 @@ apps are not started from a shell."
   (bromanko/org-agenda-bulk-mark-regexp-category "inbox")
   (bromanko/bulk-process-entries))
 
-(define-key org-agenda-mode-map "r" 'bromanko/org-process-inbox)
-
 
 (defun bromanko/org-archive-done-tasks ()
   "Archive all done tasks."
@@ -176,6 +174,8 @@ apps are not started from a shell."
         org-agenda-compact-blocks t)
 
   (org-super-agenda-mode)
+
+  (define-key org-agenda-mode-map "r" 'bromanko/org-process-inbox)
 
   (add-to-list 'org-capture-templates
                `("i" "inbox" entry (file ,(concat org-directory "inbox.org"))
