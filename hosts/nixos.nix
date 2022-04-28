@@ -13,7 +13,7 @@ with lib.my; {
     ++ (mapModulesRec' (toString ../modules/linux) import);
 
   nix = {
-    package = pkgs.unstable.nix;
+    package = pkgs.nix;
     extraOptions = ''
       experimental-features = nix-command flakes
       keep-derivations = true
