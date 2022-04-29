@@ -72,6 +72,10 @@ in {
         HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_FOUND="fg=blue,bold"
         HISTORY_SUBSTRING_SEARCH_HIGHLIGHT_NOT_FOUND="fg=red,bold"
         ZSH_AUTOSUGGEST_STRATEGY=( history )
+
+        # vterm
+        setopt PROMPT_SUBST
+        PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
       '';
     };
   };
