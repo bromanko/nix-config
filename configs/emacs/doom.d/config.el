@@ -253,15 +253,14 @@ apps are not started from a shell."
   (setq org-export-with-toc nil))
 
 ;; org-roam
-(after! org-roam-
-  (setq org-roam-directory org-directory)
-  (map! :leader
-        :prefix "n"
-        :desc "org-roam" "l" #'org-roam
-        :desc "org-roam-insert" "i" #'org-roam-insert
-        :desc "org-roam-find-file" "f" #'org-roam-find-file
-        :desc "org-roam-show-graph" "g" #'org-roam-show-graph
-        :desc "org-roam-capture" "c" #'org-roam-capture))
+(setq org-roam-directory (file-truename (concat org-directory "roam")))
+
+;; Speed up saving of large files in org-roam by batching operations into a
+;; single sqlite txn. From org-roam#1752 on GH.
+(advice-add 'org-roam-db-update-file :around
+            (defun +org-roam-db-update-file (fn &rest args)
+              (emacsql-with-transaction (org-roam-db)
+                (apply fn args))))
 
 ;; deft notes
 (setq
