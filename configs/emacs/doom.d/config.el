@@ -167,6 +167,9 @@ apps are not started from a shell."
   (interactive)
   (org-map-entries 'org-archive-subtree "/DONE" 'file))
 
+
+(map! :map org-mode-map "SPC m s z" #'bromanko/org-archive-done-tasks)
+
 (after! org
   ;;
   ;; agenda
@@ -234,6 +237,7 @@ apps are not started from a shell."
                                                  ))
                       )))))
         )
+
 
   ;;
   ;; org-export settings
