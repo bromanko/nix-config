@@ -52,19 +52,17 @@ with lib.my; {
         "federico-terzi/espanso"
       ];
       casks = [
+        "1password"
         "choosy"
         "istat-menus"
         "jetbrains-toolbox"
         "raycast"
         "signal"
-        "krisp"
-        "viscosity"
         "notion"
         "spotify"
       ];
       brews = [ "espanso" ];
       masApps = {
-        "1Password" = 1333542190;
         Amphetamine = 937984704;
         Fantastical = 975937182;
         Keynote = 409183694;
@@ -76,4 +74,5 @@ with lib.my; {
   };
 
   home-manager = { sharedModules = [{ manual.manpages.enable = false; }]; };
+  services.nix-daemon.enable = true;
 }
