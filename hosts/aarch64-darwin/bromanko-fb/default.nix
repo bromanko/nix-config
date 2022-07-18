@@ -53,12 +53,14 @@ with lib.my; {
       ];
       casks = [
         "1password"
+        "bartender"
+        "betterdisplay"
+        "camo-studio"
         "choosy"
         "istat-menus"
-        "jetbrains-toolbox"
+        "lunar"
         "raycast"
         "signal"
-        "notion"
         "spotify"
       ];
       brews = [ "espanso" ];
