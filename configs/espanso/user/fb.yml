@@ -14,6 +14,8 @@ matches:
     replace: "Core Health"
   - trigger: "//cf"
     replace: "Client Foundation"
+  - trigger: "//dt"
+    replace: "Data Transparency"
   - trigger: "//ee"
     replace: "Exceeds Expectations"
   - trigger: "//fb"
