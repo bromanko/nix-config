@@ -67,6 +67,7 @@ with lib.my; {
       masApps = {
         Amphetamine = 937984704;
         Fantastical = 975937182;
+        "iA Writer" = 775737590;
         Keynote = 409183694;
         Numbers = 409203825;
         Pages = 409201541;
