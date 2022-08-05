@@ -4,4 +4,4 @@ with lib;
 with lib.my;
 let cfg = config.modules.desktop.fonts;
 
-in { config = mkIf cfg.enable { fonts = { enableFontDir = true; }; }; }
+in { config = mkIf cfg.enable { fonts = { fontDir = { enable = true; }; }; }; }
