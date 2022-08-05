@@ -29,6 +29,7 @@ with lib.my; {
     dev = {
       elixir.enable = true;
       idea.enable = true;
+      dotnet.enable = true;
       psql.enable = true;
       docker.enable = true;
       nix.enable = true;
@@ -68,7 +69,6 @@ with lib.my; {
       ];
       brews = [ "espanso" ];
       masApps = {
-        Amphetamine = 937984704;
         Fantastical = 975937182;
         Keynote = 409183694;
         Kindle = 405399194;
