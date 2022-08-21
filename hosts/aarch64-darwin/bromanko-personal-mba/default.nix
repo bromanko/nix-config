@@ -66,6 +66,7 @@ with lib.my; {
         "spotify"
         "vmware-fusion"
         "notion"
+        "kindavim"
       ];
       brews = [ "espanso" ];
       masApps = {
