@@ -23,3 +23,6 @@
 
 ;; Better org agenda
 (package! org-super-agenda)
+
+;; Just mode
+(package! just-mode)
