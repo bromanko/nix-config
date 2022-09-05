@@ -338,3 +338,140 @@ let g:WhichKeyDesc_Help_ContextualHelpAlt = "<leader>h<Space> contextual-help"
 nnoremap <leader>h<Space>    :action ContextHelp<CR>
 vnoremap <leader>h<Space>    :action ContextHelp<CR>
 """ ---------------------------------------------
+
+
+""" Major mode ----------------------------------
+let g:WhichKeyDesc_Major = "<leader>m +major-mode-commands"
+
+let g:WhichKeyDesc_Major_Compile = "<leader>mc +compile"
+
+let g:WhichKeyDesc_Major_Debug = "<leader>md +debug"
+
+let g:WhichKeyDesc_Major_Goto = "<leader>mg +goto"
+
+let g:WhichKeyDesc_Major_Help = "<leader>mh +help"
+
+let g:WhichKeyDesc_Major_Format = "<leader>m= +format"
+
+let g:WhichKeyDesc_Major_Project = "<leader>mp +project"
+
+let g:WhichKeyDesc_Major_Refactoring = "<leader>mr +refactor"
+""" ---------------------------------------------
+
+
+""" Refactoring ---------------------------------
+" Code cleanup
+let g:WhichKeyDesc_Major_Refactoring_CodeCleanup = "<leader>mrC code-cleanup"
+nnoremap <leader>mrC      :action CodeCleanup<CR>
+vnoremap <leader>mrC      :action CodeCleanup<CR>
+
+" Create constructor
+let g:WhichKeyDesc_Major_Refactoring_CreateConstructor = "<leader>mrc create-constructor"
+nnoremap <leader>mrc      :action GenerateConstructor<CR>
+vnoremap <leader>mrc      <Esc>:action GenerateConstructor<CR>
+
+""" Extract Submenu ---------------------------------
+let g:WhichKeyDesc_Major_Refactoring_CodeCleanup_Extract = "<leader>mre +extract"
+
+" Extract method
+let g:WhichKeyDesc_Major_Refactoring_CodeCleanup_Extract_Method = "<leader>mrem method"
+nnoremap <leader>mrem    :action ExtractMethod<CR>
+vnoremap <leader>mrem    <Esc>:action ExtractMethod<CR>
+
+" Extract superclass
+let g:WhichKeyDesc_Major_Refactoring_CodeCleanup_Extract_Superclass = "<leader>mres superclass"
+nnoremap <leader>mres    :action ExtractSuperclass<CR>
+vnoremap <leader>mres    <Esc>:action ExtractSuperclass<CR>
+""" ---------------------------------------------
+
+" Generate getter and setter
+let g:WhichKeyDesc_Major_Refactoring_GenerateGetterSetter = "<leader>mrG generate-getter-setter"
+nnoremap <leader>mrG      :action GenerateGetterAndSetter<CR>
+vnoremap <leader>mrG      <Esc>:action GenerateGetterAndSetter<CR>
+
+" Select what to generate
+let g:WhichKeyDesc_Major_Refactoring_Generate = "<leader>mrg generate"
+nnoremap <leader>mrg      :action Generate<CR>
+vnoremap <leader>mrg      <Esc>:action Generate<CR>
+
+" Implement Methods
+let g:WhichKeyDesc_Major_Refactoring_ImplementMethods = "<leader>mrI implement-methods"
+nnoremap <leader>mrI      :action ImplementMethods<CR>
+vnoremap <leader>mrI      <Esc>:action ImplementMethods<CR>
+
+" Optimize imports
+let g:WhichKeyDesc_Major_Refactoring_OptimizeImports = "<leader>mri optimize-imports"
+nnoremap <leader>mri      :action OptimizeImports<CR>
+vnoremap <leader>mri      <Esc>:action OptimizeImports<CR>
+
+" Create a new Element.
+let g:WhichKeyDesc_Major_Refactoring_NewElement = "<leader>mrN new-element"
+nnoremap <leader>mrN      :action NewElement<CR>
+vnoremap <leader>mrN      :action NewElement<CR>
+
+" Create a new class. You can also create enum, interface and more.
+let g:WhichKeyDesc_Major_Refactoring_NewClass = "<leader>mrn new-class"
+nnoremap <leader>mrn      :action NewClass<CR>
+vnoremap <leader>mrn      :action NewClass<CR>
+
+" Choose a refactoring action
+let g:WhichKeyDesc_Major_Refactoring_ChooseRefactoringAction = "<leader>mrR choose-refactoring-action"
+nnoremap <leader>mrR      :action Refactorings.QuickListPopupAction<CR>
+vnoremap <leader>mrR      <Esc>:action Refactorings.QuickListPopupAction<CR>
+
+" Rename symbol
+let g:WhichKeyDesc_Major_Refactoring_RenameSymbol = "<leader>mrr rename-symbol"
+nnoremap <leader>mrr      :action RenameElement<CR>
+vnoremap <leader>mrr      :action RenameElement<CR>
+""" ---------------------------------------------
+
+
+""" Search ----------------------------------
+let g:WhichKeyDesc_SearchSymbol = "<leader>s    +search/symbol"
+
+" Search everywhere
+let g:WhichKeyDesc_SearchSymbol_SearchEverywhere = "<leader>sE search-everywhere"
+nnoremap <leader>sE    :action SearchEverywhere<CR>
+vnoremap <leader>sE    :action SearchEverywhere<CR>
+
+" Search in current file by using Intellij Search
+let g:WhichKeyDesc_SearchSymbol_FindInFile = "<leader>sf find-in-file"
+nnoremap <leader>sf    :action Find<CR>
+vnoremap <leader>sf    :action Find<CR>
+
+" Search and replace in current file by using Intellij Search
+let g:WhichKeyDesc_SearchSymbol_ReplaceInFile = "<leader>sr replace-in-file"
+nnoremap <leader>sr    :action Replace<CR>
+vnoremap <leader>sr    :action Replace<CR>
+
+" Clear search highlights.
+let g:WhichKeyDesc_SearchSymbol_ClearHighlight = "<leader>sc clear-highlight"
+nnoremap <leader>sc    :nohlsearch<CR>
+vnoremap <leader>sc    <Esc>:nohlsearch<CR>
+
+" Rename symbol
+let g:WhichKeyDesc_SearchSymbol_RenameElement = "<leader>se rename-element"
+nnoremap <leader>se    :action RenameElement<CR>
+vnoremap <leader>se    :action RenameElement<CR>
+
+" Highlight current symbol. Do it again to toggle highlight.
+let g:WhichKeyDesc_SearchSymbol_HighlightUsages = "<leader>sh highlight-usages"
+nnoremap <leader>sh    :action HighlightUsagesInFile<CR>
+vnoremap <leader>sh    <Esc>:action HighlightUsagesInFile<CR>
+
+" Find usages
+let g:WhichKeyDesc_SearchSymbol_FindUsages = "<leader>sP find-usages"
+nnoremap <leader>sP    :action FindUsages<CR>
+vnoremap <leader>sP    :action FindUsages<CR>
+
+" Search in project.
+let g:WhichKeyDesc_SearchSymbol_SearchProject = "<leader>sp search-project"
+nnoremap <leader>sp    :action FindInPath<CR>
+vnoremap <leader>sp    :action FindInPath<CR>
+let g:WhichKeyDesc_SearchSymbol_ResumeLastSearch = "<leader>sl resume-last-search"
+nnoremap <leader>sl    :action FindInPath<CR>
+vnoremap <leader>sl    :action FindInPath<CR>
+let g:WhichKeyDesc_SearchSymbol_Swoop = "<leader>ss swoop"
+nnoremap <leader>ss    :action FindInPath<CR>
+vnoremap <leader>ss    :action FindInPath<CR>
+""" ---------------------------------------------
