@@ -62,6 +62,7 @@ with lib.my; {
         "raycast"
         "signal"
         "spotify"
+        "kindaVim"
       ];
       brews = [ "espanso" ];
       masApps = {
