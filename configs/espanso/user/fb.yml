@@ -6,6 +6,8 @@ matches:
     replace: "1 on 1"
   - trigger: "//an"
     replace: "Android"
+  - trigger: "//au"
+    replace: "Asset Understanding"
   - trigger: "//be"
     replace: "Better Engineering"
   - trigger: "//cbd"
