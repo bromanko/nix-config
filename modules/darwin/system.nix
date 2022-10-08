@@ -14,7 +14,7 @@ with lib; {
   system.defaults.LaunchServices.LSQuarantine = false;
 
   # System - Increase window resize speed for Cocoa applications.
-  system.defaults.NSGlobalDomain.NSWindowResizeTime = "0.001";
+  system.defaults.NSGlobalDomain.NSWindowResizeTime = 1.0e-3;
 
   # System - Disable auto-correct.
   system.defaults.NSGlobalDomain.NSAutomaticSpellingCorrectionEnabled = false;
@@ -41,7 +41,7 @@ with lib; {
   system.defaults.dock.autohide = true;
 
   # Dock - Remove the auto-hiding delay.
-  system.defaults.dock."autohide-delay" = "0";
+  system.defaults.dock."autohide-delay" = 0.0;
 
   # Dock - Don’t show Dashboard as a Space.
   system.defaults.dock.dashboard-in-overlay = true;

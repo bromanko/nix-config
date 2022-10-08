@@ -66,12 +66,11 @@ in {
 
     homebrew = {
       enable = true;
-      autoUpdate = true;
-      cleanup = "zap";
-      global = {
-        brewfile = true;
-        noLock = true;
+      onActivation = {
+        autoUpdate = true;
+        cleanup = "zap";
       };
+      global = { brewfile = true; };
 
       brewPrefix = cfg.brewPrefix;
       taps = cfg.taps;
