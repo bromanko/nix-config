@@ -79,6 +79,7 @@ with lib.my; {
         Slack = 803453959;
         Tailscale = 1475387142;
         Xcode = 497799835;
+        Wireguard = 1451685025;
       };
     };
   };
