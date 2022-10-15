@@ -75,7 +75,7 @@ in {
 
         # vterm
         setopt PROMPT_SUBST
-        PROMPT=$PROMPT'%{$(vterm_prompt_end)%}'
+        precmd_functions+=(vterm_prompt_end)
       '';
     };
   };
