@@ -15,7 +15,10 @@ with lib.my; {
         ];
       };
       bat.enable = true;
-      git.enable = true;
+      git = {
+        enable = true;
+        userEmail = "bromanko@meta.com";
+      };
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
