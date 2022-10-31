@@ -26,3 +26,8 @@
 
 ;; Just mode
 (package! just-mode)
+
+;; Catppuccin theme
+(package! autothemer)
+(package! catppuccin
+  :recipe (:host github :repo "catppuccin/emacs"))

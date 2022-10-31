@@ -18,7 +18,7 @@
 
 (setq-default line-spacing 0.15)
 
-(defvar br-default-theme 'doom-monokai-pro)
+(defvar br-default-theme 'catppuccin-mocha)
 (setq doom-theme br-default-theme)
 (load-theme br-default-theme t)
 
