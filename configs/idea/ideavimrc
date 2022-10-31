@@ -134,6 +134,11 @@ let g:WhichKeyDesc_CompileComments_CompileDirty = "<leader>cc     compile-dirty"
 nnoremap <leader>cc    :action CompileDirty<CR>
 vnoremap <leader>cc    :action CompileDirty<CR>
 
+" Reformat code
+let g:WhichKeyDesc_CompileComments_ReformatCode = "<leader>cf    reformat-code"
+nnoremap <leader>cf    :action ReformatCode<CR>
+vnoremap <leader>cf    :action ReformatCode<CR>
+
 " Comment lines
 let g:WhichKeyDesc_CompileComments_CommentByLineComment = "<leader>cl     comment-by-line-comment"
 nnoremap <leader>cl    :action CommentByLineComment<CR>
@@ -149,10 +154,10 @@ let g:WhichKeyDesc_CompileComments_CommentParagraphByLineComment = "<leader>cp  
 nnoremap <leader>cp    vip:action CommentByLineComment<CR>
 vnoremap <leader>cp    <Esc>vip:action CommentByLineComment<CR>
 
-" Comment from begin of buffer up to current line
-let g:WhichKeyDesc_CompileComments_CommentBufferByLineComment = "<leader>ct     comment-buffer-from-start-to-line"
-nnoremap <leader>ct    Vgg:action CommentByLineComment<CR>
-vnoremap <leader>ct    <Esc>Vgg:action CommentByLineComment<CR>
+" Quick documentation
+let g:WhichKeyDesc_CompileComments_QuickJavaDoc = "<leader>ct    quick-documentation"
+nnoremap <leader>ct    :action QuickJavaDoc<CR>
+vnoremap <leader>ct    :action QuickJavaDoc<CR>
 
 " Copy and comment current line
 let g:WhichKeyDesc_CompileComments_CopyAndCommentCurrentLine = "<leader>cy     copy-and-comment-current-line"
