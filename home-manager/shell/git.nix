@@ -5,7 +5,7 @@ with lib.my;
 let cfg = config.modules.shell.git;
 in {
   config = mkIf cfg.enable {
-    home.programs.git = {
+    programs.git = {
       enable = true;
 
       userEmail = cfg.userEmail;
