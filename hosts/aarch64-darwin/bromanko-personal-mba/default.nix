@@ -76,12 +76,12 @@ with lib.my; {
         NextDNS = 1464122853;
         Numbers = 409203825;
         Pages = 409201541;
-        Slack = 803453959;
         Tailscale = 1475387142;
         Xcode = 497799835;
         Wireguard = 1451685025;
       };
     };
   };
+  hm = { home = { packages = [ pkgs.slack ]; }; };
   services.nix-daemon.enable = true;
 }
