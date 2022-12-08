@@ -79,6 +79,8 @@ with lib; {
 
   # The following settings are not configurable via nix-darwin
   system.activationScripts.postActivation.text = ''
+    echo "configuring system defaults..." >&2
+
     # Keyboard - Automatically illuminate built-in MacBook keyboard in low light.
     defaults write com.apple.BezelServices kDim -bool true
     # Keyboard - Turn off keyboard illumination when computer is not used for 5 minutes.
