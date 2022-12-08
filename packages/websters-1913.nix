@@ -14,14 +14,9 @@ in stdenv.mkDerivation {
   };
 
   installPhase = ''
-    local dictsDir="$out/Library/Dictionaries"
-    install -m755 -d "$dictsDir"
-
-    local webDir="$dictsDir/websters-1913.dictionary"
+    local webDir="$out/websters-1913.dictionary"
     install -m755 -d "$webDir"
     cp -r websters-1913.dictionary/** "$webDir"
-    ls -al $dictsDir
-    ls -al $webDir
   '';
 
   meta = with lib; {
