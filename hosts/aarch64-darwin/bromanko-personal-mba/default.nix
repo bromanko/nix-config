@@ -20,6 +20,7 @@ with lib.my; {
     };
     desktop = {
       fonts.enable = true;
+      dictionaries.enable = true;
       apps = {
         raycast.enable = true;
         espanso.enable = true;
