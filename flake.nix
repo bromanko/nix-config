@@ -34,6 +34,7 @@
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
+          config.input-fonts.acceptLicense = true;
           overlays = [ self.overlay ] ++ (lib.attrValues self.overlays);
         });
 
