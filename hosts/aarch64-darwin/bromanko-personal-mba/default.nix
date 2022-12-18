@@ -1,6 +1,7 @@
 { pkgs, config, lib, ... }:
 
-with lib;
+let brewPath = "/opt/homebrew/bin";
+in with lib;
 with lib.my; {
   modules = {
     shell = {
@@ -8,7 +9,7 @@ with lib.my; {
       openssh.enable = true;
       zsh = {
         enable = true;
-        extraPaths = [ "$HOME/.emacs.d/bin" ];
+        extraPaths = [ "$HOME/.emacs.d/bin" brewPath ];
       };
       bat.enable = true;
       git.enable = true;
@@ -44,7 +45,7 @@ with lib.my; {
 
     homebrew = {
       enable = true;
-      brewPrefix = "/opt/homebrew/bin";
+      brewPrefix = brewPath;
       taps = [
         "homebrew/cask"
         "homebrew/cask-versions"
