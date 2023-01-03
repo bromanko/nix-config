@@ -80,5 +80,6 @@ with lib.my; {
   };
 
   home-manager = { sharedModules = [{ manual.manpages.enable = false; }]; };
+  hm = { home = { packages = [ pkgs.obsidian ]; }; };
   services.nix-daemon.enable = true;
 }
