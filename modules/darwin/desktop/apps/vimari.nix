@@ -2,7 +2,7 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.apps.raycast;
+let cfg = config.modules.desktop.apps.vimari;
 in {
   options.modules.desktop.apps.vimari = { enable = mkBoolOpt false; };
 
