@@ -30,6 +30,7 @@ with lib.my; {
       dictionaries.enable = true;
       apps = {
         raycast.enable = true;
+        hammerspoon.enable = true;
         espanso.enable = true;
         vimari.enable = true;
       };
