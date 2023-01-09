@@ -27,6 +27,7 @@ with lib.my; {
     };
     desktop = {
       fonts.enable = true;
+      dictionaries.enable = true;
       apps = {
         raycast.enable = true;
         espanso.enable = true;
@@ -79,7 +80,6 @@ with lib.my; {
     };
   };
 
-  home-manager = { sharedModules = [{ manual.manpages.enable = false; }]; };
   hm = { home = { packages = [ pkgs.obsidian ]; }; };
   services.nix-daemon.enable = true;
 }
