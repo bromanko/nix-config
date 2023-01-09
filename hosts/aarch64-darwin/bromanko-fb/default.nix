@@ -64,7 +64,6 @@ with lib.my; {
         "choosy"
         "istat-menus"
         "lunar"
-        "raycast"
         "signal"
         "spotify"
         "kindaVim"

@@ -63,7 +63,6 @@ with lib.my; {
         "istat-menus"
         "jetbrains-toolbox"
         "lunar"
-        "raycast"
         "signal"
         "spotify"
         "vmware-fusion"

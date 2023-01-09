@@ -55,7 +55,6 @@ with lib.my; {
         "google-chrome"
         "istat-menus"
         "jetbrains-toolbox"
-        "raycast"
         "signal"
         "spotify"
         "vmware-fusion"
