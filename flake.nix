@@ -14,7 +14,7 @@
 
     # Other sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    emacs-overlay-darwin.url = "github:bromanko/emacs-overlay-darwin";
+    emacs-overlay-darwin.url = "github:cmacrae/emacs";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
