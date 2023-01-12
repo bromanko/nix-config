@@ -18,9 +18,10 @@
 
 (setq-default line-spacing 0.15)
 
-(defvar br-default-theme 'catppuccin-mocha)
+(defvar br-default-theme 'catppuccin)
 (setq doom-theme br-default-theme)
 (load-theme br-default-theme t)
+(setq catppuccin-flavor 'mocha)
 
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
