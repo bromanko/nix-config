@@ -11,6 +11,14 @@ in {
       taps = [ "homebrew/cask" ];
       casks = [ "hammerspoon" ];
     };
-    hm = { home = { packages = with pkgs; [ lua lua53Packages.fennel ]; }; };
+    hm = {
+      home = {
+        packages = with pkgs; [
+          lua5_4
+          lua53Packages.luarocks
+          lua53Packages.fennel
+        ];
+      };
+    };
   };
 }
