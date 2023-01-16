@@ -13,6 +13,7 @@ in stdenv.mkDerivation {
     stripRoot = false;
   };
 
+  dontBuild = true;
   installPhase = ''
     local webDir="$out/websters-1913.dictionary"
     install -m755 -d "$webDir"
