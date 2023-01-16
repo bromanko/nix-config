@@ -14,10 +14,17 @@ in {
     hm = {
       home = {
         packages = with pkgs; [
-          lua5_4
           lua53Packages.luarocks
           lua53Packages.fennel
+          my.spacehammer
         ];
+        file = {
+          hammerspoon = {
+            source = pkgs.my.spacehammer;
+            target = ".hammerspoon";
+            recursive = true;
+          };
+        };
       };
     };
   };
