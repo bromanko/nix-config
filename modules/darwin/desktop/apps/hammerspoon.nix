@@ -14,14 +14,25 @@ in {
     hm = {
       home = {
         packages = with pkgs; [
-          lua53Packages.luarocks
-          lua53Packages.fennel
+          lua53Packages.luarocks # Required for spacehammer
+          lua53Packages.fennel # Required for spacehammer
           my.spacehammer
         ];
         file = {
-          hammerspoon = {
-            source = pkgs.my.spacehammer;
+          hammerspoonCfg = {
+            source = pkgs.symlinkJoin {
+              name = "hammerspoonCfg";
+              paths = [
+                pkgs.my.spacehammer
+                "${pkgs.lua53Packages.fennel}/share/lua/5.3"
+              ];
+            };
             target = ".hammerspoon";
+            recursive = true;
+          };
+          spacehammerCfg = {
+            source = ../../../../configs/hammerspoon/spacehammer;
+            target = ".spacehammer";
             recursive = true;
           };
         };
