@@ -32,6 +32,25 @@
   (fn activate []
     (windows.activate-app app-name)))
 
+(fn m-key [key]
+  "
+  Simulates pressing a multimedia key on a keyboard
+  Takes the key string and simulates pressing it for 5 ms then relesing it.
+  Side effectful.
+  Returns nil
+  "
+  (: (hs.eventtap.event.newSystemKeyEvent (string.upper key) true) :post)
+  (hs.timer.usleep 5)
+  (: (hs.eventtap.event.newSystemKeyEvent (string.upper key) false) :post))
+
+(fn mute
+  []
+  "
+  Simulates pressing the mute keyboard key
+  "
+  (fn mute []
+    (m-key :mute)))
+
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General
@@ -233,9 +252,9 @@
          :title "Volume Up"
          :action "multimedia:volume-up"
          :repeatable true}
-        {:key :k
-         :title "Mute"
-         :action "multimedia:volume-up"}
+        {:key :m
+         :title "Toggle Mute"
+         :action (mute)}
         {:key :a
          :title (.. "Launch " music-app)
          :action (activator music-app)}])
