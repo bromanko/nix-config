@@ -282,7 +282,7 @@
          :items capture-bindings}])
 
 (local common-keys
-       [{:mods [:alt]
+       [{:mods [:cmd]
          :key :space
          :action "lib.modal:activate-modal"}
         {:mods [:cmd :ctrl]
