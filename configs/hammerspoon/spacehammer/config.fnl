@@ -318,14 +318,6 @@
         :keys browser-keys
         :items browser-items})
 
-(local emacs-config
-       {:key "Emacs"
-        :activate (fn [] (vim.disable))
-        :deactivate (fn [] (vim.enable))
-        :launch "emacs:maximize"
-        :items []
-        :keys []})
-
 (local hammerspoon-config
        {:key "Hammerspoon"
         :items (concat
@@ -340,7 +332,6 @@
 
 (local apps
        [chrome-config
-        emacs-config
         hammerspoon-config])
 
 (local config
