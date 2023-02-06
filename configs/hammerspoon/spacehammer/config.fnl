@@ -68,6 +68,14 @@
 ;; Windows
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(fn close-active-window
+  []
+  "
+  Closes the active window
+  "
+  (fn close []
+    (: (hs.window.focusedWindow) :close)))
+
 (local window-jumps
        [{:mods [:cmd]
          :key "hjkl"
@@ -163,6 +171,9 @@
          {:key :c
           :title "Center"
           :action "windows:center-window-frame"}
+         {:key :d
+          :title "Close"
+          :action (close-active-window)}
          {:key :g
           :title "Grid"
           :action "windows:show-grid"}
