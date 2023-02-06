@@ -194,6 +194,9 @@
          :title "Emacs"
          :action (activator "Emacs")}
         {:key :h
+         :title "Hammerspoon"
+         :action (activator "Hammerspoon")}
+        {:key :f
          :title "Workplace Chat"
          :action (activator "Workplace Chat")}
         {:key :l
