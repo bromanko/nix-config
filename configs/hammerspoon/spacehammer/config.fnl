@@ -259,6 +259,24 @@
          :title (.. "Launch " music-app)
          :action (activator music-app)}])
 
+(fn screen-capture
+  [style]
+  "
+  Issues a screen capture command
+  "
+  (fn c []
+    (local task (hs.task.new "/usr/sbin/screencapture" nil ["-i" (.. "-J" style) "-c"]))
+    (task:start)))
+
+(local capture-bindings
+       [return
+        {:key :s
+        :title "Selection"
+        :action (screen-capture "selection")}
+        {:key :w
+        :title "Window"
+        :action (screen-capture "window")}])
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Main Menu & Config
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -280,7 +298,10 @@
          :action "windows:jump"}
         {:key   :m
          :title "Media"
-         :items media-bindings}])
+         :items media-bindings}
+        {:key   :x
+         :title "Capture Screen"
+         :items capture-bindings}])
 
 (local common-keys
        [{:mods [:alt]
