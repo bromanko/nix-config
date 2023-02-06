@@ -147,27 +147,6 @@
          :action "windows:resize-right"
          :repeatable true}])
 
-(local window-move-screens
-       [{:key "n, p"
-         :title "Move next\\previous screen"}
-        {:mods [:shift]
-         :key "n, p"
-         :title "Move up\\down screens"}
-        {:key :n
-         :action "windows:move-south"
-         :repeatable true}
-        {:key :p
-         :action "windows:move-north"
-         :repeatable true}
-        {:mods [:shift]
-         :key :n
-         :action "windows:move-west"
-         :repeatable true}
-        {:mods [:shift]
-         :key :p
-         :action "windows:move-east"
-         :repeatable true}])
-
 (local window-bindings
        (concat
         [return
@@ -178,7 +157,6 @@
         window-halves
         window-increments
         window-resize
-        window-move-screens
         [{:key :m
           :title "Maximize"
           :action "windows:maximize-window-frame"}
