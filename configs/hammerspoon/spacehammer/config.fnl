@@ -356,7 +356,8 @@
         :exit  (fn [] (windows.hide-display-numbers))
         :apps  apps
         :hyper {:key :F18}
-        :modules {:windows {:center-ratio "80:50"}}})
+        :grid {:size "3x1" :margins [10 10]}
+        :modules {:windows {:center-ratio "80:50" }}})
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
