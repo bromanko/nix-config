@@ -337,7 +337,7 @@
         :items (concat
                 menu-items
                 [{:key :r
-                  :title "Reload Console"
+                  :title "Reload Config"
                   :action hs.reload}
                  {:key :c
                   :title "Clear Console"
