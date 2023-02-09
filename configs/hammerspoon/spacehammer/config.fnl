@@ -51,16 +51,6 @@
   (fn mute []
     (m-key :mute)))
 
-(fn is-clamshell
-  []
-  "
-  Returns a value indicating whether the computer is currently in clamshell
-  mode (lid is closed).
-  "
-  (=
-    (hs.execute "ioreg -r -k AppleClamshellState -d 4 | grep AppleClamshellState | head -1 | grep No")
-    ""))
-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; General
@@ -72,6 +62,16 @@
        {:key :space
         :title "Back"
         :action :previous})
+
+(fn is-clamshell
+  []
+  "
+  Returns a value indicating whether the computer is currently in clamshell
+  mode (lid is closed).
+  "
+  (=
+    (hs.execute "ioreg -r -k AppleClamshellState -d 4 | grep AppleClamshellState | head -1 | grep No")
+    ""))
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
