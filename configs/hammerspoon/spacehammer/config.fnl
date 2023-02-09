@@ -4,8 +4,8 @@
 (local emacs (require :emacs))
 (local vim (require :vim))
 
-(local {:concat concat
-        :logf logf} (require :lib.functional))
+(local {: concat
+        : logf} (require :lib.functional))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Initialize
