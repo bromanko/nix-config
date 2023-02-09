@@ -90,80 +90,80 @@
 
 (local window-jumps
        [{:mods [:cmd]
-         :key "hjkl"
+         :key "⏴⏷⏶⏵"
          :title "Jump"}
         {:mods [:cmd]
-         :key :h
+         :key :left
          :action "windows:jump-window-left"
          :repeatable true}
         {:mods [:cmd]
-         :key :j
+         :key :up
          :action "windows:jump-window-above"
          :repeatable true}
         {:mods [:cmd]
-         :key :k
+         :key :down
          :action "windows:jump-window-below"
          :repeatable true}
         {:mods [:cmd]
-         :key :l
+         :key :right
          :action "windows:jump-window-right"
          :repeatable true}])
 
 (local window-halves
-       [{:key "hjkl"
+       [{:key "⏴⏷⏶⏵"
          :title "Halves"}
-        {:key :h
+        {:key :left
          :action "windows:resize-half-left"
          :repeatable true}
-        {:key :j
+        {:key :down
          :action "windows:resize-half-bottom"
          :repeatable true}
-        {:key :k
+        {:key :up
          :action "windows:resize-half-top"
          :repeatable true}
-        {:key :l
+        {:key :right
          :action "windows:resize-half-right"
          :repeatable true}])
 
 (local window-increments
        [{:mods [:alt]
-         :key "hjkl"
+         :key "⏴⏷⏶⏵"
          :title "Increments"}
         {:mods [:alt]
-         :key :h
+         :key :left
          :action "windows:resize-inc-left"
          :repeatable true}
         {:mods [:alt]
-         :key :j
+         :key :down
          :action "windows:resize-inc-bottom"
          :repeatable true}
         {:mods [:alt]
-         :key :k
+         :key :up
          :action "windows:resize-inc-top"
          :repeatable true}
         {:mods [:alt]
-         :key :l
+         :key :right
          :action "windows:resize-inc-right"
          :repeatable true}])
 
 (local window-resize
        [{:mods [:shift]
-         :key "hjkl"
+         :key "⏴⏷⏶⏵"
          :title "Resize"}
         {:mods [:shift]
-         :key :h
+         :key :left
          :action "windows:resize-left"
          :repeatable true}
         {:mods [:shift]
-         :key :j
+         :key :down
          :action "windows:resize-down"
          :repeatable true}
         {:mods [:shift]
-         :key :k
+         :key :up
          :action "windows:resize-up"
          :repeatable true}
         {:mods [:shift]
-         :key :l
+         :key :right
          :action "windows:resize-right"
          :repeatable true}])
 
