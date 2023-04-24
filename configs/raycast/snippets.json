@@ -1,0 +1,14 @@
+[
+  { "name": "My Name", "keyword": ",me", "text": "Brian Romanko" },
+  { "name": "Too Long; Didn't Read", "keyword": "tldr", "text": "TL;DR" },
+  {
+    "name": "Today's Date",
+    "keyword": ",td",
+    "text": "{date \"MM/dd/yyyy\"}"
+  },
+  {
+    "name": "Today's Date (Long)",
+    "keyword": ",tl",
+    "text": "{date}"
+  }
+]
