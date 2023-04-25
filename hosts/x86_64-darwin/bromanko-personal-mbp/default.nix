@@ -59,7 +59,6 @@ with lib.my; {
       masApps = {
         "1Password" = 1333542190;
         Amphetamine = 937984704;
-        Fantastical = 975937182;
         Keynote = 409183694;
         Kindle = 405399194;
         NextDNS = 1464122853;
