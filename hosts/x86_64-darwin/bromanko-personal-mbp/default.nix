@@ -20,10 +20,7 @@ with lib.my; {
     };
     desktop = {
       fonts.enable = true;
-      apps = {
-        raycast.enable = true;
-        espanso.enable = true;
-      };
+      apps = { raycast.enable = true; };
     };
     dev = {
       elixir.enable = true;
@@ -46,7 +43,6 @@ with lib.my; {
         "homebrew/cask-versions"
         "homebrew/core"
         "homebrew/services"
-        "federico-terzi/espanso"
       ];
       casks = [
         "docker"
@@ -60,7 +56,6 @@ with lib.my; {
         "vmware-fusion"
         "notion"
       ];
-      brews = [ "espanso" ];
       masApps = {
         "1Password" = 1333542190;
         Amphetamine = 937984704;
