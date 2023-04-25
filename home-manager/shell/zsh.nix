@@ -23,8 +23,7 @@ in {
 
       enableAutosuggestions = true;
       enableSyntaxHighlighting = true;
-      enableCompletion =
-        false; # Disable due to conflicts with nix 2.4 completions
+      enableCompletion = true;
       history.extended = true;
 
       shellAliases = {
