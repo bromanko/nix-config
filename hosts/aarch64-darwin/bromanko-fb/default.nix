@@ -31,7 +31,6 @@ with lib.my; {
       apps = {
         raycast.enable = true;
         hammerspoon.enable = true;
-        espanso.enable = true;
         vimari.enable = true;
       };
     };
@@ -54,22 +53,18 @@ with lib.my; {
         "homebrew/cask-versions"
         "homebrew/core"
         "homebrew/services"
-        "federico-terzi/espanso"
       ];
       casks = [
         "1password"
         "bartender"
         "betterdisplay"
         "camo-studio"
-        "choosy"
         "istat-menus"
         "lunar"
         "signal"
         "spotify"
         "kindaVim"
-        "scrolla"
       ];
-      brews = [ "espanso" ];
       masApps = {
         Amphetamine = 937984704;
         "iA Writer" = 775737590;
