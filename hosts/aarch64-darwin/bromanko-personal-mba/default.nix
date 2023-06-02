@@ -72,7 +72,6 @@ with lib.my; {
       ];
       brews = [ "espanso" ];
       masApps = {
-        Fantastical = 975937182;
         Keynote = 409183694;
         Kindle = 405399194;
         NextDNS = 1464122853;
