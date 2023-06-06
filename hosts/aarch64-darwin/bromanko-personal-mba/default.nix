@@ -57,6 +57,7 @@ with lib.my; {
       casks = [
         "1password"
         "bartender"
+        "betterdisplay"
         "docker"
         "dropbox"
         "firefox"
@@ -70,7 +71,6 @@ with lib.my; {
         "notion"
         "kindavim"
       ];
-      brews = [ "espanso" ];
       masApps = {
         Keynote = 409183694;
         Kindle = 405399194;
