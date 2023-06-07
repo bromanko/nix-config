@@ -69,6 +69,7 @@ with lib.my; {
         "spotify"
         "vmware-fusion"
         "notion"
+        "orion"
         "kindavim"
       ];
       masApps = {
