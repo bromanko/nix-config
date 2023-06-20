@@ -61,6 +61,7 @@ with lib.my; {
         "docker"
         "dropbox"
         "firefox"
+        "figma"
         "google-chrome"
         "istat-menus"
         "jetbrains-toolbox"
