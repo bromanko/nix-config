@@ -36,6 +36,7 @@ with lib.my; {
       exa.enable = true;
       fd.enable = true;
     };
+    desktop = { fonts.enable = true; };
     dev = { nix.enable = true; };
     editor = {
       neovim.enable = true;
