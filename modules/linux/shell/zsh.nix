@@ -5,6 +5,8 @@ with lib.my;
 let cfg = config.modules.shell.zsh;
 in {
   config = mkIf cfg.enable {
+    programs.zsh.enable = true;
+
     home-manager.users."${config.user.name}" = {
       programs.zsh = {
         shellAliases = {
