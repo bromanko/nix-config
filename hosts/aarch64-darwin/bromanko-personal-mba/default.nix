@@ -68,7 +68,6 @@ with lib.my; {
         "lunar"
         "signal"
         "spotify"
-        "vmware-fusion"
         "notion"
         "orion"
         "kindavim"
