@@ -24,6 +24,8 @@ with lib.my; {
 
   nixpkgs.config.allowUnfree = true;
 
+  services.openssh = { enable = true; };
+
   modules = {
     shell = {
       commonPkgs.enable = true;
