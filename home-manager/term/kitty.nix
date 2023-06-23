@@ -88,8 +88,5 @@ in {
         color15 = "#e3e1e4";
       };
     };
-
-    programs.zsh.shellAliases =
-      mkIf config.modules.shell.zsh.enable { ssh = "kitty +kitten ssh"; };
   };
 }
