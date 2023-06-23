@@ -17,7 +17,13 @@ with lib.my; {
 
   # Using iwd since there is a bug with wpa_supplicant 2.10
   # with Broadcom chips
-  networking.wireless.iwd.enable = true;
+  networking = {
+    wireless.iwd.enable = true;
+    networkmanager = {
+      enable = true;
+      wifi.backend = "iwd";
+    };
+  };
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Los_Angeles";
