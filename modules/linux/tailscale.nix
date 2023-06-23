@@ -10,9 +10,5 @@ in {
     environment.systemPackages = [ pkgs.tailscale ];
 
     services.tailscale.enable = true;
-
-    systemd.services.tailscale-autoconnect = {
-      description = "Automatic connection to Tailscale";
-    };
   };
 }
