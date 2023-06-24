@@ -28,8 +28,6 @@ with lib.my; {
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Los_Angeles";
 
-  nixpkgs.config.allowUnfree = true;
-
   services.openssh = { enable = true; };
 
   modules = {
