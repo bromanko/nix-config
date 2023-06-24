@@ -2,13 +2,35 @@
 
 with lib;
 with lib.my; {
-  imports = [ # Include the results of the hardware scan.
-    ./hardware-configuration.nix
-  ];
+  imports = [ ./hardware-configuration.nix ];
 
-  # Use the systemd-boot EFI boot loader.
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi.canTouchEfiVariables = true;
+  boot = {
+    loader = {
+      efi.canTouchEfiVariables = true;
+      systemd-boot.enable = true;
+    };
+
+    # Enable remote login during boot to unlock
+    # encrypted volume
+    initrd = {
+      network = {
+        enable = true;
+        ssh = {
+          enable = true;
+          port = 2222;
+          # this includes the ssh keys of all users in the wheel group
+          authorizedKeys = with lib;
+            concatLists (mapAttrsToList (name: user:
+              if elem "wheel" user.extraGroups then
+                user.openssh.authorizedKeys.keys
+              else
+                [ ]) config.users.users);
+          hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
+        };
+      };
+      availableKernelModules = [ "wl" ];
+    };
+  };
 
   # The default governor constantly runs all cores
   # at max frequency. Schedutil will run at a lower
