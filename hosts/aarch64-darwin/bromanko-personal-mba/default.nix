@@ -84,6 +84,6 @@ with lib.my; {
       };
     };
   };
-  hm = { home = { packages = [ pkgs.slack ]; }; };
+  hm = { home = { packages = with pkgs; [ slack tailscale ]; }; };
   services.nix-daemon.enable = true;
 }
