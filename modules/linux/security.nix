@@ -6,7 +6,7 @@
   boot.tmp.useTmpfs = lib.mkDefault true;
   # If not using tmpfs, which is naturally purged on reboot, we must clean it
   # /tmp ourselves. /tmp should be volatile storage!
-  boot.cleanTmpDir = lib.mkDefault (!config.boot.tmp.useTmpfs);
+  boot.tmp.cleanOnBoot = lib.mkDefault (!config.boot.tmp.useTmpfs);
 
   # Change me later!
   user.initialPassword = "nixos";
