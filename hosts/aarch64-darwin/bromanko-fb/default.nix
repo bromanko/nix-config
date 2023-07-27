@@ -59,6 +59,7 @@ with lib.my; {
         "bartender"
         "betterdisplay"
         "camo-studio"
+        "figma"
         "istat-menus"
         "lunar"
         "signal"
@@ -76,6 +77,6 @@ with lib.my; {
     };
   };
 
-  hm = { home = { packages = [ pkgs.obsidian ]; }; };
+  hm = { home = { packages = with pkgs; [ obsidian llm ]; }; };
   services.nix-daemon.enable = true;
 }
