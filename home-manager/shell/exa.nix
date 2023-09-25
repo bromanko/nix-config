@@ -5,10 +5,10 @@ with lib.my;
 let cfg = config.modules.shell.exa;
 in {
   config = mkIf cfg.enable {
-    home.packages = [ pkgs.exa ];
+    home.packages = [ pkgs.eza ];
 
     programs.zsh.shellAliases = mkIf config.modules.shell.zsh.enable {
-      ls = "${pkgs.exa}/bin/exa";
+      ls = "${pkgs.eza}/bin/eza";
       ll = "ls -l --time-style long-iso --icons";
       l = "ll -a";
     };
