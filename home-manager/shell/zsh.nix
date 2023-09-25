@@ -22,7 +22,7 @@ in {
       enable = true;
 
       enableAutosuggestions = true;
-      enableSyntaxHighlighting = true;
+      syntaxHighlighting.enable = true;
       enableCompletion = true;
       history.extended = true;
 
