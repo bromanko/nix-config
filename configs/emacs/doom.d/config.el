@@ -57,7 +57,8 @@ apps are not started from a shell."
 (set-exec-path-from-shell-PATH)
 
 ;; evil-easymotion
-(evilem-default-keybindings "SPC")
+(after! evil-easymotion
+  (evilem-default-keybindings "SPC"))
 
 ;; save on focus change
 (add-hook 'focus-out-hook (lambda () (save-some-buffers t)))
