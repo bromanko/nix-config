@@ -14,14 +14,14 @@
 
     # Other sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    emacs-overlay-darwin.url = "github:cmacrae/emacs";
     flake-compat = {
       url = "github:edolstra/flake-compat";
       flake = false;
     };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager, ... }:
+  outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
+    , emacs-overlay, ... }:
     let
       inherit (lib.my) mapModules mapModulesRec;
 
@@ -35,7 +35,8 @@
           inherit system;
           config.allowUnfree = true;
           config.input-fonts.acceptLicense = true;
-          overlays = [ self.overlay ] ++ (lib.attrValues self.overlays);
+          overlays = [ self.overlay emacs-overlay.overlay ]
+            ++ (lib.attrValues self.overlays);
         });
 
       lib = nixpkgs.lib.extend (self: super: {
