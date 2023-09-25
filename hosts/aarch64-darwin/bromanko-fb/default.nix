@@ -77,6 +77,6 @@ with lib.my; {
     };
   };
 
-  hm = { home = { packages = with pkgs; [ obsidian llm ]; }; };
+  hm = { home = { packages = with pkgs; [ obsidian ]; }; };
   services.nix-daemon.enable = true;
 }
