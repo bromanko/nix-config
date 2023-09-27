@@ -348,6 +348,8 @@ vnoremap <leader>h<Space>    :action ContextHelp<CR>
 """ Major mode ----------------------------------
 let g:WhichKeyDesc_Major = "<leader>m +major-mode-commands"
 
+let g:WhichKeyDesc_Major_AI = "<leader>ma +ai"
+
 let g:WhichKeyDesc_Major_Compile = "<leader>mc +compile"
 
 let g:WhichKeyDesc_Major_Debug = "<leader>md +debug"
@@ -414,6 +416,8 @@ vnoremap <leader>mdr    <Esc>:action ChooseDebugConfiguration<CR>
 let g:WhichKeyDesc_Major_Debug_StepInto = "<leader>mds step-into"
 nnoremap <leader>mds    :action StepInto<CR>
 vnoremap <leader>mds    <Esc>:action StepInto<CR>
+
+""" AI ------------------------------------------
 
 
 """ Refactoring ---------------------------------
