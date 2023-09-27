@@ -75,7 +75,6 @@ with lib.my; {
       masApps = {
         Keynote = 409183694;
         Kindle = 405399194;
-        NextDNS = 1464122853;
         Numbers = 409203825;
         Pages = 409201541;
         Tailscale = 1475387142;
