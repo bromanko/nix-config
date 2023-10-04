@@ -16,18 +16,19 @@ in {
   };
 
   config = mkIf cfg.enable {
-    system.activationScripts.postActivation.text = ''
-      # Set up dictionaries.
-      echo "configuring dictionaries..." >&2
-      mkdir -p ~/Library/Dictionaries
+    home-manager.users."${config.user.name}".home.activation.installDictionaries =
+      ''
+        # Set up dictionaries.
+        echo "configuring dictionaries..." >&2
+        mkdir -p $HOME/Library/Dictionaries
 
-      declare -a dictionaries=( ${toString (lib.toList cfg.dictionaries)} )
-      for path in $dictionaries; do
-        find -L $path -type d -name "*.dictionary" -print0 | while IFS= read -rd "" f; do
-          # Must copy the dictionary since symlinks don't work with Dictionary.app
-          cp -rf "$f" ~/Library/Dictionaries
+        declare -a dictionaries=( ${toString (lib.toList cfg.dictionaries)} )
+        for path in $dictionaries; do
+          find -L $path -type d -name "*.dictionary" -print0 | while IFS= read -rd "" f; do
+            # Must copy the dictionary since symlinks don't work with Dictionary.app
+            cp -rf "$f" $HOME/Library/Dictionaries
+          done
         done
-      done
-    '';
+      '';
   };
 }
