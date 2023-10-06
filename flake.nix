@@ -25,7 +25,7 @@
     let
       inherit (lib.my) mapModules mapModulesRec;
 
-      supportedSystems = [ "x86_64-darwin" "aarch64-darwin" "x86_64-linux" ];
+      supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
 
       forAllSystems = f:
         nixpkgs.lib.genAttrs supportedSystems (system: f system);
@@ -64,8 +64,7 @@
       overlays = mapModules ./overlays import;
 
       darwinConfigurations =
-        (lib.my.mapDarwinHosts "x86_64-darwin" ./hosts/x86_64-darwin)
-        // (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
+        (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
       nixosConfigurations = lib.my.mapNixosHosts ./hosts/nixos;
 
