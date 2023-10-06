@@ -18,7 +18,7 @@ in {
         emacsPackages.auth-source-1password
       ];
 
-      programs.ssh = {
+      programs.ssh = mkIf config.modules.shell.ssh.enable {
         matchBlocks = {
           keychain = {
             host = "*";
@@ -27,6 +27,19 @@ in {
                 "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"'';
             };
           };
+        };
+      };
+
+      programs.git = mkIf config.modules.shell.git.enable {
+        signing = {
+          signByDefault = true;
+          key =
+            "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia";
+        };
+        extraConfig.gpg = {
+          format = "ssh";
+          ssh.program =
+            "/Applications/1Password.app/Contents/MacOS/op-ssh-sign";
         };
       };
     };
