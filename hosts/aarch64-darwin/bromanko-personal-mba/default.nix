@@ -26,6 +26,7 @@ with lib.my; {
         raycast.enable = true;
         espanso.enable = true;
         vimari.enable = true;
+        "1Password".enable = true;
       };
     };
     dev = {
@@ -54,7 +55,6 @@ with lib.my; {
         "federico-terzi/espanso"
       ];
       casks = [
-        "1password"
         "bartender"
         "betterdisplay"
         "docker"
