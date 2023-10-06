@@ -9,6 +9,8 @@ in {
       enable = true;
 
       forwardAgent = true;
+      controlMaster = "auto";
+      controlPersist = "1800";
 
       matchBlocks = {
         keychain = {
