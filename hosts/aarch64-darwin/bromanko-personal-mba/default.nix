@@ -26,7 +26,6 @@ with lib.my; {
         raycast.enable = true;
         espanso.enable = true;
         vimari.enable = true;
-        hammerspoon.enable = true;
       };
     };
     dev = {
