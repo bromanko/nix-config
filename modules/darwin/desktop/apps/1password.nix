@@ -17,6 +17,18 @@ in {
         _1password
         emacsPackages.auth-source-1password
       ];
+
+      programs.ssh = {
+        matchBlocks = {
+          keychain = {
+            host = "*";
+            extraOptions = {
+              IdentityAgent = ''
+                "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"'';
+            };
+          };
+        };
+      };
     };
   };
 }
