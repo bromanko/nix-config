@@ -5,6 +5,7 @@ with lib.my; {
   modules = {
     shell = {
       commonPkgs.enable = true;
+      ssh.enable = true;
       zsh = {
         enable = true;
         extraPaths = [
