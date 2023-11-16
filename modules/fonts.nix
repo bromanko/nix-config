@@ -13,6 +13,7 @@ in {
         (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
         open-sans
         input-fonts
+        monaspace
       ];
     };
   };
