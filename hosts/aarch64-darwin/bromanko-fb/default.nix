@@ -30,6 +30,7 @@ with lib.my; {
       fonts.enable = true;
       dictionaries.enable = true;
       apps = {
+        "1Password".enable = true;
         raycast.enable = true;
         hammerspoon.enable = true;
         vimari.enable = true;
@@ -56,7 +57,6 @@ with lib.my; {
         "homebrew/services"
       ];
       casks = [
-        "1password"
         "bartender"
         "betterdisplay"
         "camo-studio"
