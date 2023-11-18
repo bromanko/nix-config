@@ -58,6 +58,7 @@ with lib.my; {
       casks = [
         "bartender"
         "betterdisplay"
+        "dash"
         "docker"
         "dropbox"
         "firefox"
