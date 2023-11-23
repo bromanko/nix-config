@@ -244,9 +244,15 @@ vnoremap <leader>fs    :action SaveDocument<CR>
 " Sadly when you are inside the project window this key binding does not work
 " anymore. You can use <A-1> if you want to close the window or <Esc> if you
 " want to leave the window opened and focus on the code.
-" let g:WhichKeyDesc_Files_FileTree = "<leader>ft file-tree"
-" nnoremap <leader>ft    :action ActivateProjectToolWindow<CR>
-" vnoremap <leader>ft    :action ActivateProjectToolWindow<CR>
+let g:WhichKeyDesc_Files_FileTree = "<leader>ft file-tree"
+nnoremap <leader>ft    :action ActivateProjectToolWindow<CR>
+vnoremap <leader>ft    :action ActivateProjectToolWindow<CR>
+nnoremap <leader>fr    :action ActivateRunToolWindow<CR>
+vnoremap <leader>fr    :action ActivateRunToolWindow<CR>
+nnoremap <leader>fd    :action ActivateDebugToolWindow<CR>
+vnoremap <leader>fd    :action ActivateDebugToolWindow<CR>
+nnoremap <leader>fb    :action ActivateDatabaseToolWindow<CR>
+vnoremap <leader>fb    :action ActivateDatabaseToolWindow<CR>
 
 """ Yank/Copy Submenu ---------------------------------
 let g:WhichKeyDesc_Files_YankCopy = "<leader>fy +Yank/Copy"
@@ -260,10 +266,11 @@ vnoremap <leader>fyy    :action CopyAbsolutePath<CR>
 """ Frame ---------------------------------------------
 let g:WhichKeyDesc_Frame = "<leader>F    +frame"
 
-" Focus next project
 let g:WhichKeyDesc_Frame_NextProjectWindow = "<leader>Fo next-project-window"
 nnoremap <leader>Fo    :action NextProjectWindow<CR>
 vnoremap <leader>Fo    :action NextProjectWindow<CR>
+nnoremap <leader>Fh    :action HideSideWindows<CR>
+vnoremap <leader>Fh    :action HideSideWindows<CR>
 """ ---------------------------------------------------
 
 """ Git
