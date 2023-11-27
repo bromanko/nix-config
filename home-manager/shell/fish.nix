@@ -47,7 +47,7 @@ in {
       interactiveShellInit = ''
         # add extra paths to $PATH
         ${concatStrings (map (path: ''
-          set -x PATH "${path}" $PATH
+          set -x PATH $PATH "${path}"
         '') cfg.extraPaths)}
 
         # vterm
