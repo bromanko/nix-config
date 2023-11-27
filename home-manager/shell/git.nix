@@ -2,7 +2,22 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.shell.git;
+let
+  cfg = config.modules.shell.git;
+  shellAliases = {
+    g = "git";
+    ga = "git add";
+    gb = "git branch";
+    gc = "git commit";
+    gcm = "git checkout main";
+    gco = "git checkout";
+    gcp = "git cherry-pick";
+    gd = "git diff";
+    ggpush = "git push origin $(current_branch)";
+    gl = "git pull --prune";
+    gp = "git push origin HEAD";
+    gs = "git status -sb";
+  };
 in {
   config = mkIf cfg.enable {
     programs.git = {
@@ -137,19 +152,9 @@ in {
       settings = { git_protocol = "ssh"; };
     };
 
-    programs.zsh.shellAliases = mkIf config.modules.shell.zsh.enable {
-      g = "git";
-      ga = "git add";
-      gb = "git branch";
-      gc = "git commit";
-      gcm = "git checkout main";
-      gco = "git checkout";
-      gcp = "git cherry-pick";
-      gd = "git diff";
-      ggpush = "git push origin $(current_branch)";
-      gl = "git pull --prune";
-      gp = "git push origin HEAD";
-      gs = "git status -sb";
-    };
+    programs.zsh.shellAliases =
+      mkIf config.modules.shell.zsh.enable shellAliases;
+    programs.fish.shellAliases =
+      mkIf config.modules.shell.fish.enable shellAliases;
   };
 }
