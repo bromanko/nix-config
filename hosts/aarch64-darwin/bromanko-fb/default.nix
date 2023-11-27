@@ -6,7 +6,7 @@ with lib.my; {
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
-      zsh = {
+      fish = {
         enable = true;
         extraPaths = [
           "$HOME/homebrew/bin"
