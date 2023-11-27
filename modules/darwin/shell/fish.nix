@@ -10,7 +10,7 @@ in {
 
     environment = {
       shells = [ pkgs.fish ];
-      pathsToLink = [ "/share/zsh" ];
+      pathsToLink = [ "/share/fish" ];
     };
   };
 }
