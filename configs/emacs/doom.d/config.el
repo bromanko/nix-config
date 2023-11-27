@@ -76,7 +76,12 @@ apps are not started from a shell."
 ;; Disable quit confirmation
 (setq confirm-kill-emacs nil)
 
+;; Use bash for shell commands
+(setq shell-file-name (executable-find "bash"))
 
+;; Use fish for vterm
+(setq-default vterm-shell (executable-find "fish"))
+(setq-default explicit-shell-file-name (executable-find "fish"))
 
 ;; **************************************************
 ;; Performance
