@@ -9,7 +9,7 @@ in {
       enable = true;
 
       enableZshIntegration = config.modules.shell.zsh.enable;
-      enableFishIntegration = false;
+      enableFishIntegration = config.modules.shell.fish.enable;
       enableBashIntegration = false;
 
       # See docs at https://starship.rs/config

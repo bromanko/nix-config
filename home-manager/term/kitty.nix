@@ -12,6 +12,10 @@ in {
         name = "FantasqueSansMono Nerd Font Mono";
         size = config.modules.term.kitty.fontSize;
       };
+      shellIntegration = {
+        enableZshIntegration = config.modules.shell.zsh.enable;
+        enableFishIntegration = config.modules.shell.fish.enable;
+      };
       keybindings = {
         "cmd+up" = "scroll_line_up";
         "cmd+down" = "scroll_line_down";
