@@ -2,6 +2,18 @@
 
 (setq user-full-name "Brian Romanko"
       user-mail-address "hello@bromanko.com")
+  
+;; **************************************************
+;; Terminal Settings
+;; **************************************************
+;; Use bash for shell commands
+;; Important to set this early
+(setq shell-file-name (executable-find "bash"))
+
+;; Use fish for vterm
+(setq-default vterm-shell (executable-find "fish"))
+(setq-default explicit-shell-file-name (executable-find "fish"))
+
 
 ;; **************************************************
 ;; UI Settings
@@ -34,27 +46,9 @@
 (setq evil-insert-state-cursor 'bar)
 
 
-
 ;; **************************************************
 ;; General
 ;; **************************************************
-
-;; PATH configuration
-(defun set-exec-path-from-shell-PATH ()
-  "Set up Emacs' `exec-path' and PATH environment variable to match
-that used by the user's shell.
-
-This is particularly useful under Mac OS X and macOS, where GUI
-apps are not started from a shell."
-  (interactive)
-  (let ((path-from-shell (replace-regexp-in-string
-			  "[ \t\n]*$" "" (shell-command-to-string
-					  "$SHELL --login -c 'echo $PATH'"
-					  ))))
-    (setenv "PATH" path-from-shell)
-    (setq exec-path (split-string path-from-shell path-separator))))
-
-(set-exec-path-from-shell-PATH)
 
 ;; evil-easymotion
 (after! evil-easymotion
@@ -75,13 +69,6 @@ apps are not started from a shell."
 
 ;; Disable quit confirmation
 (setq confirm-kill-emacs nil)
-
-;; Use bash for shell commands
-(setq shell-file-name (executable-find "bash"))
-
-;; Use fish for vterm
-(setq-default vterm-shell (executable-find "fish"))
-(setq-default explicit-shell-file-name (executable-find "fish"))
 
 ;; **************************************************
 ;; Performance
