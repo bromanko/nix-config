@@ -10,9 +10,8 @@ with lib.my; {
         enable = true;
         extraPaths = [
           "$HOME/homebrew/bin"
-          "/opt/facebook/bin"
-          "/opt/facebook/hg/bin"
-          "$HOME/.emacs.d/bin"
+          "$HOME/.config/emacs/bin"
+          "$HOME/.nix-profile/bin"
         ];
       };
       bat.enable = true;
