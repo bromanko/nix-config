@@ -47,7 +47,7 @@ in {
       interactiveShellInit = ''
         # add extra paths to $PATH
         ${concatStrings (map (path: ''
-          set -x PATH $PATH "${path}"
+          fish_add_path "${path}"
         '') cfg.extraPaths)}
 
         # vterm
