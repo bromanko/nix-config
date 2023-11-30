@@ -8,9 +8,9 @@ with lib.my; {
       commonPkgs.enable = true;
       ssh.enable = true;
       openssh.enable = true;
-      zsh = {
+      fish = {
         enable = true;
-        extraPaths = [ "$HOME/.emacs.d/bin" brewPath ];
+        extraPaths = [ "$HOME/.config/emacs/bin" brewPath ];
       };
       bat.enable = true;
       git.enable = true;
