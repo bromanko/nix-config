@@ -30,6 +30,7 @@ in {
           end
         '';
         vterm_prompt_end = "vterm_printf '51;A'(whoami)'@'(hostname)':'(pwd)";
+        gi = "curl -sL https://www.toptal.com/developers/gitignore/api/$argv";
       };
 
       shellAbbrs = {
