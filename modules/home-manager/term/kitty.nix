@@ -8,7 +8,7 @@ with lib.my; {
       type = int;
       example = "16";
       description = "The size of the font.";
-      default = 16;
+      default = 14;
     };
   };
 }

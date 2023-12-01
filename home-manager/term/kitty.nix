@@ -9,7 +9,7 @@ in {
     programs.kitty = {
       enable = true;
       font = {
-        name = "FantasqueSansMono Nerd Font Mono";
+        name = "MonaspiceAr Nerd Font Propo";
         size = config.modules.term.kitty.fontSize;
       };
       shellIntegration = {
