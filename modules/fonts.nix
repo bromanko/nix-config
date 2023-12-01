@@ -10,7 +10,7 @@ in {
   config = mkIf cfg.enable {
     fonts = {
       fonts = with pkgs; [
-        (nerdfonts.override { fonts = [ "FantasqueSansMono" ]; })
+        (nerdfonts.override { fonts = [ "FantasqueSansMono" "Monaspace" ]; })
         open-sans
         input-fonts
         monaspace
