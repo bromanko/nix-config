@@ -2,7 +2,7 @@
 
 (setq user-full-name "Brian Romanko"
       user-mail-address "hello@bromanko.com")
-  
+
 ;; **************************************************
 ;; Terminal Settings
 ;; **************************************************
@@ -18,7 +18,7 @@
 ;; **************************************************
 ;; UI Settings
 ;; **************************************************
-(setq doom-font (font-spec :family "FantasqueSansMono Nerd Font" :weight 'regular)
+(setq doom-font (font-spec :family "MonaspiceAr Nerd Font Propo" :weight 'regular)
       doom-variable-pitch-font (font-spec :family "Avenir Next" :weight 'medium))
 
 ;; Increase the font-size relative to what Emacs defaults
