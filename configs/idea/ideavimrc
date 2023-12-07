@@ -269,8 +269,8 @@ let g:WhichKeyDesc_Frame = "<leader>F    +frame"
 let g:WhichKeyDesc_Frame_NextProjectWindow = "<leader>Fo next-project-window"
 nnoremap <leader>Fo    :action NextProjectWindow<CR>
 vnoremap <leader>Fo    :action NextProjectWindow<CR>
-nnoremap <leader>Fh    :action HideSideWindows<CR>
-vnoremap <leader>Fh    :action HideSideWindows<CR>
+nnoremap <leader>Fh    :action HideAllWindows<CR>
+vnoremap <leader>Fh    :action HideAllWindows<CR>
 """ ---------------------------------------------------
 
 """ Git
@@ -337,7 +337,15 @@ nnoremap <leader>hdk    :map<CR>
 vnoremap <leader>hdk    <Esc>:map<CR>
 """ ---------------------------------------------
 
-" JetBrains Plugins Repository
+""" Copilot Submenu ---------------------------------
+let g:WhichKeyDesc_Help_Copilot = "<leader>hc +github copilot"
+
+let g:WhichKeyDesc_Help_Copilot_Chat = "<leader>hcc copilot-chat"
+nnoremap <leader>hcc    :action ActivateGitHubCopilotChatToolWindow<CR>
+vnoremap <leader>hcc    :action ActivateGitHubCopilotChatToolWindow<CR>
+"""--------------------------------------------------
+
+""" JetBrains Plugins Repository --------------------
 let g:WhichKeyDesc_Help_PluginDevelopment = "<leader>hp plugin-development"
 nnoremap <leader>hp    :action WelcomeScreen.DevelopPlugins<CR>
 vnoremap <leader>hp    :action WelcomeScreen.DevelopPlugins<CR>
