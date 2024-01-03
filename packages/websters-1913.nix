@@ -18,6 +18,7 @@ in stdenv.mkDerivation {
     local webDir="$out/websters-1913.dictionary"
     install -m755 -d "$webDir"
     cp -r websters-1913.dictionary/** "$webDir"
+    chmod -R 755 $webDir
   '';
 
   meta = with lib; {

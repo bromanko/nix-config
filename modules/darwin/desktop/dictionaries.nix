@@ -29,6 +29,7 @@ in {
             cp -rf "$f" $HOME/Library/Dictionaries
           done
         done
+        chmod -R 755 $HOME/Library/Dictionaries/
       '';
   };
 }
