@@ -30,6 +30,10 @@ with lib.my; {
         raycast.enable = true;
         hammerspoon.enable = true;
         vimari.enable = true;
+        synergy = {
+          enable = true;
+          mode = "server";
+        };
       };
     };
     dev = {
