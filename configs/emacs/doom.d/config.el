@@ -21,13 +21,6 @@
 (setq doom-font (font-spec :family "MonaspiceAr Nerd Font Propo" :weight 'regular)
       doom-variable-pitch-font (font-spec :family "Avenir Next" :weight 'medium))
 
-;; Increase the font-size relative to what Emacs defaults
-;; I prefer this to hard-coding the font size because it works better across
-;; macOS and Linux with HiDPI
-(if (display-graphic-p)
-    (add-hook 'emacs-startup-hook
-              (lambda () (doom/increase-font-size 1))))
-
 (setq-default line-spacing 0.15)
 
 (defvar br-default-theme 'catppuccin)
