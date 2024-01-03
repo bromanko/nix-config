@@ -72,6 +72,8 @@ with lib.my; {
         "notion"
         "orion"
         "kindavim"
+        "utm"
+        "crystalfetch"
       ];
       masApps = {
         Keynote = 409183694;
