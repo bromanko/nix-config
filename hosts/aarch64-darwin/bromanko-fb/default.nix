@@ -71,6 +71,8 @@ with lib.my; {
     };
   };
 
-  hm = { home = { packages = with pkgs; [ obsidian nix-output-monitor ]; }; };
+  hm = {
+    home = { packages = with pkgs; [ obsidian nix-output-monitor pandoc ]; };
+  };
   services.nix-daemon.enable = true;
 }
