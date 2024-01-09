@@ -49,9 +49,7 @@ with lib.my; {
       enable = true;
       brewPrefix = brewPath;
       taps = [
-        "homebrew/cask"
         "homebrew/cask-versions"
-        "homebrew/core"
         "homebrew/services"
         "federico-terzi/espanso"
       ];

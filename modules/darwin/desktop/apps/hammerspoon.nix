@@ -7,10 +7,7 @@ in {
   options.modules.desktop.apps.hammerspoon = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
-    modules.homebrew = {
-      taps = [ "homebrew/cask" ];
-      casks = [ "hammerspoon" ];
-    };
+    modules.homebrew = { casks = [ "hammerspoon" ]; };
     hm = {
       home = {
         packages = with pkgs; [

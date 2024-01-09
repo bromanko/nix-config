@@ -7,10 +7,7 @@ in {
   options.modules.dev.docker = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
-    modules.homebrew = {
-      taps = [ "homebrew/cask" ];
-      casks = [ "docker" ];
-    };
+    modules.homebrew = { casks = [ "docker" ]; };
 
     home-manager.users."${config.user.name}" = {
       programs.zsh.shellAliases =

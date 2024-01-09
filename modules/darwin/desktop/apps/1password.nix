@@ -7,10 +7,7 @@ in {
   options.modules.desktop.apps."1Password" = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
-    modules.homebrew = {
-      taps = [ "homebrew/cask" ];
-      casks = [ "1password" ];
-    };
+    modules.homebrew = { casks = [ "1password" ]; };
 
     home-manager.users."${config.user.name}" = {
       home.packages = with pkgs; [
