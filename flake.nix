@@ -18,6 +18,10 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    homeage = {
+      url = "github:jordanisaacs/homeage";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
