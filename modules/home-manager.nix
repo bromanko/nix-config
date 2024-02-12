@@ -1,4 +1,4 @@
-{ config, lib, pkgs, options, ... }:
+{ config, lib, pkgs, options, inputs, ... }:
 
 with lib;
 with lib.my; {
@@ -7,7 +7,7 @@ with lib.my; {
   };
   config = {
     # Bootstrap the home-manager config
-    hm = import ../home-manager { inherit config lib pkgs options; };
+    hm = import ../home-manager { inherit config lib pkgs options inputs; };
 
     home-manager = {
       useGlobalPkgs = true;
