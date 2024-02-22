@@ -22,10 +22,14 @@
       url = "github:jordanisaacs/homeage";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    age-plugin-op = {
+      url = "github:bromanko/age-plugin-op";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
-    , emacs-overlay, ... }:
+    , emacs-overlay, age-plugin-op, ... }:
     let
       inherit (lib.my) mapModules mapModulesRec;
 
@@ -53,7 +57,7 @@
     in {
       # For debugging
       passthru = {
-        inherit pkgs lib nixpkgs nixpkgs-stable;
+        inherit pkgs lib;
         packages = self.packages;
       };
 
@@ -62,7 +66,9 @@
 
       overlay = final: prev: {
         stable = nixpkgs-stable.legacyPackages.${prev.system};
-        my = self.packages.${prev.system};
+        my = self.packages.${prev.system} // {
+          age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
+        };
       };
 
       overlays = mapModules ./overlays import;

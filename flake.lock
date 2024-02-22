@@ -1,5 +1,25 @@
 {
   "nodes": {
+    "age-plugin-op": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1708573671,
+        "narHash": "sha256-OKV12rNUtMxOixkeH1ShxiA7oJ0X4SV5O9R2847Qiyc=",
+        "owner": "bromanko",
+        "repo": "age-plugin-op",
+        "rev": "0a9c2ff48842b59186add607a118e3cb0085f3ee",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bromanko",
+        "repo": "age-plugin-op",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -181,6 +201,7 @@
     },
     "root": {
       "inputs": {
+        "age-plugin-op": "age-plugin-op",
         "darwin": "darwin",
         "emacs-overlay": "emacs-overlay",
         "flake-compat": "flake-compat",
