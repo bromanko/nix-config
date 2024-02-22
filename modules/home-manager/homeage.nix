@@ -30,6 +30,12 @@ with lib.my; {
       '';
     };
 
+    file = mkOption {
+      description = "Attrset of secret files";
+      default = { };
+      type = types.attrsOf secretFile;
+    };
+
     pkg = mkOption {
       description =
         "(R)age package to use. Detects if using rage and switches to `rage` as the command rather than `age`";
@@ -37,11 +43,11 @@ with lib.my; {
       type = types.package;
     };
 
-    identityPaths = mkOption {
+    mount = mkOption {
       description =
-        "Absolute path to identity files used for age decryption. Must provide at least one path";
-      default = [ ];
-      type = types.listOf types.str;
+        "Absolute path to folder where decrypted files are stored. Files are decrypted on login. Defaults to /run which is a tmpfs.";
+      default = "/run/user/$UID/secrets";
+      type = types.str;
     };
   };
 }
