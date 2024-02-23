@@ -33,7 +33,7 @@ with lib.my; {
     file = mkOption {
       description = "Attrset of secret files";
       default = { };
-      type = types.attrsOf secretFile;
+      type = types.attrs;
     };
 
     pkg = mkOption {
