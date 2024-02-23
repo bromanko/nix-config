@@ -7,13 +7,15 @@ in {
   options.modules.dev.docker = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
-    home-manager.users."${config.user.name}" = {
-      packages = with pkgs; [ docker ];
+    hm = {
+      home = { packages = with pkgs; [ docker ]; };
 
-      programs.zsh.shellAliases =
-        mkIf config.modules.shell.zsh.enable { dc = "docker-compose"; };
-      programs.fish.shellAbbrs =
-        mkIf config.modules.shell.fish.enable { dc = "docker-compose"; };
+      programs = {
+        zsh.shellAliases =
+          mkIf config.modules.shell.zsh.enable { dc = "docker-compose"; };
+        fish.shellAbbrs =
+          mkIf config.modules.shell.fish.enable { dc = "docker-compose"; };
+      };
     };
   };
 }
