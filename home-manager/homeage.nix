@@ -8,14 +8,15 @@ in {
     homeage = {
       inherit (cfg) installationType pkg file;
 
-      mount =
-        mkIf pkgs.hostPlatform.isDarwin "${config.xdg.configHome}/age/secrets"
+      mount = if pkgs.hostPlatform.isDarwin then
+        "$HOME/.config/age/secrets"
+      else
         "/run/user/$UID/secrets";
 
-      identityPaths = [ ];
+      identityPaths = [ "$HOME/.config/age/age-identity.txt" ];
     };
 
-    home = { packages = with pkgs; [ my.age-with-plugins my.age-plugin-op ]; };
+    home = { packages = with pkgs; [ my.age-with-plugins ]; };
 
     xdg.configFile = {
       "age/age-identity.txt".source = ../configs/age/age-identity.txt;
