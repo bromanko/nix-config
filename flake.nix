@@ -19,7 +19,8 @@
       flake = false;
     };
     homeage = {
-      url = "github:jordanisaacs/homeage";
+      # Waiting for https://github.com/jordanisaacs/homeage/pull/43 to land
+      url = "github:jordanisaacs/homeage/pull/43/head";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     age-plugin-op = {
