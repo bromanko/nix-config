@@ -36,13 +36,6 @@ with lib.my; {
       type = types.attrs;
     };
 
-    pkg = mkOption {
-      description =
-        "(R)age package to use. Detects if using rage and switches to `rage` as the command rather than `age`";
-      default = pkgs.age;
-      type = types.package;
-    };
-
     mount = mkOption {
       description =
         "Absolute path to folder where decrypted files are stored. Files are decrypted on login. Defaults to /run which is a tmpfs.";

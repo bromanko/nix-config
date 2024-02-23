@@ -6,7 +6,9 @@ in {
   imports = [ inputs.homeage.homeManagerModules.homeage ];
   config = mkIf cfg.enable {
     homeage = {
-      inherit (cfg) installationType pkg file;
+      inherit (cfg) installationType file;
+
+      pkg = pkgs.my.age-with-plugins;
 
       mount = if pkgs.hostPlatform.isDarwin then
         "$HOME/.config/age/secrets"
