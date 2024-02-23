@@ -2,7 +2,7 @@
 
 pkgs.writeShellApplication {
   name = "age";
-  runtimeInputs = [ pkgs.my.age-plugin-op ];
+  runtimeInputs = with pkgs; [ my.age-plugin-op _1password ];
   text = ''
     ${pkgs.age}/bin/age "$@"
   '';
