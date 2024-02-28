@@ -20,7 +20,7 @@ in {
     taps = mkOption {
       type = listOf str;
       default = [ ];
-      example = [ "homebrew/cask" ];
+      example = [ "homebrew/cask-versions" ];
       description = "Homebrew formula repositories to tap.";
     };
 
