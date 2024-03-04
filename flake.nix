@@ -18,6 +18,10 @@
       url = "github:edolstra/flake-compat";
       flake = false;
     };
+    rust-overlay = {
+      url = "github:oxalica/rust-overlay";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     homeage = {
       # Waiting for https://github.com/jordanisaacs/homeage/pull/43 to land
       url = "github:jordanisaacs/homeage/pull/43/head";
@@ -30,7 +34,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
-    , emacs-overlay, age-plugin-op, ... }:
+    , emacs-overlay, rust-overlay, age-plugin-op, ... }:
     let
       inherit (lib.my) mapModules mapModulesRec;
 
@@ -44,8 +48,12 @@
           inherit system;
           config.allowUnfree = true;
           config.input-fonts.acceptLicense = true;
-          overlays = [ self.overlay emacs-overlay.overlay ]
-            ++ (lib.attrValues self.overlays);
+          overlays = [
+            self.overlay
+            emacs-overlay.overlay
+            self.overlay
+            rust-overlay.overlays.default
+          ] ++ (lib.attrValues self.overlays);
         });
 
       lib = nixpkgs.lib.extend (self: super: {
