@@ -154,6 +154,29 @@
         "type": "github"
       }
     },
+    "jujutsu": {
+      "inputs": {
+        "flake-utils": "flake-utils_2",
+        "nixpkgs": [
+          "nixpkgs"
+        ],
+        "rust-overlay": "rust-overlay"
+      },
+      "locked": {
+        "lastModified": 1709406849,
+        "narHash": "sha256-sCYmfddEGX/C/PSpVtmbjNEVHnNU5O6Z11IfLYp8R6s=",
+        "owner": "bnjmnt4n",
+        "repo": "jj",
+        "rev": "8018cb246cfc5eff6bab5fa5da295900e3ab0186",
+        "type": "github"
+      },
+      "original": {
+        "owner": "bnjmnt4n",
+        "ref": "ssh-openssh",
+        "repo": "jj",
+        "type": "github"
+      }
+    },
     "nixpkgs": {
       "locked": {
         "lastModified": 1706371002,
@@ -226,24 +249,28 @@
         "flake-compat": "flake-compat",
         "home-manager": "home-manager",
         "homeage": "homeage",
+        "jujutsu": "jujutsu",
         "nixpkgs": "nixpkgs_2",
-        "nixpkgs-stable": "nixpkgs-stable_2",
-        "rust-overlay": "rust-overlay"
+        "nixpkgs-stable": "nixpkgs-stable_2"
       }
     },
     "rust-overlay": {
       "inputs": {
-        "flake-utils": "flake-utils_2",
+        "flake-utils": [
+          "jujutsu",
+          "flake-utils"
+        ],
         "nixpkgs": [
+          "jujutsu",
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1709431943,
-        "narHash": "sha256-CqTcEJGITB3rfSuAcWC1QZnbVnIipXmIDbZHfxsAy80=",
+        "lastModified": 1707444620,
+        "narHash": "sha256-P8kRkiJLFttN+hbAOlm11wPxUrQZqKle+QtVCqFiGXY=",
         "owner": "oxalica",
         "repo": "rust-overlay",
-        "rev": "362184acf4a991f27fc222864e94a2e81b3c3c9f",
+        "rev": "78503e9199010a4df714f29a4f9c00eb2ccae071",
         "type": "github"
       },
       "original": {
