@@ -19,7 +19,7 @@ with lib.my; {
       openssh.enable = true;
       fish = {
         enable = true;
-        extraPaths = [ "$HOME/.config/emacs/bin" brewPath ];
+        extraPaths = [ "$HOME/bin" "$HOME/.config/emacs/bin" brewPath ];
       };
       bat.enable = true;
       git.enable = true;
