@@ -1,7 +1,42 @@
-self: super: rec {
-  jujutsu = super.rustPlatform.buildRustPackage rec {
+self: super:
+let
+  ourRustVersion = super.rust-bin.stable."1.76.0".default;
+
+  ourRustPlatform = super.makeRustPlatform {
+    rustc = ourRustVersion;
+    cargo = ourRustVersion;
+  };
+
+  # these are needed in both devShell and buildInputs
+  darwinDeps = with super;
+    lib.optionals stdenv.isDarwin [
+      darwin.apple_sdk.frameworks.Security
+      darwin.apple_sdk.frameworks.SystemConfiguration
+      libiconv
+    ];
+
+  # work around https://github.com/nextest-rs/nextest/issues/267
+  # this needs to exist in both the devShell and preCheck phase!
+  darwinNextestHack = super.lib.optionalString super.stdenv.isDarwin ''
+    export DYLD_FALLBACK_LIBRARY_PATH=$(${ourRustVersion}/bin/rustc --print sysroot)/lib
+  '';
+
+  # NOTE (aseipp): on Linux, go ahead and use mold by default to improve
+  # link times a bit; mostly useful for debug build speed, but will help
+  # over time if we ever get more dependencies, too
+  useMoldLinker = super.stdenv.isLinux;
+
+  # these are needed in both devShell and buildInputs
+  linuxNativeDeps = with super; lib.optionals stdenv.isLinux [ mold-wrapped ];
+in rec {
+  jujutsu = ourRustPlatform.buildRustPackage rec {
     pname = "jujutsu";
-    version = "0.14.0";
+    version = "unstable-${self.shortRev or "dirty"}";
+
+    buildFeatures = [ "packaging" ];
+    cargoBuildFlags =
+      [ "--bin" "jj" ]; # don't build and install the fake editors
+    useNextest = true;
 
     src = super.fetchFromGitHub {
       owner = "bnjmnt4n";
@@ -15,19 +50,29 @@ self: super: rec {
       allowBuiltinFetchGit = true;
     };
 
-    cargoBuildFlags = [ "--bin" "jj" ]; # don't install the fake editors
-    useNextest = true; # nextest is the upstream integration framework
-    ZSTD_SYS_USE_PKG_CONFIG = "1"; # disable vendored zlib
-    LIBSSH2_SYS_USE_PKG_CONFIG = "1"; # disable vendored libssh2
+    nativeBuildInputs = with super;
+      [
+        gzip
+        installShellFiles
+        makeWrapper
+        pkg-config
 
-    nativeBuildInputs = with super; [ gzip installShellFiles pkg-config ];
+        # for signing tests
+        gnupg
+        openssh
+      ] ++ linuxNativeDeps;
+    buildInputs = with super; [ openssl zstd libgit2 libssh2 ] ++ darwinDeps;
 
-    buildInputs = with super;
-      [ openssl zstd libgit2 libssh2 ] ++ lib.optionals stdenv.isDarwin [
-        darwin.apple_sdk.frameworks.Security
-        darwin.apple_sdk.frameworks.SystemConfiguration
-        libiconv
-      ];
+    ZSTD_SYS_USE_PKG_CONFIG = "1";
+    LIBSSH2_SYS_USE_PKG_CONFIG = "1";
+    RUSTFLAGS =
+      super.lib.optionalString useMoldLinker "-C link-arg=-fuse-ld=mold";
+    NIX_JJ_GIT_HASH = self.rev or "";
+    CARGO_INCREMENTAL = "0";
+
+    preCheck = ''
+      export RUST_BACKTRACE=1
+    '' + darwinNextestHack;
 
     postInstall = ''
       $out/bin/jj util mangen > ./jj.1
@@ -38,16 +83,6 @@ self: super: rec {
         --fish <($out/bin/jj util completion fish) \
         --zsh <($out/bin/jj util completion zsh)
     '';
-
-    passthru = {
-      updateScript = super.nix-update-script { };
-      tests = {
-        version = super.testers.testVersion {
-          package = jujutsu;
-          command = "jj --version";
-        };
-      };
-    };
 
     meta = with super.lib; {
       description = "A Git-compatible DVCS that is both simple and powerful";
