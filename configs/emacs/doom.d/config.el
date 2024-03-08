@@ -13,6 +13,7 @@
 ;; Use fish for vterm
 (setq-default vterm-shell (executable-find "fish"))
 (setq-default explicit-shell-file-name (executable-find "fish"))
+(add-hook 'vterm-mode-hook  'with-editor-export-editor)
 
 
 ;; **************************************************
