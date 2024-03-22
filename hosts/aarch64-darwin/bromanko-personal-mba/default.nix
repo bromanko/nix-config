@@ -38,6 +38,7 @@ with lib.my; {
         espanso.enable = true;
         vimari.enable = true;
         "1Password".enable = true;
+        vscode.enable = true;
       };
     };
     dev = {
