@@ -5,6 +5,6 @@ with lib.my;
 let cfg = config.modules.dev.nix;
 in {
   config = mkIf cfg.enable {
-    home = { packages = with pkgs; [ nixfmt nix-output-monitor ]; };
+    home = { packages = with pkgs; [ nixfmt nix-output-monitor nil ]; };
   };
 }
