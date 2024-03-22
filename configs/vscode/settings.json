@@ -78,5 +78,8 @@
         },
     },
     "whichkey.delay": 200,
-    "nix.enableLanguageServer": true
+    "nix.enableLanguageServer": true,
+    "editor.rulers": [
+        80
+    ]
 }
