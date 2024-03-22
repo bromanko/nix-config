@@ -27,6 +27,7 @@ in {
             name = cfg.userName;
             email = cfg.userEmail;
           };
+          ui.diff.tool = [ "difft" "--color=always" "$left" "$right" ];
         };
       };
 
