@@ -81,5 +81,19 @@
     "nix.enableLanguageServer": true,
     "editor.rulers": [
         80
-    ]
+    ],
+    "vspacecode.bindingOverrides": [
+        {
+            "keys": "h.h",
+            "name": "Show hover",
+            "type": "command",
+            "command": "editor.action.showHover",
+            "icon": "info",
+        }
+    ],
+    "terminal.integrated.copyOnSelection": true,
+    "terminal.integrated.cursorStyle": "line",
+    "terminal.integrated.enableImages": true,
+    "terminal.integrated.fontSize": 13,
+    "terminal.integrated.lineHeight": 1.4
 }
