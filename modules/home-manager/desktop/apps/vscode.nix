@@ -20,12 +20,29 @@ in {
           bodil.file-browser
           github.copilot
           github.copilot-chat
-          bbenoist.nix
+          jnoortheen.nix-ide
           rust-lang.rust-analyzer
           vscodevim.vim
           vspacecode.vspacecode
           vspacecode.whichkey
+          usernamehw.errorlens
         ];
+      };
+      home = {
+        activation = {
+          afterWriteBoundary = ''
+            echo "Removing VSCode config files"
+            rm -rf "$HOME/Library/Application Support/Code/User/"{settings,keybindings}.json
+
+            echo "Writing VSCode config files"
+            cp ${
+              ../../../../configs/vscode/settings.json
+            } "$HOME/Library/Application Support/Code/User/settings.json"
+            cp ${
+              ../../../../configs/vscode/keybindings.json
+            } "$HOME/Library/Application Support/Code/User/keybindings.json"
+          '';
+        };
       };
     };
   };
