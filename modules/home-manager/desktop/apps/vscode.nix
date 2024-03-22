@@ -31,16 +31,32 @@ in {
       home = {
         activation = {
           afterWriteBoundary = ''
-            echo "Removing VSCode config files"
-            rm -rf "$HOME/Library/Application Support/Code/User/"{settings,keybindings}.json
-
-            echo "Writing VSCode config files"
-            cp ${
-              ../../../../configs/vscode/settings.json
-            } "$HOME/Library/Application Support/Code/User/settings.json"
-            cp ${
-              ../../../../configs/vscode/keybindings.json
-            } "$HOME/Library/Application Support/Code/User/keybindings.json"
+            if [ ! -f "$HOME/Library/Application Support/Code/User/settings.json" ]; then
+              echo "Writing VSCode settings.json"
+              cp ${
+                ../../../../configs/vscode/settings.json
+              } "$HOME/Library/Application Support/Code/User/settings.json"
+            else
+              if ! cmp ${
+                ../../../../configs/vscode/settings.json
+              } "$HOME/Library/Application Support/Code/User/settings.json"; then
+                echo "VSCode settings.json exists and is different"
+                exit 1
+              fi
+            fi
+            if [ ! -f "$HOME/Library/Application Support/Code/User/keybindings.json" ]; then
+              echo "Writing VSCode keybindings.json"
+              cp ${
+                ../../../../configs/vscode/keybindings.json
+              } "$HOME/Library/Application Support/Code/User/keybindings.json"
+            else 
+              if ! cmp ${
+                ../../../../configs/vscode/keybindings.json
+              } "$HOME/Library/Application Support/Code/User/keybindings.json"; then
+                echo "VSCode keybindings.json exists and is different"
+                exit 1
+              fi
+            fi
           '';
         };
       };
