@@ -10,6 +10,7 @@ in {
         bottom
         curl
         delta
+        difftastic
         duf
         du-dust
         gnupg
