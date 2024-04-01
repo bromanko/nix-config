@@ -62,6 +62,7 @@ with lib.my; {
         "spotify"
         "kindaVim"
         "google-drive"
+        "onedrive"
       ];
       masApps = {
         Amphetamine = 937984704;
