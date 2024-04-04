@@ -73,6 +73,6 @@ with lib.my; {
     };
   };
 
-  hm = { home = { packages = with pkgs; [ obsidian pandoc ]; }; };
+  hm = { home = { packages = with pkgs; [ obsidian pandoc my.homerow ]; }; };
   services.nix-daemon.enable = true;
 }
