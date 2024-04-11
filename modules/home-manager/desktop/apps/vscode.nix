@@ -26,6 +26,8 @@ in {
           vspacecode.vspacecode
           vspacecode.whichkey
           usernamehw.errorlens
+          elixir-lsp.vscode-elixir-ls
+          continue.continue
         ];
       };
       home = {
