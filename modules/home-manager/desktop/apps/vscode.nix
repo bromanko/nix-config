@@ -11,23 +11,39 @@ in {
       programs.vscode = {
         enable = true;
         extensions = with pkgs.vscode-extensions; [
+          # Looks
           catppuccin.catppuccin-vsc
           catppuccin.catppuccin-vsc-icons
-          serayuzgur.crates
-          mkhl.direnv
-          kahole.magit
-          tamasfe.even-better-toml
+
+          # Feel
           bodil.file-browser
-          github.copilot
-          github.copilot-chat
-          jnoortheen.nix-ide
-          rust-lang.rust-analyzer
           vscodevim.vim
           vspacecode.vspacecode
           vspacecode.whichkey
           usernamehw.errorlens
-          elixir-lsp.vscode-elixir-ls
+
+          # General
+          mkhl.direnv
+          kahole.magit
+
+          # TOML
+          tamasfe.even-better-toml
+
+          # nix
+          jnoortheen.nix-ide
+
+          # AI
+          github.copilot
+          github.copilot-chat
           continue.continue
+
+          # Rust
+          serayuzgur.crates
+          rust-lang.rust-analyzer
+
+          # Elixir
+          elixir-lsp.vscode-elixir-ls
+          phoenixframework.phoenix
         ];
       };
       home = {
