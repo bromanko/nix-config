@@ -95,6 +95,6 @@ with lib.my; {
       };
     };
   };
-  hm = { home = { packages = with pkgs; [ slack tailscale ]; }; };
+  hm = { home = { packages = with pkgs; [ slack tailscale ollama ]; }; };
   services.nix-daemon.enable = true;
 }
