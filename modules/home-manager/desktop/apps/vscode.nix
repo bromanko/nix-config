@@ -25,6 +25,7 @@ in {
           # General
           mkhl.direnv
           kahole.magit
+          # bradlc.vscode-tailwindcss
 
           # TOML
           tamasfe.even-better-toml
