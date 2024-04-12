@@ -93,7 +93,12 @@
     ],
     "terminal.integrated.copyOnSelection": true,
     "terminal.integrated.cursorStyle": "line",
-    "terminal.integrated.enableImages": true,
     "terminal.integrated.fontSize": 13,
-    "terminal.integrated.lineHeight": 1.4
+    "terminal.integrated.lineHeight": 1.4,
+    "editor.indentSize": "tabSize",
+    "sqltools.useNodeRuntime": true,
+    "workbench.startupEditor": "none",
+    "extensions.ignoreRecommendations": true,
+    "editor.formatOnSave": true,
+    "editor.minimap.enabled": false
 }
