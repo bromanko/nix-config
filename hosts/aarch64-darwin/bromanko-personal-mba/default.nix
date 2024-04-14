@@ -83,6 +83,7 @@ with lib.my; {
         "kindavim"
         "utm"
         "crystalfetch"
+        "ollama"
       ];
       masApps = {
         Keynote = 409183694;
@@ -95,6 +96,6 @@ with lib.my; {
       };
     };
   };
-  hm = { home = { packages = with pkgs; [ slack tailscale ]; }; };
+  hm = { home = { packages = with pkgs; [ slack tailscale aldente ]; }; };
   services.nix-daemon.enable = true;
 }
