@@ -15,7 +15,7 @@ in {
           catppuccin.catppuccin-vsc
           catppuccin.catppuccin-vsc-icons
 
-          # Feel
+          # # Feel
           bodil.file-browser
           vscodevim.vim
           vspacecode.vspacecode
@@ -36,7 +36,7 @@ in {
           # AI
           github.copilot
           github.copilot-chat
-          continue.continue
+          # continue.continue # Not supported on Darwin
 
           # Rust
           serayuzgur.crates
