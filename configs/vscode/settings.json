@@ -100,5 +100,6 @@
     "workbench.startupEditor": "none",
     "extensions.ignoreRecommendations": true,
     "editor.formatOnSave": true,
-    "editor.minimap.enabled": false
+    "editor.minimap.enabled": false,
+    "continue.enableTabAutocomplete": true
 }
