@@ -27,14 +27,10 @@
       url = "github:bromanko/age-plugin-op";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    jujutsu = {
-      url = "github:bnjmnt4n/jj/ssh-openssh";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
-    , emacs-overlay, age-plugin-op, jujutsu, ... }:
+    , emacs-overlay, age-plugin-op, ... }:
     let
       inherit (lib.my) mapModules mapModulesRec;
 
@@ -48,8 +44,7 @@
           inherit system;
           config.allowUnfree = true;
           config.input-fonts.acceptLicense = true;
-          overlays =
-            [ self.overlay emacs-overlay.overlay jujutsu.overlays.default ]
+          overlays = [ self.overlay emacs-overlay.overlay ]
             ++ (lib.attrValues self.overlays);
         });
 
