@@ -2,7 +2,14 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.shell.jujutsu;
+let
+  cfg = config.modules.shell.jujutsu;
+  jj1Password = pkgs.jujutsu.overrideAttrs (old: {
+    nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.makeWrapper ];
+    postInstall = ''
+      wrapProgram $out/bin/jj --set SSH_AUTH_SOCK "~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    '';
+  });
 in {
   options.modules.shell.jujutsu = {
     enable = mkBoolOpt false;
@@ -22,6 +29,8 @@ in {
     hm = {
       programs.jujutsu = {
         enable = true;
+        package =
+          mkIf config.modules.desktop.apps."1Password".enable jj1Password;
         settings = {
           user = {
             name = cfg.userName;
