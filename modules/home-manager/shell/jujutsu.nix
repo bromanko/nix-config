@@ -7,7 +7,9 @@ let
   jj1Password = pkgs.jujutsu.overrideAttrs (old: {
     nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.makeWrapper ];
     postInstall = ''
-      wrapProgram $out/bin/jj --set SSH_AUTH_SOCK "~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+      # Export via run rather than set to expand the ~ variable
+      wrapProgram $out/bin/jj \
+        --run "export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
     '';
   });
 in {
