@@ -101,5 +101,6 @@
     "extensions.ignoreRecommendations": true,
     "editor.formatOnSave": true,
     "editor.minimap.enabled": false,
-    "continue.enableTabAutocomplete": true
+    "continue.enableTabAutocomplete": true,
+    "explorer.confirmDelete": false
 }
