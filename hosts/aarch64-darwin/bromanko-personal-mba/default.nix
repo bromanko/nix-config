@@ -84,6 +84,7 @@ with lib.my; {
         "utm"
         "crystalfetch"
         "ollama"
+        "arc"
       ];
       masApps = {
         Keynote = 409183694;
