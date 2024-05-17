@@ -63,6 +63,7 @@ with lib.my; {
         "kindaVim"
         "google-drive"
         "onedrive"
+        "arc"
       ];
       masApps = {
         Amphetamine = 937984704;
