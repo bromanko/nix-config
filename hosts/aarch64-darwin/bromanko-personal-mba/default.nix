@@ -29,6 +29,7 @@ with lib.my; {
       direnv.enable = true;
       exa.enable = true;
       fd.enable = true;
+      helix.enable = true;
     };
     desktop = {
       fonts.enable = true;
