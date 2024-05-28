@@ -36,7 +36,6 @@ with lib.my; {
       dictionaries.enable = true;
       apps = {
         raycast.enable = true;
-        espanso.enable = true;
         vimari.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
