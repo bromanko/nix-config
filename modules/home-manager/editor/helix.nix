@@ -2,9 +2,9 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.shell.helix;
+let cfg = config.modules.editor.helix;
 in {
-  options.modules.shell.helix = { enable = mkBoolOpt false; };
+  options.modules.editor.helix = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable {
     hm = {

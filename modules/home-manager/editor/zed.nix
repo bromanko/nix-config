@@ -2,9 +2,9 @@
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.apps.zed;
+let cfg = config.modules.editor.zed;
 in {
-  options.modules.desktop.apps.zed = { enable = mkBoolOpt false; };
+  options.modules.editor.zed = { enable = mkBoolOpt false; };
 
   config = mkIf cfg.enable { homebrew = { casks = [ "zed@preview" ]; }; };
 }

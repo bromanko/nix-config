@@ -29,7 +29,6 @@ with lib.my; {
       direnv.enable = true;
       exa.enable = true;
       fd.enable = true;
-      helix.enable = true;
     };
     desktop = {
       fonts.enable = true;
@@ -39,7 +38,6 @@ with lib.my; {
         vimari.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
-        zed.enable = true;
       };
     };
     dev = {
@@ -60,6 +58,8 @@ with lib.my; {
     editor = {
       neovim.enable = true;
       emacs.enable = true;
+      zed.enable = true;
+      helix.enable = true;
     };
 
     homebrew = {
