@@ -102,5 +102,19 @@
     "editor.formatOnSave": true,
     "editor.minimap.enabled": false,
     "continue.enableTabAutocomplete": true,
-    "explorer.confirmDelete": false
+    "explorer.confirmDelete": false,
+    "explorer.confirmDragAndDrop": false,
+    "tailwindCSS.includeLanguages": {
+        "ocaml": "javascript"
+    },
+    "tailwindCSS.classAttributes": [
+        "class",
+        "className",
+        "ngClass",
+        "class:list",
+        "class_"
+    ],
+    "editor.quickSuggestions": {
+        "strings": "on"
+    }
 }
