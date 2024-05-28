@@ -12,6 +12,7 @@ in {
         name = "MonaspiceAr Nerd Font Propo";
         size = config.modules.term.kitty.fontSize;
       };
+      theme = "Catppuccin-Mocha";
       shellIntegration = {
         enableZshIntegration = config.modules.shell.zsh.enable;
         enableFishIntegration = config.modules.shell.fish.enable;
@@ -42,7 +43,7 @@ in {
         tab_bar_style = "powerline";
         macos_hide_titlebar = true;
         macos_option_as_alt = true;
-     };
+      };
     };
   };
 }
