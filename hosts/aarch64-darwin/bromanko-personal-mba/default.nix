@@ -39,6 +39,7 @@ with lib.my; {
         vimari.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
+        zed.enable = true;
       };
     };
     dev = {
