@@ -10,10 +10,33 @@ in {
     hm = {
       programs.helix = {
         enable = true;
-        extraPackages = with pkgs; [ helix-gpt ];
+        extraPackages = with pkgs; [
+          helix-gpt
+          nodePackages.bash-language-server
+          nodePackages.vscode-css-languageserver-bin
+          elixir-ls
+          fsautocomplete
+          terraform-ls
+          nodePackages.typescript-language-server
+          nodePackages.vscode-json-languageserver
+          ocamlPackages.lsp
+          yaml-language-server
+        ];
         settings = {
           theme = "catppuccin_mocha";
-          editor = { line-number = "relative"; };
+          editor = {
+            line-number = "relative";
+            rulers = [ 80 ];
+            "cursor-shape" = {
+              insert = "bar";
+              normal = "block";
+              select = "underline";
+            };
+            "indent-guides" = {
+              render = true;
+              character = "|";
+            };
+          };
         };
       };
     };

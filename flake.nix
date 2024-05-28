@@ -32,7 +32,7 @@
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
     , emacs-overlay, age-plugin-op, ... }:
     let
-      inherit (lib.my) mapModules mapModulesRec;
+      inherit (lib.my) mapModules;
 
       supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
 

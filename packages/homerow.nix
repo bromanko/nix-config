@@ -16,8 +16,7 @@ let
       curl -kL "$DOWNLOAD_URL" -o "$out"
     '';
 
-in
-stdenvNoCC.mkDerivation rec {
+in stdenvNoCC.mkDerivation rec {
   pname = "homerow";
   version = "0.21";
 

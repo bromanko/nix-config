@@ -28,7 +28,11 @@ in {
 
       extraConfig = {
         init = { defaultBranch = "main"; };
-        core = { whitespace = "trailing-space"; fsmonitor = true; untrackedCache = true; };
+        core = {
+          whitespace = "trailing-space";
+          fsmonitor = true;
+          untrackedCache = true;
+        };
         github = { user = cfg.gitHubUser; };
         rebase = { autosquash = true; };
         push = { default = "current"; };
