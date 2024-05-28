@@ -39,6 +39,7 @@ in {
           };
         };
       };
+      xdg.configFile = { "helix/languages.toml".source = ../../../configs/helix/languages.toml; };
     };
   };
 }

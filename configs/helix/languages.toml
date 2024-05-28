@@ -1,0 +1,4 @@
+[[language]]
+name= "nix"
+[language.formatter]
+command = "nixfmt"
