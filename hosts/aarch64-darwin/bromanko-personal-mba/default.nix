@@ -51,7 +51,12 @@ with lib.my; {
       nix.enable = true;
       nodejs.enable = true;
     };
-    term = { kitty.enable = true; };
+    term = {
+      kitty = {
+        enable = true;
+        fontSize = 13;
+      };
+    };
     editor = {
       neovim.enable = true;
       emacs.enable = true;
