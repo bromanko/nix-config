@@ -116,5 +116,6 @@
     ],
     "editor.quickSuggestions": {
         "strings": "on"
-    }
+    },
+    "github.copilot.editor.enableAutoCompletions": true
 }
