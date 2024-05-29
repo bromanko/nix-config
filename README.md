@@ -6,7 +6,12 @@ This is my Nix configuration. It supports my macOS, nixOS, and home-manager conf
 
 ### Requirements
 
-Nix and Flakes must be installed in order to build the derivations. Running the included `./install-nix.sh` script will set those up.
+Nix and Flakes must be installed in order to build the derivations. I recommend using the [Determinate Nix Installer](https://determinate.systems/oss/).
+
+```bash
+curl --proto '=https' --tlsv1.2 -sSf -L \
+  https://install.determinate.systems/nix | sh -s -- install
+```
 
 ### Building and Applying
 
