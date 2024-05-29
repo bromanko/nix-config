@@ -9,7 +9,7 @@ in {
     programs.kitty = {
       enable = true;
       font = {
-        name = "MonaspiceAr Nerd Font Propo";
+        name = "MonaspiceAr Nerd Font Mono Light";
         size = config.modules.term.kitty.fontSize;
       };
       theme = "Catppuccin-Mocha";
@@ -34,15 +34,16 @@ in {
         "kitty_mod+p>shift+f" = "kitten hints --type path";
       };
       settings = {
-        theme = "Catppuccin-Mocha";
         cursor_shape = "beam";
         scrollback_lines = 10000;
         open_url_modifiers = "cmd";
         copy_on_select = true;
         remember_window_size = true;
         tab_bar_style = "powerline";
-        macos_hide_titlebar = true;
+        hide_window_decorations = "titlebar-only";
         macos_option_as_alt = true;
+        window_padding_width = 10;
+        window_margin_width = "10 0 0 0";
       };
     };
   };
