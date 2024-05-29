@@ -27,6 +27,11 @@ in {
           editor = {
             line-number = "relative";
             rulers = [ 80 ];
+
+            "auto-format" = true;
+            "auto-save" = true;
+            "bufferline" = "multiple";
+
             "cursor-shape" = {
               insert = "bar";
               normal = "block";
@@ -35,6 +40,10 @@ in {
             "indent-guides" = {
               render = true;
               character = "|";
+            };
+            "file-picker" = {
+              hidden = true;
+              git-ignore = true;
             };
           };
         };
