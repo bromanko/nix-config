@@ -14,10 +14,6 @@
 
     # Other sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    flake-compat = {
-      url = "github:edolstra/flake-compat";
-      flake = false;
-    };
     homeage = {
       # Waiting for https://github.com/jordanisaacs/homeage/pull/43 to land
       url = "github:jordanisaacs/homeage/pull/43/head";
