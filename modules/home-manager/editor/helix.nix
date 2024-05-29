@@ -19,7 +19,8 @@ in {
           terraform-ls
           nodePackages.typescript-language-server
           nodePackages.vscode-json-languageserver
-          ocamlPackages.lsp
+          ocamlformat
+          ocamlPackages.ocaml-lsp
           yaml-language-server
         ];
         settings = {
