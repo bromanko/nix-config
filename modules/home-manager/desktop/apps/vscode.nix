@@ -49,7 +49,7 @@ in {
       };
       home = {
         activation = {
-          afterWriteBoundary = ''
+          vscodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
             if [ ! -f "$HOME/Library/Application Support/Code/User/settings.json" ]; then
               echo "Writing VSCode settings.json"
               cp ${
@@ -68,7 +68,7 @@ in {
               cp ${
                 ../../../../configs/vscode/keybindings.json
               } "$HOME/Library/Application Support/Code/User/keybindings.json"
-            else 
+            else
               if ! cmp ${
                 ../../../../configs/vscode/keybindings.json
               } "$HOME/Library/Application Support/Code/User/keybindings.json"; then
