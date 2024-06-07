@@ -11,6 +11,14 @@
     darwin.inputs.nixpkgs.follows = "nixpkgs";
     home-manager.url = "github:nix-community/home-manager";
     home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    brew-api = {
+      url = "github:BatteredBunny/brew-api";
+      flake = false;
+    };
+    brew-nix = {
+      url = "github:BatteredBunny/brew-nix";
+      inputs.brew-api.follows = "brew-api";
+    };
 
     # Other sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
@@ -26,7 +34,7 @@
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
-    , emacs-overlay, age-plugin-op, ... }:
+    , emacs-overlay, age-plugin-op, brew-nix, ... }:
     let
       inherit (lib.my) mapModules;
 
@@ -40,7 +48,8 @@
           inherit system;
           config.allowUnfree = true;
           config.input-fonts.acceptLicense = true;
-          overlays = [ self.overlay emacs-overlay.overlay ]
+          overlays =
+            [ self.overlay brew-nix.overlays.default emacs-overlay.overlay ]
             ++ (lib.attrValues self.overlays);
         });
 
