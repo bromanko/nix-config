@@ -1,4 +1,4 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, lib, ... }:
 
 let brewPath = "/opt/homebrew/bin";
 in with lib;
@@ -65,18 +65,12 @@ with lib.my; {
     homebrew = {
       enable = true;
       brewPrefix = brewPath;
-      taps = [
-        "homebrew/cask-versions"
-        "homebrew/services"
-        "federico-terzi/espanso"
-      ];
+      taps = [ "homebrew/cask-versions" "homebrew/services" ];
       casks = [
         "bartender"
         "betterdisplay"
         "dash"
         "docker"
-        "dropbox"
-        "firefox"
         "figma"
         "google-chrome"
         "istat-menus"
@@ -84,12 +78,10 @@ with lib.my; {
         "lunar"
         "signal"
         "spotify"
-        "notion"
         "orion"
         "kindavim"
         "utm"
         "crystalfetch"
-        "ollama"
         "arc"
       ];
       masApps = {
