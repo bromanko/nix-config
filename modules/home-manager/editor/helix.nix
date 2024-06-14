@@ -12,7 +12,7 @@ in {
         enable = true;
         extraPackages = with pkgs; [
           helix-gpt
-          nodePackages.bash-language-server
+          # nodePackages.bash-language-server
           nodePackages.vscode-css-languageserver-bin
           elixir-ls
           fsautocomplete
