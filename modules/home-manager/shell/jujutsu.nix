@@ -42,6 +42,18 @@ in {
         };
       };
 
+      # On Darwin jj reads from $HOME/Library/Application Support/jj/config.toml
+      # See https://github.com/martinvonz/jj/issues/3434
+      home = mkIf pkgs.stdenv.isDarwin {
+        activation = {
+          jjConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+            mkdir -p "$HOME/Library/Application Support/jj"
+            rm -f "$HOME/Library/Application Support/jj/config.toml"
+            ln -s $HOME/.config/jj/config.toml "$HOME/Library/Application Support/jj/config.toml"
+          '';
+        };
+      };
+
       programs.git = { ignores = [ ".jj" ]; };
     };
   };
