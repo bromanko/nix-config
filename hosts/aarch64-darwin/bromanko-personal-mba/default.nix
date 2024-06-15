@@ -67,7 +67,6 @@ with lib.my; {
       brewPrefix = brewPath;
       taps = [ "homebrew/cask-versions" "homebrew/services" ];
       casks = [
-        "bartender"
         "betterdisplay"
         "dash"
         "docker"
@@ -75,6 +74,7 @@ with lib.my; {
         "google-chrome"
         "istat-menus"
         "jetbrains-toolbox"
+        "jordanbaird-ice"
         "lunar"
         "signal"
         "spotify"
