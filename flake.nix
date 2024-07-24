@@ -23,10 +23,14 @@
       url = "github:bromanko/age-plugin-op";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    unison-lang = {
+      url = "github:ceedubs/unison-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
-    , emacs-overlay, age-plugin-op, ... }:
+    , emacs-overlay, age-plugin-op, unison-lang, ... }:
     let
       inherit (lib.my) mapModules;
 
@@ -40,7 +44,7 @@
           inherit system;
           config.allowUnfree = true;
           config.input-fonts.acceptLicense = true;
-          overlays = [ self.overlay emacs-overlay.overlay ]
+          overlays = [ self.overlay emacs-overlay.overlay unison-lang.overlay ]
             ++ (lib.attrValues self.overlays);
         });
 
