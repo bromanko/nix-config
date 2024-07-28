@@ -13,7 +13,7 @@ in {
         extraPackages = with pkgs; [
           helix-gpt
           # nodePackages.bash-language-server
-          nodePackages.vscode-css-languageserver-bin
+          nodePackages.vscode-langservers-extracted
           elixir-ls
           fsautocomplete
           terraform-ls

@@ -39,7 +39,7 @@ in {
           # continue.continue # Not supported on Darwin
 
           # Rust
-          serayuzgur.crates
+          fill-labs.dependi
           rust-lang.rust-analyzer
 
           # Elixir
