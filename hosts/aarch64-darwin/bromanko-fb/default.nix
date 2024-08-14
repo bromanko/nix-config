@@ -55,11 +55,11 @@ with lib.my; {
       brewPrefix = "$HOME/homebrew/bin";
       taps = [ "homebrew/cask-versions" "homebrew/services" ];
       casks = [
-        "bartender"
         "betterdisplay"
         "camo-studio"
         "figma"
         "istat-menus"
+        "jordanbaird-ice"
         "lunar"
         "signal"
         "spotify"
