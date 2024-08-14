@@ -12,12 +12,7 @@ in {
       programs.wezterm = {
         enable = true;
         enableZshIntegration = config.modules.shell.zsh.enable;
-        extraConfig = ''
-          return {
-            font = wezterm.font("MonaspiceAr Nerd Font Mono Light")
-            font_size = 14;
-          }
-        '';
+        extraConfig = builtins.readFile ../../../configs/wezterm/wezterm.lua;
       };
     };
   };
