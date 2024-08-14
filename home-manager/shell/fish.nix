@@ -46,6 +46,12 @@ in {
       shellAliases = { "reload!" = "source ~/.config/fish/config.fish"; };
 
       interactiveShellInit = ''
+        fish_vi_key_bindings
+        set fish_cursor_default block
+        set fish_cursor_insert line
+        # Force needed for wezterm. See https://github.com/wez/wezterm/discussions/4670
+        set fish_vi_force_cursor 1
+
         # add extra paths to $PATH
         ${concatStrings (map (path: ''
           fish_add_path "${path}"
