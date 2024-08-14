@@ -41,7 +41,10 @@ with lib.my; {
       nodejs.enable = true;
       idea.enable = true;
     };
-    term = { kitty.enable = true; };
+    term = {
+      kitty.enable = true;
+      wezterm.enable = true;
+    };
     editor = {
       neovim.enable = true;
       emacs.enable = true;
