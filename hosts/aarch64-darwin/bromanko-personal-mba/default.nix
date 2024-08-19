@@ -54,6 +54,7 @@ with lib.my; {
         enable = true;
         fontSize = 13;
       };
+      wezterm.enable = true;
     };
     editor = {
       neovim.enable = true;
@@ -83,6 +84,7 @@ with lib.my; {
         "utm"
         "crystalfetch"
         "arc"
+	"calibre"
       ];
       masApps = {
         Keynote = 409183694;
