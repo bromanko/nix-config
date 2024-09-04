@@ -11,6 +11,7 @@ with lib.my; {
         extraPaths = [
           "$HOME/homebrew/bin"
           "$HOME/.config/emacs/bin"
+          "/opt/facebook/bin"
           "$HOME/.nix-profile/bin"
         ];
       };
