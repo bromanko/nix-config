@@ -14,7 +14,7 @@ in {
 
       matchBlocks = {
         keychain = {
-          host = "*";
+          host = "github github.com";
           extraOptions = {
             IgnoreUnknown = "UseKeychain";
             AddKeysToAgent = "yes";
