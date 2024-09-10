@@ -77,6 +77,6 @@ with lib.my; {
     };
   };
 
-  hm = { home = { packages = with pkgs; [ obsidian pandoc my.homerow ]; }; };
+  hm = { home = { packages = with pkgs; [ obsidian pandoc my.homerow eternal-terminal ]; }; };
   services.nix-daemon.enable = true;
 }
