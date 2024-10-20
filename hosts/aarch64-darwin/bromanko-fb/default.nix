@@ -1,7 +1,8 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, lib, ... }:
 
 with lib;
-with lib.my; {
+with lib.my;
+{
   modules = {
     shell = {
       commonPkgs.enable = true;
@@ -15,7 +16,9 @@ with lib.my; {
         ];
       };
       bat.enable = true;
-      git = { enable = true; };
+      git = {
+        enable = true;
+      };
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
@@ -53,7 +56,10 @@ with lib.my; {
     homebrew = {
       enable = true;
       brewPrefix = "$HOME/homebrew/bin";
-      taps = [ "homebrew/cask-versions" "homebrew/services" ];
+      taps = [
+        "homebrew/cask-versions"
+        "homebrew/services"
+      ];
       casks = [
         "betterdisplay"
         "camo-studio"
@@ -77,6 +83,14 @@ with lib.my; {
     };
   };
 
-  hm = { home = { packages = with pkgs; [ obsidian pandoc my.homerow ]; }; };
+  hm = {
+    home = {
+      packages = with pkgs; [
+        obsidian
+        pandoc
+        my.homerow
+      ];
+    };
+  };
   services.nix-daemon.enable = true;
 }
