@@ -65,6 +65,7 @@ with lib.my;
     };
     editor = {
       default = "nvim";
+      visual = "zed-preview";
       neovim.enable = true;
       emacs.enable = true;
       zed.enable = true;
