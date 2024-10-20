@@ -38,7 +38,10 @@ in {
             name = cfg.userName;
             email = cfg.userEmail;
           };
-          ui.diff.tool = [ "difft" "--color=always" "$left" "$right" ];
+          ui = {
+            diff.tool = [ "difft" "--color=always" "$left" "$right" ];
+            paginate = "never";
+          };
         };
       };
       programs.git = { ignores = [ ".jj" ]; };
