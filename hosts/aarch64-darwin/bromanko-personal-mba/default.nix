@@ -1,8 +1,11 @@
 { pkgs, lib, ... }:
 
-let brewPath = "/opt/homebrew/bin";
-in with lib;
-with lib.my; {
+let
+  brewPath = "/opt/homebrew/bin";
+in
+with lib;
+with lib.my;
+{
   modules = {
     homeage = {
       enable = true;
@@ -19,7 +22,11 @@ with lib.my; {
       openssh.enable = true;
       fish = {
         enable = true;
-        extraPaths = [ "$HOME/bin" "$HOME/.config/emacs/bin" brewPath ];
+        extraPaths = [
+          "$HOME/bin"
+          "$HOME/.config/emacs/bin"
+          brewPath
+        ];
       };
       bat.enable = true;
       git.enable = true;
@@ -57,6 +64,7 @@ with lib.my; {
       wezterm.enable = true;
     };
     editor = {
+      default = "nvim";
       neovim.enable = true;
       emacs.enable = true;
       zed.enable = true;
@@ -66,7 +74,10 @@ with lib.my; {
     homebrew = {
       enable = true;
       brewPrefix = brewPath;
-      taps = [ "homebrew/cask-versions" "homebrew/services" ];
+      taps = [
+        "homebrew/cask-versions"
+        "homebrew/services"
+      ];
       casks = [
         "betterdisplay"
         "dash"
@@ -84,7 +95,7 @@ with lib.my; {
         "utm"
         "crystalfetch"
         "arc"
-	"calibre"
+        "calibre"
       ];
       masApps = {
         Keynote = 409183694;
@@ -97,6 +108,14 @@ with lib.my; {
       };
     };
   };
-  hm = { home = { packages = with pkgs; [ slack tailscale aldente ]; }; };
+  hm = {
+    home = {
+      packages = with pkgs; [
+        slack
+        tailscale
+        aldente
+      ];
+    };
+  };
   services.nix-daemon.enable = true;
 }

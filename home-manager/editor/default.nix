@@ -1,8 +1,17 @@
-{ config, lib, pkgs, ... }:
+{ config, lib, ... }:
 
 with lib;
-let cfg = config.modules.editor;
-in {
-  config =
-    mkIf (cfg.default != null) { home.sessionVariables.EDITOR = cfg.default; };
+with lib.my;
+let
+  cfg = config.modules.editor;
+in
+{
+  config = {
+    home = {
+      sessionVariables = {
+        EDITOR = mkIf (cfg.default != null) cfg.default;
+        VISUAL = mkIf (cfg.visual != null) cfg.visual;
+      };
+    };
+  };
 }
