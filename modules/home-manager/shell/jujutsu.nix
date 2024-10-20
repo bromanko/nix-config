@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
@@ -12,7 +17,8 @@ let
         --run "export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
     '';
   });
-in {
+in
+{
   options.modules.shell.jujutsu = {
     enable = mkBoolOpt false;
 
@@ -31,20 +37,26 @@ in {
     hm = {
       programs.jujutsu = {
         enable = true;
-        package =
-          mkIf config.modules.desktop.apps."1Password".enable jj1Password;
+        package = mkIf config.modules.desktop.apps."1Password".enable jj1Password;
         settings = {
           user = {
             name = cfg.userName;
             email = cfg.userEmail;
           };
           ui = {
-            diff.tool = [ "difft" "--color=always" "$left" "$right" ];
-            paginate = "never";
+            diff.tool = [
+              "difft"
+              "--color=always"
+              "$left"
+              "$right"
+            ];
+            paginate = "auto";
           };
         };
       };
-      programs.git = { ignores = [ ".jj" ]; };
+      programs.git = {
+        ignores = [ ".jj" ];
+      };
     };
   };
 }
