@@ -10,6 +10,7 @@ in {
     homebrew = { casks = [ "zed@preview" ]; };
     hm = {
       home = {
+        packages = with pkgs; [ nixd ];
         activation.zedConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
           if [ ! -f "$HOME/.config/zed/settings.json" ]; then
             echo "Writing Zed settings.json"
