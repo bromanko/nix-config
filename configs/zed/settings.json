@@ -14,12 +14,12 @@
   "buffer_font_family": "MonaspiceAr Nerd Font Propo",
   "vim_mode": true,
   "autosave": "on_focus_change",
-  "language_overrides": {
+  "languages": {
     "Nix": {
       "formatter": {
         "external": {
           "command": "nixfmt",
-          "arguments": []
+          "arguments": ["-"]
         }
       }
     }
