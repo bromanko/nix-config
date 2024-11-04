@@ -1,8 +1,7 @@
 { pkgs, lib, ... }:
 
 with lib;
-with lib.my;
-{
+with lib.my; {
   modules = {
     shell = {
       commonPkgs.enable = true;
@@ -16,9 +15,7 @@ with lib.my;
         ];
       };
       bat.enable = true;
-      git = {
-        enable = true;
-      };
+      git = { enable = true; };
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
@@ -56,10 +53,7 @@ with lib.my;
     homebrew = {
       enable = true;
       brewPrefix = "$HOME/homebrew/bin";
-      taps = [
-        "homebrew/cask-versions"
-        "homebrew/services"
-      ];
+      taps = [ "homebrew/cask-versions" "homebrew/services" ];
       casks = [
         "betterdisplay"
         "camo-studio"
@@ -71,26 +65,26 @@ with lib.my;
         "spotify"
         "kindaVim"
         "google-drive"
+        "obsidian"
         "onedrive"
-        "arc"
+        "steermouse"
       ];
       masApps = {
         Amphetamine = 937984704;
         Keynote = 409183694;
         Numbers = 409203825;
         Pages = 409201541;
+        "StopTheMadness Pro" = 6471380298;
       };
     };
   };
 
   hm = {
-    home = {
-      packages = with pkgs; [
-        obsidian
-        pandoc
-        my.homerow
-      ];
-    };
+    home = { packages = with pkgs; [ pandoc my.homerow eternal-terminal ]; };
   };
-  services.nix-daemon.enable = true;
+
+  services = {
+    nix-daemon.enable = true;
+    activate-system.enable = true;
+  };
 }
