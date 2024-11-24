@@ -1,10 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  nixpkgs.config.allowUnfree = true;
   boot.kernelModules = [ "wl" ];
   boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
-  boot.blacklistedKernelModules = [ "b43" "bcma" ];
+  boot.blacklistedKernelModules = [
+    "b43"
+    "bcma"
+  ];
   networking.wireless.enable = false;
 
   # Need to use iwd due to a bug with Broadcom adapters

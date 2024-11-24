@@ -49,11 +49,18 @@ with inputs;
   mkNixosIso =
     path:
     nixosSystem {
+      specialArgs = {
+        inherit lib inputs;
+      };
       system = "x86_64-linux";
       modules = [
-        {
-          nixpkgs.pkgs = pkgs.x86_64-linux;
-        }
+        (
+          { modulesPath, ... }:
+          {
+            imports = [ (modulesPath + "/installer/cd-dvd/installation-cd-minimal.nix") ];
+            nixpkgs.pkgs = pkgs.x86_64-linux;
+          }
+        )
         (import path)
       ];
     };
