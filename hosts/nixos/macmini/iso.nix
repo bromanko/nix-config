@@ -8,7 +8,7 @@
 
   nixpkgs.config.allowUnfree = true;
   boot.kernelModules = [ "wl" ];
-  boot.externalModulePackages = [ config.boot.kernelPakcages.broadcom_sta ];
+  boot.extraModulePackages = [ config.boot.kernelPackages.broadcom_sta ];
   boot.blacklistedKernelModules = [ "b43" "bcma" ];
   networking.wireless.enable = false;
 
