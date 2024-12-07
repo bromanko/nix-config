@@ -92,7 +92,6 @@ with lib.my;
         "signal"
         "spotify"
         "orion"
-        "kindavim"
         "utm"
         "crystalfetch"
         "arc"
