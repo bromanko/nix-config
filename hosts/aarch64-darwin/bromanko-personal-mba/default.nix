@@ -113,7 +113,6 @@ with lib.my;
       packages = with pkgs; [
         slack
         tailscale
-        aldente
       ];
     };
   };
