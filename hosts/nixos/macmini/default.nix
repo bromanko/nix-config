@@ -67,6 +67,7 @@ with lib.my;
       zsh.enable = true;
       bat.enable = true;
       git.enable = true;
+      fish.enable = true;
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
