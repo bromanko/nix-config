@@ -15,28 +15,6 @@ with lib.my;
       efi.canTouchEfiVariables = true;
       systemd-boot.enable = true;
     };
-
-    # Enable remote login during boot to unlock
-    # encrypted volume
-    initrd = {
-      network = {
-        enable = true;
-        ssh = {
-          enable = true;
-          port = 2222;
-          # this includes the ssh keys of all users in the wheel group
-          authorizedKeys =
-            with lib;
-            concatLists (
-              mapAttrsToList (
-                name: user: if elem "wheel" user.extraGroups then user.openssh.authorizedKeys.keys else [ ]
-              ) config.users.users
-            );
-          hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
-        };
-      };
-      availableKernelModules = [ "wl" ];
-    };
   };
 
   # The default governor constantly runs all cores
