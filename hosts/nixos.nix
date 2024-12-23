@@ -1,14 +1,22 @@
-{ config, lib, pkgs, inputs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 with lib;
-with lib.my; {
-  imports = [
-    inputs.home-manager.nixosModules.home-manager
-    ../modules/users.nix
-    ../modules/fonts.nix
-    ../modules/home-manager.nix
-  ]
-  # Must toString the path so that nix doesn't attempt to import it to the store
+with lib.my;
+{
+  imports =
+    [
+      inputs.home-manager.nixosModules.home-manager
+      ../modules/users.nix
+      ../modules/fonts.nix
+      ../modules/home-manager.nix
+    ]
+    # Must toString the path so that nix doesn't attempt to import it to the store
     ++ (mapModulesRec' (toString ../modules/home-manager) import)
     ++ (mapModulesRec' (toString ../modules/linux) import);
 
@@ -35,5 +43,9 @@ with lib.my; {
     };
   };
 
-  environment.systemPackages = with pkgs; [ xorg.xdpyinfo killall git ];
+  environment.systemPackages = with pkgs; [
+    xorg.xdpyinfo
+    killall
+    git
+  ];
 }
