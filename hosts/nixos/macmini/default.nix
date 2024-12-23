@@ -64,7 +64,6 @@ with lib.my;
   modules = {
     shell = {
       commonPkgs.enable = true;
-      zsh.enable = true;
       bat.enable = true;
       git.enable = true;
       fish.enable = true;
