@@ -1,20 +1,30 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.dev.docker;
-in {
-  options.modules.dev.docker = { enable = mkBoolOpt false; };
+let
+  cfg = config.modules.dev.docker;
+in
+{
+  options.modules.dev.docker = {
+    enable = mkBoolOpt false;
+  };
 
   config = mkIf cfg.enable {
     hm = {
-      home = { packages = with pkgs; [ docker ]; };
+      home = {
+        packages = with pkgs; [ docker ];
+      };
 
       programs = {
-        zsh.shellAliases =
-          mkIf config.modules.shell.zsh.enable { dc = "docker-compose"; };
-        fish.shellAbbrs =
-          mkIf config.modules.shell.fish.enable { dc = "docker-compose"; };
+        zsh.shellAliases = mkIf config.modules.shell.zsh.enable { dc = "docker compose"; };
+        fish.shellAbbrs = mkIf config.modules.shell.fish.enable { dc = "docker compose"; };
       };
     };
   };
