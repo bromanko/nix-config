@@ -1,7 +1,13 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
-with lib.my; {
+with lib.my;
+{
   imports = [ ./hardware-configuration.nix ];
 
   boot = {
@@ -19,12 +25,13 @@ with lib.my; {
           enable = true;
           port = 2222;
           # this includes the ssh keys of all users in the wheel group
-          authorizedKeys = with lib;
-            concatLists (mapAttrsToList (name: user:
-              if elem "wheel" user.extraGroups then
-                user.openssh.authorizedKeys.keys
-              else
-                [ ]) config.users.users);
+          authorizedKeys =
+            with lib;
+            concatLists (
+              mapAttrsToList (
+                name: user: if elem "wheel" user.extraGroups then user.openssh.authorizedKeys.keys else [ ]
+              ) config.users.users
+            );
           hostKeys = [ "/etc/secrets/initrd/ssh_host_ed25519_key" ];
         };
       };
@@ -50,7 +57,9 @@ with lib.my; {
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Los_Angeles";
 
-  services.openssh = { enable = true; };
+  services.openssh = {
+    enable = true;
+  };
 
   modules = {
     shell = {
@@ -64,8 +73,12 @@ with lib.my; {
       exa.enable = true;
       fd.enable = true;
     };
-    desktop = { fonts.enable = true; };
-    dev = { nix.enable = true; };
+    desktop = {
+      fonts.enable = true;
+    };
+    dev = {
+      nix.enable = true;
+    };
     editor = {
       neovim.enable = true;
       emacs.enable = true;
