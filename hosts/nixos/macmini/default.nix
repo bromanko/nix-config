@@ -62,6 +62,7 @@ with lib.my;
       emacs.enable = true;
     };
     tailscale.enable = true;
+    media-server.enable = true;
   };
 
   # This value determines the NixOS release from which the default
