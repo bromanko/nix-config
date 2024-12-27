@@ -62,6 +62,7 @@ with lib.my;
         fontSize = 13;
       };
       wezterm.enable = true;
+      ghostty.enable = true;
     };
     editor = {
       default = "nvim";

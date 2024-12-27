@@ -1,0 +1,34 @@
+# Since Ghostty config is managed by home-manager it is read-only
+# By default we'll also attempt to load a non-Nix managed config file
+# to test things
+config-file = ?override-config
+
+################################################
+# Appearance
+################################################
+font-family = MonaspiceAr Nerd Font
+theme = catppuccin-mocha
+window-padding-x = 10
+
+################################################
+# Behavior
+################################################
+clipboard-trim-trailing-spaces = true
+copy-on-select = true
+confirm-close-surface = false
+quit-after-last-window-closed = true
+
+quick-terminal-autohide = true
+
+################################################
+# Keymap
+################################################
+
+# Tabs
+
+# Panes
+
+# Prompts
+
+
+# Global
