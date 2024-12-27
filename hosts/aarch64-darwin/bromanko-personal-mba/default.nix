@@ -84,6 +84,7 @@ with lib.my;
         "dash"
         "docker"
         "figma"
+        "ghostty"
         "google-chrome"
         "istat-menus"
         "jetbrains-toolbox"
