@@ -1,6 +1,12 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-with lib; {
+with lib;
+{
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
   # System - Always show scroll bars.
@@ -96,7 +102,7 @@ with lib; {
     defaults write com.apple.finder NewWindowTarget -string "PfDe"
     defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME"
     # Finder - Show the $HOME/Library folder.
-    chflags nohidden $HOME/Library
+    chflags nohidden "$HOME/Library"
     # Finder - Show hidden files.
     defaults write com.apple.finder AppleShowAllFiles -bool true
     # Finder - Show path bar.
