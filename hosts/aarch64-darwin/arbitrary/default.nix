@@ -42,7 +42,6 @@ with lib.my;
       dictionaries.enable = true;
       apps = {
         raycast.enable = true;
-        vimari.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
       };
@@ -57,10 +56,6 @@ with lib.my;
       nodejs.enable = true;
     };
     term = {
-      kitty = {
-        enable = true;
-        fontSize = 13;
-      };
       wezterm.enable = true;
       ghostty.enable = true;
     };
@@ -70,7 +65,6 @@ with lib.my;
       neovim.enable = true;
       emacs.enable = true;
       zed.enable = true;
-      helix.enable = true;
     };
 
     homebrew = {
@@ -82,8 +76,6 @@ with lib.my;
       ];
       casks = [
         "betterdisplay"
-        "dash"
-        "docker"
         "figma"
         "ghostty"
         "google-chrome"
@@ -93,7 +85,6 @@ with lib.my;
         "lunar"
         "signal"
         "spotify"
-        "orion"
         "utm"
         "crystalfetch"
         "arc"
@@ -104,9 +95,7 @@ with lib.my;
         Kindle = 405399194;
         Numbers = 409203825;
         Pages = 409201541;
-        Tailscale = 1475387142;
         Xcode = 497799835;
-        Wireguard = 1451685025;
       };
     };
   };
