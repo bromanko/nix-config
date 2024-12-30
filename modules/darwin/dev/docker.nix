@@ -27,5 +27,11 @@ in
         fish.shellAbbrs = mkIf config.modules.shell.fish.enable { dc = "docker compose"; };
       };
     };
+
+    modules = mkIf config.modules.homebrew.enable {
+      homebrew = {
+        casks = [ "docker" ];
+      };
+    };
   };
 }
