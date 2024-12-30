@@ -49,7 +49,6 @@ with lib.my;
     dev = {
       elixir.enable = true;
       idea.enable = true;
-      dotnet.enable = true;
       psql.enable = true;
       docker.enable = true;
       nix.enable = true;
