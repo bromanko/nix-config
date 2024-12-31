@@ -76,7 +76,7 @@ in
       };
 
       xdg.configFile = {
-        "age/age-identity.txt".source = ../../configs/age/age-identity.txt;
+        "age/age-identity.txt".source = ../configs/age/age-identity.txt;
       };
     };
   };
