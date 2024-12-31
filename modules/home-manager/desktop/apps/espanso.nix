@@ -13,7 +13,7 @@ in
   config = mkIf cfg.enable {
     hm.home.file."Library/Preferences/espanso" = {
       recursive = true;
-      source = ../../../../configs/espanso;
+      source = ../../../configs/espanso;
     };
   };
 }
