@@ -15,7 +15,6 @@ with lib.my;
       ../modules/users.nix
       ../modules/fonts.nix
       ../modules/home-manager.nix
-      ../modules/homebrew.nix
       ../modules/homeage.nix
     ]
     # Must toString the path so that nix doesn't attempt to import it to the store

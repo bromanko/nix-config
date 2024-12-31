@@ -16,11 +16,5 @@ in
         source = ../../../configs/ghostty/config;
       };
     };
-
-    modules = mkIf config.modules.homebrew.enable {
-      homebrew = {
-        casks = [ "ghostty" ];
-      };
-    };
   };
 }
