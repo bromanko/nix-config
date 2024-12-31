@@ -52,20 +52,18 @@ in
           '';
           vterm_prompt_end = "vterm_printf '51;A'(whoami)'@'(hostname)':'(pwd)";
           gi = "curl -sL https://www.toptal.com/developers/gitignore/api/$argv";
+          multicd = "echo cd (string repeat -n (math (string length -- $argv[1]) - 1) ../)";
         };
 
         shellAbbrs = {
           S = "sudo";
           e = "$EDITOR";
-          c = "cd $PROJECTS";
-          ".." = "cd ..";
-          "..." = "cd ../..";
-          "...." = "cd ../../../";
-          "....." = "cd ../../../../";
+          c = "cd $PROJECTS/";
         };
 
         shellAliases = {
           "reload!" = "source ~/.config/fish/config.fish";
+          "less" = "less -R";
         };
 
         interactiveShellInit = ''
@@ -81,6 +79,8 @@ in
               fish_add_path "${path}"
             '') cfg.extraPaths
           )}
+
+          abbr --add dotdot --regex '^\.\.+$' --function multicd
 
           # vterm
           functions --copy fish_prompt vterm_old_fish_prompt
