@@ -36,6 +36,7 @@ with lib.my;
       direnv.enable = true;
       exa.enable = true;
       fd.enable = true;
+      llm.enable = true;
     };
     desktop = {
       fonts.enable = true;
