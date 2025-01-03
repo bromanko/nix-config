@@ -18,8 +18,8 @@ in
   config = mkIf cfg.enable {
     hm = {
       home = {
-        packages = with pkgs; [
-          llm
+        packages = [
+          pkgs.llm
         ];
       };
     };
