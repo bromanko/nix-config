@@ -51,6 +51,7 @@ with lib.my;
     editor = {
       neovim.enable = true;
       emacs.enable = true;
+      visual = "code-fb";
     };
 
     homebrew = {
@@ -69,10 +70,8 @@ with lib.my;
         "lunar"
         "signal"
         "spotify"
-        "kindaVim"
         "google-drive"
         "onedrive"
-        "arc"
       ];
       masApps = {
         Amphetamine = 937984704;
