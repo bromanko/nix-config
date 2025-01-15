@@ -47,6 +47,7 @@ with lib.my;
     term = {
       kitty.enable = true;
       wezterm.enable = true;
+      ghostty.enable = true;
     };
     editor = {
       neovim.enable = true;
@@ -56,7 +57,7 @@ with lib.my;
 
     homebrew = {
       enable = true;
-      brewPrefix = "$HOME/homebrew/bin";
+      brewPrefix = "/Users/bromanko/homebrew/bin";
       taps = [
         "homebrew/cask-versions"
         "homebrew/services"
