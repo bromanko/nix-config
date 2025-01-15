@@ -24,7 +24,7 @@ in
           name = "MonaspiceAr Nerd Font Mono Light";
           size = config.modules.term.kitty.fontSize;
         };
-        theme = "Catppuccin-Mocha";
+        themeFile = "Catppuccin-Mocha";
         shellIntegration = {
           enableZshIntegration = config.modules.shell.zsh.enable;
           enableFishIntegration = config.modules.shell.fish.enable;
