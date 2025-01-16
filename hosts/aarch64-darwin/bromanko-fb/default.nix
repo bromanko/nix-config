@@ -51,7 +51,7 @@ with lib.my;
     editor = {
       neovim.enable = true;
       emacs.enable = true;
-      visual = "code-fb";
+      visual = "code-fb -w";
     };
 
     homebrew = {
