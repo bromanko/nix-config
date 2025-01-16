@@ -16,9 +16,8 @@ with lib.my;
         ];
       };
       bat.enable = true;
-      git = {
-        enable = true;
-      };
+      git.enable = true;
+      jujutsu.enable = true;
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
