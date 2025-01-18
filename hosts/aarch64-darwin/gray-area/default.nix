@@ -61,7 +61,6 @@ with lib.my;
       enable = true;
       brewPrefix = brewPath;
       taps = [
-        "homebrew/cask-versions"
         "homebrew/services"
       ];
       casks = [

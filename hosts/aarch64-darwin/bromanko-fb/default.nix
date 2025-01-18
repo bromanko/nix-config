@@ -57,7 +57,6 @@ with lib.my;
       enable = true;
       brewPrefix = "$HOME/homebrew/bin";
       taps = [
-        "homebrew/cask-versions"
         "homebrew/services"
       ];
       casks = [
