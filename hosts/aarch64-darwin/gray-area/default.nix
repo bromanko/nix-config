@@ -71,15 +71,14 @@ with lib.my;
         "arc"
       ];
       masApps = {
+        Tailscale = 1470499037;
         Xcode = 497799835;
       };
     };
   };
   hm = {
     home = {
-      packages = with pkgs; [
-        tailscale
-      ];
+      packages = [ ];
     };
   };
   services.nix-daemon.enable = true;
