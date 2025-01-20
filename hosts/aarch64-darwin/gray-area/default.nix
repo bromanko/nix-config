@@ -3,19 +3,11 @@
 let
   brewPath = "/opt/homebrew/bin";
 in
-with lib;
-with lib.my;
 {
+  authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID2vkvKlul2zm/Qx7V0NmmwGDJcFY46tf9asOVONkcCK 1Password"
+  ];
   modules = {
-    # homeage = {
-    #   enable = true;
-    #   file = {
-    #     "nix.config" = {
-    #       source = ../../../configs/nix/nix.conf.age;
-    #       symlinks = [ "$HOME/.config/nix/nix.conf" ];
-    #     };
-    #   };
-    # };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
@@ -56,6 +48,7 @@ with lib.my;
       neovim.enable = true;
       zed.enable = true;
     };
+    openssh.enable = true;
 
     homebrew = {
       enable = true;
