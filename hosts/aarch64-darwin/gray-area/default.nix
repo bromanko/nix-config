@@ -72,14 +72,8 @@ with lib.my;
       ];
       masApps = {
         Xcode = 497799835;
+        Tailscale = 1475387142;
       };
-    };
-  };
-  hm = {
-    home = {
-      packages = with pkgs; [
-        tailscale
-      ];
     };
   };
   services.nix-daemon.enable = true;
