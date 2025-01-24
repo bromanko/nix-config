@@ -10,9 +10,9 @@ with lib.my;
       fish = {
         enable = true;
         extraPaths = [
-          "$HOME/homebrew/bin"
-          "$HOME/.config/emacs/bin"
-          "$HOME/.nix-profile/bin"
+          "/Users/bromanko/homebrew/bin"
+          "/Users/bromanko/.config/emacs/bin"
+          "/Users/bromanko/.nix-profile/bin"
         ];
       };
       bat.enable = true;
@@ -24,6 +24,7 @@ with lib.my;
       direnv.enable = true;
       exa.enable = true;
       fd.enable = true;
+      jujutsu.enable = true;
     };
     desktop = {
       fonts.enable = true;
@@ -46,7 +47,7 @@ with lib.my;
     };
     term = {
       kitty.enable = true;
-      wezterm.enable = true;
+      ghostty.enable = true;
     };
     editor = {
       neovim.enable = true;
@@ -55,7 +56,7 @@ with lib.my;
 
     homebrew = {
       enable = true;
-      brewPrefix = "$HOME/homebrew/bin";
+      brewPrefix = "/Users/bromanko/homebrew/bin";
       taps = [
         "homebrew/services"
       ];
@@ -67,11 +68,9 @@ with lib.my;
         "jordanbaird-ice"
         "lunar"
         "signal"
-        "spotify"
-        "kindaVim"
         "google-drive"
         "onedrive"
-        "arc"
+        "steermouse"
       ];
       masApps = {
         Amphetamine = 937984704;
