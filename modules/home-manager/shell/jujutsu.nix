@@ -58,7 +58,7 @@ in
               "$left"
               "$right"
             ];
-            paginate = "auto";
+            paginate = "never";
           };
         };
       };
