@@ -23,6 +23,10 @@
       url = "github:bromanko/age-plugin-op";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    jujutsu = {
+      url = "github:jj-vcs/jj";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -33,6 +37,7 @@
       home-manager,
       emacs-overlay,
       age-plugin-op,
+      jujutsu,
       ...
     }:
     let
@@ -79,6 +84,7 @@
 
       overlay = final: prev: {
         stable = nixpkgs-stable.legacyPackages.${prev.system};
+        jujutsu = jujutsu.packages.${prev.system}.jujutsu;
         my = self.packages.${prev.system} // {
           age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
         };
