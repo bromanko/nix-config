@@ -105,6 +105,5 @@ with lib.my;
 
   services = {
     nix-daemon.enable = true;
-    activate-system.enable = true;
   };
 }
