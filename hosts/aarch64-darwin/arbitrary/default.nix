@@ -1,8 +1,11 @@
 { pkgs, lib, ... }:
 
-let brewPath = "/opt/homebrew/bin";
-in with lib;
-with lib.my; {
+let
+  brewPath = "/opt/homebrew/bin";
+in
+with lib;
+with lib.my;
+{
   modules = {
     homeage = {
       enable = true;
@@ -19,7 +22,11 @@ with lib.my; {
       openssh.enable = true;
       fish = {
         enable = true;
-        extraPaths = [ "$HOME/bin" "$HOME/.config/emacs/bin" brewPath ];
+        extraPaths = [
+          "$HOME/bin"
+          "$HOME/.config/emacs/bin"
+          brewPath
+        ];
       };
       bat.enable = true;
       git.enable = true;
@@ -29,13 +36,13 @@ with lib.my; {
       direnv.enable = true;
       exa.enable = true;
       fd.enable = true;
+      llm.enable = true;
     };
     desktop = {
       fonts.enable = true;
       dictionaries.enable = true;
       apps = {
         raycast.enable = true;
-        vimari.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
       };
@@ -43,58 +50,61 @@ with lib.my; {
     dev = {
       elixir.enable = true;
       idea.enable = true;
-      dotnet.enable = true;
       psql.enable = true;
       docker.enable = true;
       nix.enable = true;
       nodejs.enable = true;
     };
     term = {
-      kitty = {
-        enable = true;
-        fontSize = 13;
-      };
+      wezterm.enable = true;
+      ghostty.enable = true;
     };
     editor = {
+      default = "nvim";
+      visual = "zed-preview -w";
       neovim.enable = true;
       emacs.enable = true;
       zed.enable = true;
-      helix.enable = true;
     };
 
     homebrew = {
       enable = true;
       brewPrefix = brewPath;
-      taps = [ "homebrew/cask-versions" "homebrew/services" ];
+      taps = [
+        "homebrew/services"
+      ];
       casks = [
-        "bartender"
         "betterdisplay"
-        "dash"
-        "docker"
         "figma"
+        "ghostty"
         "google-chrome"
         "istat-menus"
         "jetbrains-toolbox"
+        "jordanbaird-ice"
         "lunar"
         "signal"
         "spotify"
-        "orion"
-        "kindavim"
         "utm"
         "crystalfetch"
         "arc"
+        "calibre"
       ];
       masApps = {
         Keynote = 409183694;
         Kindle = 405399194;
         Numbers = 409203825;
         Pages = 409201541;
-        Tailscale = 1475387142;
         Xcode = 497799835;
-        Wireguard = 1451685025;
       };
     };
   };
-  hm = { home = { packages = with pkgs; [ slack tailscale aldente ]; }; };
+  hm = {
+    home = {
+      packages = with pkgs; [
+        slack
+        tailscale
+      ];
+    };
+  };
   services.nix-daemon.enable = true;
 }

@@ -1,24 +1,45 @@
-{ config, lib, pkgs, options, inputs, ... }:
+{
+  inputs,
+  config,
+  lib,
+  ...
+}:
 
 with lib;
-with lib.my; {
+with lib.my;
+{
+  imports = [
+    (mkAliasOptionModule [ "hm" ] [ "home-manager" "users" config.user.name ])
+  ];
   options = {
-    hm = mkOpt' types.attrs { } "Passthrough for home-manager configuration";
+    nixConfigPath = lib.mkOption {
+      type = lib.types.path;
+      apply = toString;
+      default = "${config.users.users.${config.user.name}.home}/Code/nix-config";
+      example = "${config.users.users.${config.user.name}.home}/Code/nix-config";
+      description = "Location of the nix-config working copy";
+    };
   };
   config = {
-    # Bootstrap the home-manager config
-    hm = import ../home-manager { inherit config lib pkgs options inputs; };
-
     home-manager = {
       useGlobalPkgs = true;
       backupFileExtension = "orig";
 
       # Workaround to enable installing via `nixos-install`
       # https://github.com/nix-community/home-manager/issues/1262
-      sharedModules = [{ manual.manpages.enable = false; }];
+      sharedModules = [ { manual.manpages.enable = false; } ];
+    };
 
-      # map the hm config to default home-manager user
-      users."${config.user.name}" = mkAliasDefinitions options.hm;
+    hm = {
+      lib = {
+        file = {
+          mkNixConfigSymlink =
+            path:
+            config.hm.lib.file.mkOutOfStoreSymlink (
+              config.nixConfigPath + removePrefix (toString inputs.self) (toString path)
+            );
+        };
+      };
     };
   };
 }

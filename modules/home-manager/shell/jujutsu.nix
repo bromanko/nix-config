@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
@@ -7,12 +12,21 @@ let
   jj1Password = pkgs.jujutsu.overrideAttrs (old: {
     nativeBuildInputs = old.nativeBuildInputs ++ [ pkgs.makeWrapper ];
     postInstall = ''
+      $out/bin/jj util mangen > ./jj.1
+      installManPage ./jj.1
+
+      installShellCompletion --cmd jj \
+        --bash <($out/bin/jj util completion bash) \
+        --fish <($out/bin/jj util completion fish) \
+        --zsh <($out/bin/jj util completion zsh)
+
       # Export via run rather than set to expand the ~ variable
       wrapProgram $out/bin/jj \
         --run "export SSH_AUTH_SOCK=~/Library/Group\ Containers/2BUA8C4S2C.com.1password/t/agent.sock"
     '';
   });
-in {
+in
+{
   options.modules.shell.jujutsu = {
     enable = mkBoolOpt false;
 
@@ -31,30 +45,26 @@ in {
     hm = {
       programs.jujutsu = {
         enable = true;
-        package =
-          mkIf config.modules.desktop.apps."1Password".enable jj1Password;
+        package = mkIf config.modules.desktop.apps."1Password".enable jj1Password;
         settings = {
           user = {
             name = cfg.userName;
             email = cfg.userEmail;
           };
-          ui.diff.tool = [ "difft" "--color=always" "$left" "$right" ];
+          ui = {
+            diff.tool = [
+              "difft"
+              "--color=always"
+              "$left"
+              "$right"
+            ];
+            paginate = "auto";
+          };
         };
       };
-
-      # On Darwin jj reads from $HOME/Library/Application Support/jj/config.toml
-      # See https://github.com/martinvonz/jj/issues/3434
-      home = mkIf pkgs.stdenv.isDarwin {
-        activation = {
-          jjConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            mkdir -p "$HOME/Library/Application Support/jj"
-            rm -f "$HOME/Library/Application Support/jj/config.toml"
-            ln -s $HOME/.config/jj/config.toml "$HOME/Library/Application Support/jj/config.toml"
-          '';
-        };
+      programs.git = {
+        ignores = [ ".jj" ];
       };
-
-      programs.git = { ignores = [ ".jj" ]; };
     };
   };
 }

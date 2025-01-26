@@ -1,9 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.shell.ssh;
-in {
+let
+  cfg = config.modules.shell.ssh;
+in
+{
   config = mkIf cfg.enable {
     programs.ssh = {
       enable = true;
@@ -14,7 +21,7 @@ in {
 
       matchBlocks = {
         keychain = {
-          host = "*";
+          host = "github github.com";
           extraOptions = {
             IgnoreUnknown = "UseKeychain";
             AddKeysToAgent = "yes";

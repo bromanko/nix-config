@@ -1,12 +1,25 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 with lib;
-with lib.my; {
+with lib.my;
+let
+  cfg = config.modules.homeage;
+in
+{
   options.modules.homeage = {
     enable = mkBoolOpt false;
 
     installationType = mkOption {
-      type = types.enum [ "activation" "systemd" ];
+      type = types.enum [
+        "activation"
+        "systemd"
+      ];
       default = "activation";
       example = "activation";
       description = ''
@@ -37,10 +50,34 @@ with lib.my; {
     };
 
     mount = mkOption {
-      description =
-        "Absolute path to folder where decrypted files are stored. Files are decrypted on login. Defaults to /run which is a tmpfs.";
+      description = "Absolute path to folder where decrypted files are stored. Files are decrypted on login. Defaults to /run which is a tmpfs.";
       default = "/run/user/$UID/secrets";
       type = types.str;
+    };
+  };
+
+  config = mkIf cfg.enable {
+    hm = {
+      imports = [ inputs.homeage.homeManagerModules.homeage ];
+
+      homeage = {
+        inherit (cfg) installationType file;
+
+        pkg = pkgs.my.age-with-plugins;
+
+        mount =
+          if pkgs.hostPlatform.isDarwin then "$HOME/.config/age/secrets" else "/run/user/$UID/secrets";
+
+        identityPaths = [ "$HOME/.config/age/age-identity.txt" ];
+      };
+
+      home = {
+        packages = with pkgs; [ my.age-with-plugins ];
+      };
+
+      xdg.configFile = {
+        "age/age-identity.txt".source = ../configs/age/age-identity.txt;
+      };
     };
   };
 }

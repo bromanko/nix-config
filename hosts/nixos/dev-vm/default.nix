@@ -1,9 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let dpi = 163;
-in {
+let
+  dpi = 163;
+in
+{
   imports = [ ./hardware-configuration.nix ];
 
   # Use the systemd-boot EFI boot loader.
@@ -25,7 +32,9 @@ in {
   # Don't require password for sudo
   security.sudo.wheelNeedsPassword = false;
 
-  virtualisation = { vmware.guest.enable = true; };
+  virtualisation = {
+    vmware.guest.enable = true;
+  };
 
   i18n.defaultLocale = "en_US.UTF-8";
   time.timeZone = "America/Los_Angeles";
@@ -90,15 +99,21 @@ in {
       };
     };
 
-    videoDrivers = [ "vmware" "vesa" "modesetting" ];
+    videoDrivers = [
+      "vmware"
+      "vesa"
+      "modesetting"
+    ];
   };
 
-  services.autorandr = { enable = true; };
+  services.autorandr = {
+    enable = true;
+  };
 
   home-manager.users."${config.user.name}" = {
     home = {
       packages = with pkgs; [
-        _1password
+        _1password-cli
         _1password-gui
 
         # below needed for host clipboard
@@ -111,8 +126,12 @@ in {
       };
     };
 
-    xdg.configFile = { "i3/config".source = ../../../configs/i3/config; };
-    xresources.properties = { "Xft.dpi" = dpi; };
+    xdg.configFile = {
+      "i3/config".source = ../../../configs/i3/config;
+    };
+    xresources.properties = {
+      "Xft.dpi" = dpi;
+    };
 
     xsession.pointerCursor = {
       name = "Vanilla-DMZ";

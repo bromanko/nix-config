@@ -1,10 +1,19 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.apps.vscode;
-in {
-  options.modules.desktop.apps.vscode = { enable = mkBoolOpt false; };
+let
+  cfg = config.modules.desktop.apps.vscode;
+in
+{
+  options.modules.desktop.apps.vscode = {
+    enable = mkBoolOpt false;
+  };
 
   config = mkIf cfg.enable {
     hm = {
@@ -39,7 +48,7 @@ in {
           # continue.continue # Not supported on Darwin
 
           # Rust
-          serayuzgur.crates
+          fill-labs.dependi
           rust-lang.rust-analyzer
 
           # Elixir
@@ -48,35 +57,11 @@ in {
         ];
       };
       home = {
-        activation = {
-          vscodeConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-            if [ ! -f "$HOME/Library/Application Support/Code/User/settings.json" ]; then
-              echo "Writing VSCode settings.json"
-              cp ${
-                ../../../../configs/vscode/settings.json
-              } "$HOME/Library/Application Support/Code/User/settings.json"
-            else
-              if ! cmp ${
-                ../../../../configs/vscode/settings.json
-              } "$HOME/Library/Application Support/Code/User/settings.json"; then
-                echo "VSCode settings.json exists and is different"
-                exit 1
-              fi
-            fi
-            if [ ! -f "$HOME/Library/Application Support/Code/User/keybindings.json" ]; then
-              echo "Writing VSCode keybindings.json"
-              cp ${
-                ../../../../configs/vscode/keybindings.json
-              } "$HOME/Library/Application Support/Code/User/keybindings.json"
-            else
-              if ! cmp ${
-                ../../../../configs/vscode/keybindings.json
-              } "$HOME/Library/Application Support/Code/User/keybindings.json"; then
-                echo "VSCode keybindings.json exists and is different"
-                exit 1
-              fi
-            fi
-          '';
+        file = {
+          "Library/Application Support/Code/User/settings.json".source =
+            config.hm.lib.file.mkNixConfigSymlink ../../../../configs/vscode/settings.json;
+          "Library/Application Support/Code/User/keybindings.json".source =
+            config.hm.lib.file.mkNixConfigSymlink ../../../../configs/vscode/keybindings.json;
         };
       };
     };

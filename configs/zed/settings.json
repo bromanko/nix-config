@@ -7,6 +7,13 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "assistant": {
+    "default_model": {
+      "provider": "copilot_chat",
+      "model": "gpt-4o"
+    },
+    "version": "2"
+  },
   "theme": "Catppuccin Mocha",
   "ui_font_size": 15,
   "relative_line_numbers": true,
@@ -14,12 +21,12 @@
   "buffer_font_family": "MonaspiceAr Nerd Font Propo",
   "vim_mode": true,
   "autosave": "on_focus_change",
-  "language_overrides": {
+  "languages": {
     "Nix": {
       "formatter": {
         "external": {
           "command": "nixfmt",
-          "arguments": []
+          "arguments": ["-"]
         }
       }
     }

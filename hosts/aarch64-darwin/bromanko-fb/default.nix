@@ -1,7 +1,8 @@
-{ pkgs, config, lib, ... }:
+{ pkgs, lib, ... }:
 
 with lib;
-with lib.my; {
+with lib.my;
+{
   modules = {
     homeage = {
       enable = true;
@@ -18,13 +19,16 @@ with lib.my; {
       fish = {
         enable = true;
         extraPaths = [
-          "$HOME/homebrew/bin"
-          "$HOME/.config/emacs/bin"
-          "$HOME/.nix-profile/bin"
+          "/Users/bromanko/homebrew/bin"
+          "/Users/bromanko/.config/emacs/bin"
+          "/Users/bromanko/.nix-profile/bin"
         ];
       };
       bat.enable = true;
-      git = { enable = true; };
+      git = {
+        enable = true;
+      };
+      jujutsu.enable = true;
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
@@ -50,16 +54,22 @@ with lib.my; {
       nodejs.enable = true;
       idea.enable = true;
     };
-    term = { kitty.enable = true; };
+    term = {
+      kitty.enable = true;
+      ghostty.enable = true;
+    };
     editor = {
       neovim.enable = true;
       emacs.enable = true;
+      visual = "code-fb -w";
     };
 
     homebrew = {
       enable = true;
-      brewPrefix = "$HOME/homebrew/bin";
-      taps = [ "homebrew/cask-versions" "homebrew/services" ];
+      brewPrefix = "/Users/bromanko/homebrew/bin";
+      taps = [
+        "homebrew/services"
+      ];
       casks = [
         "betterdisplay"
         "camo-studio"
@@ -68,21 +78,33 @@ with lib.my; {
         "jordanbaird-ice"
         "lunar"
         "signal"
-        "spotify"
-        "kindaVim"
         "google-drive"
+        "obsidian"
         "onedrive"
-        "arc"
+        "steermouse"
       ];
       masApps = {
         Amphetamine = 937984704;
         Keynote = 409183694;
         Numbers = 409203825;
         Pages = 409201541;
+        "StopTheMadness Pro" = 6471380298;
       };
     };
   };
 
-  hm = { home = { packages = with pkgs; [ obsidian pandoc ]; }; };
-  services.nix-daemon.enable = true;
+  hm = {
+    home = {
+      packages = with pkgs; [
+        pandoc
+        my.homerow
+        eternal-terminal
+      ];
+    };
+  };
+
+  services = {
+    nix-daemon.enable = true;
+    activate-system.enable = true;
+  };
 }

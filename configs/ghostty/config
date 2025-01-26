@@ -1,0 +1,49 @@
+# Since Ghostty config is managed by home-manager it is read-only
+# By default we'll also attempt to load a non-Nix managed config file
+# to test things
+config-file = ?override-config
+
+################################################
+# Appearance
+################################################
+font-family = MonaspiceAr Nerd Font
+theme = catppuccin-mocha
+window-padding-x = 10
+
+################################################
+# Behavior
+################################################
+clipboard-trim-trailing-spaces = true
+copy-on-select = true
+confirm-close-surface = false
+quit-after-last-window-closed = true
+
+quick-terminal-autohide = true
+
+################################################
+# Keymap
+################################################
+
+# General
+keybind = ctrl+space>h>r>r=reload_config
+
+# Tabs
+keybind = ctrl+space>b>shift+n=new_tab
+keybind = ctrl+space>b>d=close_surface
+keybind = ctrl+space>b>n=next_tab
+keybind = ctrl+space>b>p=previous_tab
+
+# Splits
+keybind = ctrl+space>w>s=new_split:down
+keybind = ctrl+space>w>v=new_split:right
+keybind = ctrl+space>w>right=goto_split:right
+keybind = ctrl+space>w>left=goto_split:left
+keybind = ctrl+space>w>down=goto_split:bottom
+keybind = ctrl+space>w>up=goto_split:top
+keybind = ctrl+space>w>w=goto_split:next
+keybind = ctrl+space>w>shift+w=goto_split:previous
+
+# Prompts
+
+# Global
+keybind = global:ctrl+option+space=toggle_quick_terminal

@@ -1,11 +1,17 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
 let
   cfg = config.modules.homebrew;
   enabled = cfg.enable && pkgs.hostPlatform.isDarwin;
-in {
+in
+{
   options.modules.homebrew = with types; {
     enable = mkBoolOpt false;
 
@@ -34,7 +40,10 @@ in {
     casks = mkOption {
       type = with types; listOf str;
       default = [ ];
-      example = [ "hammerspoon" "virtualbox" ];
+      example = [
+        "hammerspoon"
+        "virtualbox"
+      ];
       description = "Homebrew casks to install.";
     };
 
@@ -70,7 +79,9 @@ in {
         autoUpdate = true;
         cleanup = "zap";
       };
-      global = { brewfile = true; };
+      global = {
+        brewfile = true;
+      };
 
       brewPrefix = cfg.brewPrefix;
       taps = cfg.taps;

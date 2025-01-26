@@ -1,10 +1,19 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.editor.helix;
-in {
-  options.modules.editor.helix = { enable = mkBoolOpt false; };
+let
+  cfg = config.modules.editor.helix;
+in
+{
+  options.modules.editor.helix = {
+    enable = mkBoolOpt false;
+  };
 
   config = mkIf cfg.enable {
     hm = {
@@ -13,7 +22,7 @@ in {
         extraPackages = with pkgs; [
           helix-gpt
           # nodePackages.bash-language-server
-          nodePackages.vscode-css-languageserver-bin
+          nodePackages.vscode-langservers-extracted
           elixir-ls
           fsautocomplete
           terraform-ls

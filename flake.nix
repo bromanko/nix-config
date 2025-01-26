@@ -23,47 +23,59 @@
       url = "github:bromanko/age-plugin-op";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    unison-lang = {
-      url = "github:ceedubs/unison-nix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
   };
 
-  outputs = inputs@{ self, nixpkgs, nixpkgs-stable, darwin, home-manager
-    , emacs-overlay, age-plugin-op, unison-lang, ... }:
+  outputs =
+    inputs@{
+      self,
+      nixpkgs,
+      nixpkgs-stable,
+      home-manager,
+      emacs-overlay,
+      age-plugin-op,
+      ...
+    }:
     let
       inherit (lib.my) mapModules;
 
-      supportedSystems = [ "aarch64-darwin" "x86_64-linux" ];
+      supportedSystems = [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ];
 
-      forAllSystems = f:
-        nixpkgs.lib.genAttrs supportedSystems (system: f system);
+      forAllSystems = f: nixpkgs.lib.genAttrs supportedSystems (system: f system);
 
-      pkgs = forAllSystems (system:
+      pkgs = forAllSystems (
+        system:
         import nixpkgs {
           inherit system;
           config.allowUnfree = true;
           config.input-fonts.acceptLicense = true;
-          overlays = [ self.overlay emacs-overlay.overlay unison-lang.overlay ]
-            ++ (lib.attrValues self.overlays);
-        });
+          overlays = [
+            self.overlay
+            emacs-overlay.overlay
+          ] ++ (lib.attrValues self.overlays);
+        }
+      );
 
-      lib = nixpkgs.lib.extend (self: super: {
-        my = import ./lib {
-          inherit pkgs inputs home-manager;
-          lib = self;
-        };
-        hm = home-manager.lib.hm;
-      });
-    in {
+      lib = nixpkgs.lib.extend (
+        self: super: {
+          my = import ./lib {
+            inherit pkgs inputs home-manager;
+            lib = self;
+          };
+          hm = home-manager.lib.hm;
+        }
+      );
+    in
+    {
       # For debugging
       passthru = {
         inherit pkgs lib;
         packages = self.packages;
       };
 
-      packages = forAllSystems
-        (system: mapModules ./packages (p: pkgs.${system}.callPackage p { }));
+      packages = forAllSystems (system: mapModules ./packages (p: pkgs.${system}.callPackage p { }));
 
       overlay = final: prev: {
         stable = nixpkgs-stable.legacyPackages.${prev.system};
@@ -74,12 +86,12 @@
 
       overlays = mapModules ./overlays import;
 
-      darwinConfigurations =
-        (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
+      darwinConfigurations = (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
       nixosConfigurations = lib.my.mapNixosHosts ./hosts/nixos;
 
-      homeManagerConfigurations =
-        lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux;
+      homeManagerConfigurations = lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux;
+
+      isoConfigurations = lib.my.mapNixosIsos ./hosts/iso;
     };
 }
