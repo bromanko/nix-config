@@ -4,6 +4,15 @@ with lib;
 with lib.my;
 {
   modules = {
+    homeage = {
+      enable = true;
+      file = {
+        "nix.config" = {
+          source = ../../../configs/nix/nix.conf.age;
+          symlinks = [ "$HOME/.config/nix/nix.conf" ];
+        };
+      };
+    };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
@@ -19,12 +28,12 @@ with lib.my;
       git = {
         enable = true;
       };
+      jujutsu.enable = true;
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
       exa.enable = true;
       fd.enable = true;
-      jujutsu.enable = true;
     };
     desktop = {
       fonts.enable = true;
@@ -52,6 +61,7 @@ with lib.my;
     editor = {
       neovim.enable = true;
       emacs.enable = true;
+      visual = "code-fb -w";
     };
 
     homebrew = {
@@ -69,6 +79,7 @@ with lib.my;
         "lunar"
         "signal"
         "google-drive"
+        "obsidian"
         "onedrive"
         "steermouse"
       ];
@@ -77,6 +88,7 @@ with lib.my;
         Keynote = 409183694;
         Numbers = 409203825;
         Pages = 409201541;
+        "StopTheMadness Pro" = 6471380298;
       };
     };
   };
@@ -84,11 +96,14 @@ with lib.my;
   hm = {
     home = {
       packages = with pkgs; [
-        obsidian
         pandoc
         my.homerow
+        eternal-terminal
       ];
     };
   };
-  services.nix-daemon.enable = true;
+
+  services = {
+    nix-daemon.enable = true;
+  };
 }
