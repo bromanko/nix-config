@@ -9,8 +9,8 @@
 {
   "assistant": {
     "default_model": {
-      "provider": "copilot_chat",
-      "model": "gpt-4o"
+      "provider": "openai",
+      "model": "o1-mini"
     },
     "version": "2"
   },
