@@ -103,7 +103,4 @@ with lib.my;
     };
   };
 
-  services = {
-    nix-daemon.enable = true;
-  };
 }

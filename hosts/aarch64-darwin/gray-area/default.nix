@@ -69,5 +69,4 @@ in
       };
     };
   };
-  services.nix-daemon.enable = true;
 }
