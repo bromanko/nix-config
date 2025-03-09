@@ -103,7 +103,7 @@ with lib.my;
       packages = with pkgs; [
         slack
         tailscale
-        claude-code
+        my.claude-code
       ];
     };
   };
