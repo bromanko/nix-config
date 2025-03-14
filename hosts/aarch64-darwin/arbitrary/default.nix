@@ -45,6 +45,7 @@ with lib.my;
         raycast.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
+        claude.enable = true;
       };
     };
     dev = {
