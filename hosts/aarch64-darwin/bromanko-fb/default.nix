@@ -5,15 +5,6 @@ with lib.my;
 {
   nix.enable = false;
   modules = {
-    homeage = {
-      enable = true;
-      file = {
-        "nix.config" = {
-          source = ../../../configs/nix/nix.conf.age;
-          symlinks = [ "$HOME/.config/nix/nix.conf" ];
-        };
-      };
-    };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
