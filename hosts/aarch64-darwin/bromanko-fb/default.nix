@@ -3,6 +3,7 @@
 with lib;
 with lib.my;
 {
+  nix.enable = false;
   modules = {
     homeage = {
       enable = true;
