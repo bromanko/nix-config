@@ -5,6 +5,9 @@ with lib.my;
 {
   nix.enable = false;
   modules = {
+    homeage = {
+      enable = true;
+    };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
@@ -63,9 +66,9 @@ with lib.my;
         "homebrew/services"
       ];
       casks = [
+        "badgeify"
         "betterdisplay"
         "camo-studio"
-        "doll"
         "figma"
         "istat-menus"
         "jordanbaird-ice"
