@@ -74,6 +74,7 @@ with lib.my;
       casks = [
         "betterdisplay"
         "camo-studio"
+        "doll"
         "figma"
         "istat-menus"
         "jordanbaird-ice"
