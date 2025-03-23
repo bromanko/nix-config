@@ -55,6 +55,7 @@ with lib.my;
       docker.enable = true;
       nix.enable = true;
       nodejs.enable = true;
+      aider-chat.enable = true;
     };
     term = {
       wezterm.enable = true;
