@@ -21,6 +21,10 @@ in
         packages = with pkgs; [
           aider-chat
         ];
+        
+        file.".aider.conf.yml" = {
+          source = ../../../configs/aider/.aider.conf.yml;
+        };
       };
     };
   };
