@@ -7,8 +7,6 @@ with lib;
 with lib.my;
 {
   modules = {
-      enable = true;
-    };
     # homeage = {
     #   enable = true;
     #   file = {
