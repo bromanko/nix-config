@@ -4,15 +4,15 @@ with lib;
 with lib.my;
 {
   modules = {
-    homeage = {
-      enable = true;
-      file = {
-        "nix.config" = {
-          source = ../../../configs/nix/nix.conf.age;
-          symlinks = [ "$HOME/.config/nix/nix.conf" ];
-        };
-      };
-    };
+    # homeage = {
+    #   enable = true;
+    #   file = {
+    #     "nix.config" = {
+    #       source = ../../../configs/nix/nix.conf.age;
+    #       symlinks = [ "$HOME/.config/nix/nix.conf" ];
+    #     };
+    #   };
+    # };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
