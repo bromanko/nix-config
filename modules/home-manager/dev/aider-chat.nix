@@ -24,5 +24,14 @@ in
 
       };
     };
+
+    modules.homeage = {
+      file = {
+        "aider.conf.yml" = {
+          source = ../../../configs/aider/aider.conf.yml.age;
+          symlinks = [ "$HOME/.aider.conf.yml" ];
+        };
+      };
+    };
   };
 }
