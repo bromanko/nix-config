@@ -7,15 +7,15 @@ with lib;
 with lib.my;
 {
   modules = {
-    homeage = {
-      enable = true;
-      file = {
-        "nix.config" = {
-          source = ../../../configs/nix/nix.conf.age;
-          symlinks = [ "$HOME/.config/nix/nix.conf" ];
-        };
-      };
-    };
+    # homeage = {
+    #   enable = true;
+    #   file = {
+    #     "nix.config" = {
+    #       source = ../../../configs/nix/nix.conf.age;
+    #       symlinks = [ "$HOME/.config/nix/nix.conf" ];
+    #     };
+    #   };
+    # };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
@@ -45,6 +45,7 @@ with lib.my;
         raycast.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
+        claude.enable = true;
       };
     };
     dev = {
@@ -54,6 +55,7 @@ with lib.my;
       docker.enable = true;
       nix.enable = true;
       nodejs.enable = true;
+      aider-chat.enable = true;
     };
     term = {
       wezterm.enable = true;
@@ -103,8 +105,8 @@ with lib.my;
       packages = with pkgs; [
         slack
         tailscale
+        my.claude-code
       ];
     };
   };
-  services.nix-daemon.enable = true;
 }

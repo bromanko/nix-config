@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "filesystem": {
+      "command": "/run/current-system/sw/bin/bash",
+      "args": ["-c", "npx @modelcontextprotocol/server-filesystem /"]
+    }
+  }
+}

@@ -4,21 +4,31 @@ with lib;
 with lib.my;
 {
   modules = {
+    # homeage = {
+    #   enable = true;
+    #   file = {
+    #     "nix.config" = {
+    #       source = ../../../configs/nix/nix.conf.age;
+    #       symlinks = [ "$HOME/.config/nix/nix.conf" ];
+    #     };
+    #   };
+    # };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
       fish = {
         enable = true;
         extraPaths = [
-          "$HOME/homebrew/bin"
-          "$HOME/.config/emacs/bin"
-          "$HOME/.nix-profile/bin"
+          "/Users/bromanko/homebrew/bin"
+          "/Users/bromanko/.config/emacs/bin"
+          "/Users/bromanko/.nix-profile/bin"
         ];
       };
       bat.enable = true;
       git = {
         enable = true;
       };
+      jujutsu.enable = true;
       starship.enable = true;
       fzf.enable = true;
       direnv.enable = true;
@@ -46,16 +56,17 @@ with lib.my;
     };
     term = {
       kitty.enable = true;
-      wezterm.enable = true;
+      ghostty.enable = true;
     };
     editor = {
       neovim.enable = true;
       emacs.enable = true;
+      visual = "code-fb -w";
     };
 
     homebrew = {
       enable = true;
-      brewPrefix = "$HOME/homebrew/bin";
+      brewPrefix = "/Users/bromanko/homebrew/bin";
       taps = [
         "homebrew/services"
       ];
@@ -67,17 +78,17 @@ with lib.my;
         "jordanbaird-ice"
         "lunar"
         "signal"
-        "spotify"
-        "kindaVim"
         "google-drive"
+        "obsidian"
         "onedrive"
-        "arc"
+        "steermouse"
       ];
       masApps = {
         Amphetamine = 937984704;
         Keynote = 409183694;
         Numbers = 409203825;
         Pages = 409201541;
+        "StopTheMadness Pro" = 6471380298;
       };
     };
   };
@@ -85,11 +96,11 @@ with lib.my;
   hm = {
     home = {
       packages = with pkgs; [
-        obsidian
         pandoc
         my.homerow
+        eternal-terminal
       ];
     };
   };
-  services.nix-daemon.enable = true;
+
 }

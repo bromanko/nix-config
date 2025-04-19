@@ -24,10 +24,10 @@ in
       programs.bat = {
         enable = true;
         config = {
-          theme = "Catppuccin Mocha";
+          theme = "catppuccin-mocha";
         };
         themes = {
-          catppuccinMocha = {
+          catppuccin-mocha = {
             src = pkgs.fetchFromGitHub {
               owner = "catppuccin";
               repo = "bat"; # Bat uses sublime syntax for its themes

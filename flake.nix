@@ -14,13 +14,12 @@
 
     # Other sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
-    homeage = {
-      # Waiting for https://github.com/jordanisaacs/homeage/pull/43 to land
-      url = "github:jordanisaacs/homeage/pull/43/head";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     age-plugin-op = {
       url = "github:bromanko/age-plugin-op";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    jujutsu = {
+      url = "github:jj-vcs/jj";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -33,6 +32,7 @@
       home-manager,
       emacs-overlay,
       age-plugin-op,
+      jujutsu,
       ...
     }:
     let
@@ -79,6 +79,7 @@
 
       overlay = final: prev: {
         stable = nixpkgs-stable.legacyPackages.${prev.system};
+        jujutsu = jujutsu.packages.${prev.system}.jujutsu;
         my = self.packages.${prev.system} // {
           age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
         };
