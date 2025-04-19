@@ -1,9 +1,10 @@
-{ pkgs, lib, ... }:
+{ ... }:
 
 let
   brewPath = "/opt/homebrew/bin";
 in
 {
+  nix.enable = false;
   authorizedKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID2vkvKlul2zm/Qx7V0NmmwGDJcFY46tf9asOVONkcCK 1Password"
   ];
@@ -64,8 +65,8 @@ in
         "arc"
       ];
       masApps = {
+        Tailscale = 1470499037;
         Xcode = 497799835;
-        Tailscale = 1475387142;
       };
     };
   };
