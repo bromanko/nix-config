@@ -22,6 +22,10 @@
       url = "github:jj-vcs/jj";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    homeage = {
+      # Waiting for https://github.com/jordanisaacs/homeage/pull/43 to land
+      url = "github:jordanisaacs/homeage/pull/43/head";
+    };
   };
 
   outputs =

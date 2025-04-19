@@ -98,6 +98,25 @@
         "type": "github"
       }
     },
+    "homeage": {
+      "inputs": {
+        "nixpkgs": "nixpkgs_2"
+      },
+      "locked": {
+        "lastModified": 1697874814,
+        "narHash": "sha256-q8U6hCnYmZAyyvxZIj7xLB0cOsXf/fB5tUh9/hDN7sk=",
+        "owner": "jordanisaacs",
+        "repo": "homeage",
+        "rev": "af9852e7234695f1b759a8c5d07d0fd35195a422",
+        "type": "github"
+      },
+      "original": {
+        "owner": "jordanisaacs",
+        "ref": "pull/43/head",
+        "repo": "homeage",
+        "type": "github"
+      }
+    },
     "jujutsu": {
       "inputs": {
         "flake-utils": "flake-utils",
@@ -170,6 +189,18 @@
     },
     "nixpkgs_2": {
       "locked": {
+        "lastModified": 0,
+        "narHash": "sha256-KHENBhlyMZ9bUJyZo7V2ATHQ9bZuBpn1WiWFbDOME8M=",
+        "path": "/nix/store/dk11ck506g21qbygj7k7rz9zs0zxhs9m-source",
+        "type": "path"
+      },
+      "original": {
+        "id": "nixpkgs",
+        "type": "indirect"
+      }
+    },
+    "nixpkgs_3": {
+      "locked": {
         "lastModified": 1741532683,
         "narHash": "sha256-KHENBhlyMZ9bUJyZo7V2ATHQ9bZuBpn1WiWFbDOME8M=",
         "owner": "nixos",
@@ -190,8 +221,9 @@
         "darwin": "darwin",
         "emacs-overlay": "emacs-overlay",
         "home-manager": "home-manager",
+        "homeage": "homeage",
         "jujutsu": "jujutsu",
-        "nixpkgs": "nixpkgs_2",
+        "nixpkgs": "nixpkgs_3",
         "nixpkgs-stable": "nixpkgs-stable_2"
       }
     },
