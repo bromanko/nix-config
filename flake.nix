@@ -23,8 +23,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     homeage = {
-      # Waiting for https://github.com/jordanisaacs/homeage/pull/43 to land
-      url = "github:jordanisaacs/homeage/pull/43/head";
+      url = "github:bromanko/homeage/main";
+      inputs.nixpkgs.follows = "nixpkgs";
     };
   };
 
