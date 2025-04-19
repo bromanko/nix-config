@@ -25,5 +25,14 @@ in
         ];
       };
     };
+
+    modules.homeage = {
+      file = {
+        "nix.config" = {
+          source = ../../../configs/nix/nix.conf.age;
+          symlinks = [ "$HOME/.config/nix/nix.conf" ];
+        };
+      };
+    };
   };
 }
