@@ -23,6 +23,13 @@ buildNpmPackage rec {
 
   AUTHORIZED = "1";
 
+  # `claude-code` tries to auto-update by default, this disables that functionality.
+  # https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview#environment-variables
+  postInstall = ''
+    wrapProgram $out/bin/claude \
+      --set DISABLE_AUTOUPDATER 1
+  '';
+
   passthru.updateScript = ./update.sh;
 
   meta = {
