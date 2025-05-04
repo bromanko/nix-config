@@ -79,7 +79,6 @@ with lib.my;
         "jordanbaird-ice"
         "lunar"
         "signal"
-        "spotify"
         "utm"
         "crystalfetch"
         "arc"
