@@ -1,7 +1,6 @@
 {
   config,
   lib,
-  pkgs,
   ...
 }:
 
@@ -45,6 +44,16 @@ in
           };
           git = {
             subprocess = true;
+          };
+          aliases = {
+            tug = [
+              "bookmark"
+              "move"
+              "--from"
+              "heads(::@- & bookmarks())"
+              "--to"
+              "@-"
+            ];
           };
         };
       };
