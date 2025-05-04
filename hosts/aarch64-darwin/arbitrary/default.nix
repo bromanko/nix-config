@@ -83,6 +83,7 @@ with lib.my;
         "crystalfetch"
         "arc"
         "calibre"
+        "sony-ps-remote-play"
       ];
       masApps = {
         Keynote = 409183694;
