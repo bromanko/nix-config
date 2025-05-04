@@ -68,23 +68,25 @@ with inputs;
   mkHmHost =
     system: path:
     home-manager.lib.homeManagerConfiguration {
-      inherit system;
       pkgs = pkgs.${system};
       extraSpecialArgs = {
         inherit lib inputs;
       };
-      homeDirectory = "/home/bromanko";
-      username = "bromanko";
-      configuration = {
-        imports = [
-          ../hosts/home-manager.nix
-          (import path)
-        ];
-        nixpkgs = {
-          config = pkgs.${system}.config;
-          overlays = pkgs.${system}.overlays;
-        };
-      };
+      modules = [
+        ../hosts/home-manager.nix
+        {
+          home = {
+            homeDirectory = "/home/bromanko";
+            username = "bromanko";
+            stateVersion = "24.11";
+          };
+        }
+        (import path)
+      ];
+      # nixpkgs = {
+      #   config = pkgs.${system}.config;
+      #   overlays = pkgs.${system}.overlays;
+      # };
     };
 
   mapDarwinHosts = system: dir: mapModules dir (hostPath: mkDarwinHost system hostPath);
