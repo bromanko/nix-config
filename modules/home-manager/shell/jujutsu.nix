@@ -54,6 +54,15 @@ in
               "--to"
               "@-"
             ];
+            tp = [
+              "util"
+              "exec"
+              "--"
+              "bash"
+              "-c"
+              "jj tug && jj git push"
+              ""
+            ];
           };
         };
       };

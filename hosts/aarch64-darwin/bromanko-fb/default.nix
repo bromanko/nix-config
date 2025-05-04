@@ -70,6 +70,7 @@ with lib.my;
         "betterdisplay"
         "camo-studio"
         "figma"
+        "homerow"
         "istat-menus"
         "jordanbaird-ice"
         "lunar"
@@ -92,7 +93,6 @@ with lib.my;
     home = {
       packages = with pkgs; [
         pandoc
-        my.homerow
         eternal-terminal
       ];
     };
