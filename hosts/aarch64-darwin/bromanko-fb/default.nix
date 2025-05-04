@@ -21,7 +21,6 @@ with lib.my;
         enable = true;
         extraPaths = [
           "/Users/bromanko/homebrew/bin"
-          "/Users/bromanko/.config/emacs/bin"
           "/Users/bromanko/.nix-profile/bin"
         ];
       };
@@ -56,21 +55,16 @@ with lib.my;
       idea.enable = true;
     };
     term = {
-      kitty.enable = true;
       ghostty.enable = true;
     };
     editor = {
       neovim.enable = true;
-      emacs.enable = true;
       visual = "code-fb -w";
     };
 
     homebrew = {
       enable = true;
       brewPrefix = "/Users/bromanko/homebrew/bin";
-      taps = [
-        "homebrew/services"
-      ];
       casks = [
         "badgeify"
         "betterdisplay"
@@ -90,7 +84,6 @@ with lib.my;
         Keynote = 409183694;
         Numbers = 409203825;
         Pages = 409201541;
-        "StopTheMadness Pro" = 6471380298;
       };
     };
   };
