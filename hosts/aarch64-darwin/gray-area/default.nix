@@ -1,4 +1,4 @@
-{ ... }:
+{ pkgs, ... }:
 
 let
   brewPath = "/opt/homebrew/bin";
@@ -68,6 +68,13 @@ in
         Tailscale = 1470499037;
         Xcode = 497799835;
       };
+    };
+  };
+  hm = {
+    home = {
+      packages = with pkgs; [
+        my.claude-code
+      ];
     };
   };
 }
