@@ -11,9 +11,10 @@
     "edit_prediction_provider": "zed"
   },
   "assistant": {
+    "always_allow_tool_actions": true,
     "default_model": {
-      "provider": "openai",
-      "model": "o1-mini"
+      "provider": "anthropic",
+      "model": "claude-3-7-sonnet-thinking-latest"
     },
     "version": "2"
   },
