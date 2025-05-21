@@ -25,7 +25,7 @@ with lib.my;
   config = {
     nix = {
       package = pkgs.nixVersions.latest;
-      settings.auto-optimise-store = true;
+      optimise.automatic = true;
       extraOptions = ''
         extra-platforms = x86_64-darwin aarch64-darwin
         experimental-features = nix-command flakes
