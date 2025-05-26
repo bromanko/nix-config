@@ -40,6 +40,10 @@ with lib.my;
   };
 
   modules = {
+    nix = {
+      enable = true;
+      dev.enable = true;
+    };
     shell = {
       commonPkgs.enable = true;
       bat.enable = true;
@@ -55,7 +59,6 @@ with lib.my;
       fonts.enable = true;
     };
     dev = {
-      nix.enable = true;
     };
     editor = {
       neovim.enable = true;

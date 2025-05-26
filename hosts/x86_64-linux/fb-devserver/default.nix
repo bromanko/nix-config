@@ -2,6 +2,10 @@
 
 {
   modules = {
+    nix = {
+      enable = true;
+      dev.enable = true;
+    };
     shell = {
       commonPkgs.enable = true;
       zsh.enable = true;
@@ -13,7 +17,6 @@
       fd.enable = true;
     };
     dev = {
-      nix.enable = true;
       nodejs.enable = true;
     };
     editor = {

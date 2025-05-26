@@ -3,16 +3,15 @@
 with lib;
 with lib.my;
 {
-  nix.enable = false;
   modules = {
+    nix = {
+      enable = true;
+      system.enable = false;
+      dev.enable = true;
+      userConfig.enable = true;
+    };
     homeage = {
       enable = true;
-      file = {
-        "nix.config" = {
-          source = ../../../configs/nix/nix.conf.age;
-          symlinks = [ "$HOME/.config/nix/nix.conf" ];
-        };
-      };
     };
     shell = {
       commonPkgs.enable = true;
@@ -50,7 +49,6 @@ with lib.my;
       };
     };
     dev = {
-      nix.enable = true;
       nodejs.enable = true;
       idea.enable = true;
     };
