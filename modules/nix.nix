@@ -15,7 +15,6 @@ in
     enable = mkBoolOpt false;
     
     system = {
-      package = mkOpt package pkgs.nixVersions.latest;
       optimise = mkBoolOpt true;
     };
 
@@ -28,9 +27,8 @@ in
     # System-level nix configuration
     {
       nix = {
-        package = cfg.system.package;
+        package = pkgs.nixVersions.latest;
         
-        # Optimizations
         optimise.automatic = cfg.system.optimise;
         
         extraOptions = ''
