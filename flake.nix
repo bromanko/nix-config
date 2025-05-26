@@ -81,6 +81,14 @@
 
       packages = forAllSystems (system: mapModules ./packages (p: pkgs.${system}.callPackage p { }));
 
+      devShells = forAllSystems (system: {
+        default = pkgs.${system}.mkShell {
+          packages = with pkgs.${system}; [
+            nixfmt-rfc-style
+          ];
+        };
+      });
+
       overlay = final: prev: {
         stable = nixpkgs-stable.legacyPackages.${prev.system};
         jujutsu = jujutsu.packages.${prev.system}.jujutsu;
