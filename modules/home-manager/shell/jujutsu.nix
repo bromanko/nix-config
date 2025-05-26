@@ -1,4 +1,5 @@
 {
+  pkgs,
   config,
   lib,
   ...
@@ -69,6 +70,9 @@ in
       programs.git = {
         ignores = [ ".jj" ];
       };
+      home.packages = with pkgs; [
+        jjui
+      ];
     };
   };
 }
