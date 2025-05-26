@@ -15,11 +15,12 @@ in
     enable = mkBoolOpt false;
     
     system = {
-      optimise = mkBoolOpt true;
+      package = mkOpt package pkgs.nixVersions.latest;
+      optimise = mkBoolOpt pkgs.stdenv.isDarwin;
     };
 
     dev = {
-      enable = mkBoolOpt false;
+      enable = mkBoolOpt true;
     };
   };
 
@@ -27,8 +28,9 @@ in
     # System-level nix configuration
     {
       nix = {
-        package = pkgs.nixVersions.latest;
+        package = cfg.system.package;
         
+        # Darwin-specific optimizations
         optimise.automatic = cfg.system.optimise;
         
         extraOptions = ''
