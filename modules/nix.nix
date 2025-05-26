@@ -38,7 +38,7 @@ in
         package = cfg.system.package;
         
         # Darwin-specific optimizations
-        optimise.automatic = mkIf pkgs.stdenv.isDarwin cfg.system.optimise;
+        optimise.automatic = cfg.system.optimise;
         
         extraOptions = ''
           experimental-features = nix-command flakes
