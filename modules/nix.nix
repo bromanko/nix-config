@@ -15,27 +15,23 @@ in
     enable = mkBoolOpt false;
     
     system = {
-      enable = mkBoolOpt true;
-      package = mkOpt package (
-        if pkgs.stdenv.isDarwin then pkgs.nixVersions.latest else pkgs.nix
-      );
-      optimise = mkBoolOpt pkgs.stdenv.isDarwin;
+      package = mkOpt package pkgs.nixVersions.latest;
+      optimise = mkBoolOpt true;
     };
 
     dev = {
       enable = mkBoolOpt false;
     };
-
   };
 
   config = mkIf cfg.enable (mkMerge [
     # System-level nix configuration
-    (mkIf cfg.system.enable {
+    {
       nix = {
         package = cfg.system.package;
         
-        # Darwin-specific optimizations
-        optimise.automatic = mkIf pkgs.stdenv.isDarwin cfg.system.optimise;
+        # Optimizations
+        optimise.automatic = cfg.system.optimise;
         
         extraOptions = ''
           experimental-features = nix-command flakes
@@ -45,7 +41,7 @@ in
           extra-platforms = x86_64-darwin aarch64-darwin
         '';
       };
-    })
+    }
 
     # Development tools
     (mkIf cfg.dev.enable {
