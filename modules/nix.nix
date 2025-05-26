@@ -26,9 +26,6 @@ in
       enable = mkBoolOpt false;
     };
 
-    userConfig = {
-      enable = mkBoolOpt false;
-    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -38,7 +35,7 @@ in
         package = cfg.system.package;
         
         # Darwin-specific optimizations
-        optimise.automatic = cfg.system.optimise;
+        optimise.automatic = mkIf pkgs.stdenv.isDarwin cfg.system.optimise;
         
         extraOptions = ''
           experimental-features = nix-command flakes
@@ -64,7 +61,7 @@ in
     })
 
     # User nix configuration via homeage
-    (mkIf cfg.userConfig.enable {
+    {
       modules.homeage = {
         file = {
           "nix.config" = {
@@ -73,6 +70,6 @@ in
           };
         };
       };
-    })
+    }
   ]);
 }
