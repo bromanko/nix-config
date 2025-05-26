@@ -7,6 +7,10 @@ with lib;
 with lib.my;
 {
   modules = {
+    nix = {
+      enable = true;
+      dev.enable = true;
+    };
     homeage = {
       enable = true;
     };
@@ -47,7 +51,6 @@ with lib.my;
       idea.enable = true;
       psql.enable = true;
       docker.enable = true;
-      nix.enable = true;
       nodejs.enable = true;
       aider-chat.enable = true;
     };

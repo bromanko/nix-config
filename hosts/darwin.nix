@@ -1,9 +1,7 @@
 {
   config,
   lib,
-  pkgs,
   inputs,
-  options,
   ...
 }:
 
@@ -17,20 +15,16 @@ with lib.my;
       ../modules/fonts.nix
       ../modules/home-manager.nix
       ../modules/homeage.nix
+      ../modules/nix.nix
     ]
     # Must toString the path so that nix doesn't attempt to import it to the store
     ++ (mapModulesRec' (toString ../modules/home-manager) import)
     ++ (mapModulesRec' (toString ../modules/darwin) import);
 
   config = {
-    nix = {
-      package = pkgs.nixVersions.latest;
-      optimise.automatic = true;
-      extraOptions = ''
-        extra-platforms = x86_64-darwin aarch64-darwin
-        experimental-features = nix-command flakes
-        keep-derivations = true
-        keep-outputs = true'';
+    modules.nix = {
+      enable = true;
+      dev.enable = true;
     };
 
     users.users.${config.user.name} = mkAliasDefinitions config.user;

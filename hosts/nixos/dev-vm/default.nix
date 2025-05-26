@@ -143,6 +143,10 @@ in
   };
 
   modules = {
+    nix = {
+      enable = true;
+      dev.enable = true;
+    };
     shell = {
       commonPkgs.enable = true;
       openssh.enable = true;
@@ -165,7 +169,6 @@ in
       elixir.enable = true;
       idea.enable = true;
       psql.enable = true;
-      nix.enable = true;
       nodejs.enable = true;
     };
     term = {

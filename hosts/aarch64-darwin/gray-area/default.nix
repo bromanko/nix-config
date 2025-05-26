@@ -4,11 +4,14 @@ let
   brewPath = "/opt/homebrew/bin";
 in
 {
-  nix.enable = false;
   authorizedKeys = [
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID2vkvKlul2zm/Qx7V0NmmwGDJcFY46tf9asOVONkcCK 1Password"
   ];
   modules = {
+    nix = {
+      enable = true;
+      dev.enable = true;
+    };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
@@ -38,7 +41,6 @@ in
     };
     dev = {
       docker.enable = true;
-      nix.enable = true;
     };
     term = {
       ghostty.enable = true;

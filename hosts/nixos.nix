@@ -15,17 +15,14 @@ with lib.my;
       ../modules/users.nix
       ../modules/fonts.nix
       ../modules/home-manager.nix
+      ../modules/nix.nix
     ]
     # Must toString the path so that nix doesn't attempt to import it to the store
     ++ (mapModulesRec' (toString ../modules/home-manager) import)
     ++ (mapModulesRec' (toString ../modules/linux) import);
 
-  nix = {
-    package = pkgs.nix;
-    extraOptions = ''
-      experimental-features = nix-command flakes
-      keep-derivations = true
-      keep-outputs = true'';
+  modules.nix = {
+    enable = true;
   };
 
   users.users.${config.user.name} = mkAliasDefinitions config.user;
