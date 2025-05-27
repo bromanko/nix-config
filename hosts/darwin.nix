@@ -22,11 +22,6 @@ with lib.my;
     ++ (mapModulesRec' (toString ../modules/darwin) import);
 
   config = {
-    modules.nix = {
-      enable = true;
-      dev.enable = true;
-    };
-
     users.users.${config.user.name} = mkAliasDefinitions config.user;
 
     hm = {
