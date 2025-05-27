@@ -5,9 +5,8 @@ with lib.my;
 {
   modules = {
     nix = {
-      enable = true;
+      system.enable = false; # Using determinate systems nix
       dev.enable = true;
-      userConfig.enable = true;
     };
     homeage = {
       enable = true;
