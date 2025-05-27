@@ -83,10 +83,6 @@ with inputs;
         }
         (import path)
       ];
-      # nixpkgs = {
-      #   config = pkgs.${system}.config;
-      #   overlays = pkgs.${system}.overlays;
-      # };
     };
 
   mapDarwinHosts = system: dir: mapModules dir (hostPath: mkDarwinHost system hostPath);
