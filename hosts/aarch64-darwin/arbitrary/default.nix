@@ -8,7 +8,7 @@ with lib.my;
 {
   modules = {
     nix = {
-      enable = true;
+      system.enable = true;
       dev.enable = true;
     };
     homeage = {
