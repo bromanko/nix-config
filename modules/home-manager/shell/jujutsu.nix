@@ -35,7 +35,7 @@ in
             email = cfg.userEmail;
           };
           ui = {
-            diff.tool = [
+            diff-formatter = [
               "difft"
               "--color=always"
               "$left"
