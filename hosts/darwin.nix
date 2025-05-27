@@ -23,6 +23,7 @@ with lib.my;
 
   config = {
     users.users.${config.user.name} = mkAliasDefinitions config.user;
+    system.primaryUser = config.user.name;
 
     hm = {
       home = {
