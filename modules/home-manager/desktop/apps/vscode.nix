@@ -19,7 +19,7 @@ in
     hm = {
       programs.vscode = {
         enable = true;
-        extensions = with pkgs.vscode-extensions; [
+        profiles.default.extensions = with pkgs.vscode-extensions; [
           # Looks
           catppuccin.catppuccin-vsc
           catppuccin.catppuccin-vsc-icons
