@@ -19,6 +19,8 @@ with lib.my;
         extraPaths = [
           "/Users/bromanko/homebrew/bin"
           "/Users/bromanko/.nix-profile/bin"
+          "/opt/facebook/hg/bin"
+          "/opt/facebook/bin/"
         ];
       };
       bat.enable = true;

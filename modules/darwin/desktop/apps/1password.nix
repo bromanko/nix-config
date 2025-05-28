@@ -28,8 +28,8 @@ in
 
       programs.ssh = mkIf config.modules.shell.ssh.enable {
         matchBlocks = {
-          keychain = {
-            host = "*";
+          keychain = lib.mkForce {
+            host = "github.com";
             extraOptions = {
               IdentityAgent = ''"~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"'';
             };
