@@ -103,6 +103,7 @@ with lib.my;
         slack
         tailscale
         my.claude-code
+        my.tldx
       ];
     };
   };
