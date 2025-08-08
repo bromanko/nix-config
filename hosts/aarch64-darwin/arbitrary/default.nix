@@ -75,6 +75,7 @@ with lib.my;
       ];
       casks = [
         "betterdisplay"
+        "docker"
         "figma"
         "ghostty"
         "google-chrome"
