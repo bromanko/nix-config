@@ -19,7 +19,6 @@ in
     hm = {
       home.packages = [
         pkgs.nodejs
-        pkgs.nodePackages.prettier
       ];
     };
   };
