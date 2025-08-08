@@ -105,6 +105,7 @@ with lib.my;
         tailscale
         my.claude-code
         my.tldx
+        nur.repos.charmbracelet.crush
       ];
     };
   };
