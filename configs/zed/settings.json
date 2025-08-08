@@ -10,13 +10,13 @@
   "features": {
     "edit_prediction_provider": "zed"
   },
-  "assistant": {
+  "agent": {
+    "default_profile": "ask",
     "always_allow_tool_actions": true,
     "default_model": {
       "provider": "anthropic",
-      "model": "claude-3-7-sonnet-thinking-latest"
+      "model": "claude-sonnet-4-thinking-latest"
     },
-    "version": "2"
   },
   "theme": "Catppuccin Mocha",
   "ui_font_size": 15,
