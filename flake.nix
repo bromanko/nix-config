@@ -62,9 +62,10 @@
           config.input-fonts.acceptLicense = true;
           overlays = [
             self.overlay
-            nur.overlay
+            nur.overlays.default
             emacs-overlay.overlay
-          ] ++ (lib.attrValues self.overlays);
+          ]
+          ++ (lib.attrValues self.overlays);
         }
       );
 
