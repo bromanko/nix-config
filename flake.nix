@@ -5,6 +5,10 @@
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/master";
     nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-21.11";
+    nur = {
+      url = "github:nix-community/NUR";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # System management
     darwin.url = "github:LnL7/nix-darwin/master";
@@ -33,6 +37,7 @@
       self,
       nixpkgs,
       nixpkgs-stable,
+      nur,
       home-manager,
       emacs-overlay,
       age-plugin-op,
@@ -57,6 +62,7 @@
           config.input-fonts.acceptLicense = true;
           overlays = [
             self.overlay
+            nur.overlay
             emacs-overlay.overlay
           ] ++ (lib.attrValues self.overlays);
         }
