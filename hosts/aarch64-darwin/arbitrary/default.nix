@@ -53,6 +53,7 @@ with lib.my;
       docker.enable = true;
       nodejs.enable = true;
       aider-chat.enable = true;
+      codex.enable = true;
     };
     term = {
       wezterm.enable = true;
