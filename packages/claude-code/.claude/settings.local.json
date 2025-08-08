@@ -1,0 +1,10 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nix-instantiate:*)",
+      "Bash(nixfmt:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}
