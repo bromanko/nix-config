@@ -107,6 +107,7 @@ with lib.my;
         my.claude-code
         my.tldx
         nur.repos.charmbracelet.crush
+        chatgpt
       ];
     };
   };
