@@ -86,9 +86,9 @@ with lib.my;
         "signal"
         "utm"
         "crystalfetch"
-        "arc"
         "calibre"
         "sony-ps-remote-play"
+        "zen"
       ];
       masApps = {
         Keynote = 409183694;

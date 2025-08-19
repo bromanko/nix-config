@@ -64,7 +64,7 @@ in
         "ghostty"
         "istat-menus"
         "jordanbaird-ice"
-        "arc"
+        "zen"
       ];
       masApps = {
         Tailscale = 1470499037;
