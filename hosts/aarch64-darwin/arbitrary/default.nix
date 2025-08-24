@@ -54,6 +54,7 @@ with lib.my;
       nodejs.enable = true;
       aider-chat.enable = true;
       codex.enable = true;
+      claude-code.enable = true;
     };
     term = {
       wezterm.enable = true;
@@ -104,7 +105,6 @@ with lib.my;
       packages = with pkgs; [
         slack
         tailscale
-        my.claude-code
         my.tldx
         nur.repos.charmbracelet.crush
         chatgpt
