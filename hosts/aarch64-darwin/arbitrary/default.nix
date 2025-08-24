@@ -108,6 +108,7 @@ with lib.my;
         my.tldx
         nur.repos.charmbracelet.crush
         chatgpt
+        devenv
       ];
     };
   };
