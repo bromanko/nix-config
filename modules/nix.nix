@@ -31,19 +31,18 @@ in
       # System-level nix configuration
       {
         nix = mkIf cfg.system.enable {
-          # package = pkgs.nixVersions.latest;
-
           optimise.automatic = cfg.system.optimise;
 
-          extraOptions =
-            ''
-              experimental-features = nix-command flakes
-              keep-derivations = true
-              keep-outputs = true
-            ''
-            + optionalString pkgs.stdenv.isDarwin ''
-              extra-platforms = x86_64-darwin aarch64-darwin
-            '';
+          extraOptions = ''
+            experimental-features = nix-command flakes
+            keep-derivations = true
+            keep-outputs = true
+            extra-substituters = https://devenv.cachix.org
+            extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
+          ''
+          + optionalString pkgs.stdenv.isDarwin ''
+            extra-platforms = x86_64-darwin aarch64-darwin
+          '';
         };
       }
 
