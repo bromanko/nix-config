@@ -34,6 +34,9 @@ in
             name = cfg.userName;
             email = cfg.userEmail;
           };
+          core = {
+            fsmonitor = "watchman";
+          };
           ui = {
             diff-formatter = [
               "difft"
@@ -72,6 +75,7 @@ in
       };
       home.packages = with pkgs; [
         jjui
+        watchman
       ];
     };
   };
