@@ -25,6 +25,7 @@ Based on the jujutsu status and changes shown above, analyze the modifications a
    - Use descriptive commit messages following conventional commit format when applicable
    - Ensure each commit represents a complete, coherent change
    - Consider the existing codebase patterns and commit history style
+   - Leave the working directory on a new clean commit
 
 3. **Commit message guidelines**:
    - Start with a concise summary (50 chars or less)
