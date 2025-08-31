@@ -45,11 +45,27 @@ in
               "$right"
             ];
             paginate = "never";
+            default-command = "l";
+          };
+          templates = {
+            log-node = ''
+              if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
+                "◇",
+                builtin_log_node
+              )
+            '';
           };
           git = {
             subprocess = true;
+            push-new-bookmarks = true;
           };
           aliases = {
+            n = [ "new" ];
+            l = [
+              "log"
+              "-r"
+              "ancestors(reachable(@, mutable()), 2)"
+            ];
             tug = [
               "bookmark"
               "move"
