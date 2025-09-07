@@ -11,7 +11,7 @@
     "edit_prediction_provider": "zed"
   },
   "agent": {
-    "default_profile": "ask",
+    "default_profile": "write",
     "always_allow_tool_actions": true,
     "default_model": {
       "provider": "zed.dev",
