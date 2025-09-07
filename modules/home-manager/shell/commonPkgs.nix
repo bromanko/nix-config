@@ -19,6 +19,7 @@ in
     hm = {
       home = {
         packages = with pkgs; [
+          ast-grep
           bottom
           curl
           delta
