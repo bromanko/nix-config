@@ -34,8 +34,8 @@ in
             name = cfg.userName;
             email = cfg.userEmail;
           };
-          core = {
-            fsmonitor = "watchman";
+          fsmonitor = {
+            backend = "watchman";
           };
           ui = {
             diff-formatter = [
