@@ -104,7 +104,6 @@
 
       overlay = final: prev: {
         stable = nixpkgs-stable.legacyPackages.${prev.system};
-        jujutsu = jujutsu.packages.${prev.system}.jujutsu;
         my = self.packages.${prev.system} // {
           age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
         };
