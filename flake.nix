@@ -11,10 +11,15 @@
     };
 
     # System management
-    darwin.url = "github:LnL7/nix-darwin/master";
-    darwin.inputs.nixpkgs.follows = "nixpkgs";
-    home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
+    determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
+    darwin = {
+      url = "github:LnL7/nix-darwin/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    home-manager = {
+      url = "github:nix-community/home-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     # Other sources
     emacs-overlay.url = "github:nix-community/emacs-overlay";
@@ -38,6 +43,7 @@
       nixpkgs,
       nixpkgs-stable,
       nur,
+      determinate,
       home-manager,
       emacs-overlay,
       age-plugin-op,
