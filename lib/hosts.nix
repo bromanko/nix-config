@@ -24,6 +24,7 @@ with inputs;
           };
           networking.hostName = mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
+        inputs.determinate.darwinModules.default
         ../hosts/darwin.nix
         (import path)
       ];

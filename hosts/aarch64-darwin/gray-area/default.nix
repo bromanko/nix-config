@@ -9,7 +9,7 @@ in
   ];
   modules = {
     nix = {
-      enable = true;
+      enable = "default";
       dev.enable = true;
     };
     shell = {

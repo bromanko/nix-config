@@ -8,7 +8,7 @@ with lib.my;
 {
   modules = {
     nix = {
-      system.enable = true;
+      system.enable = "determinate";
       dev.enable = true;
     };
     homeage = {
@@ -64,7 +64,6 @@ with lib.my;
       default = "nvim";
       visual = "zed-preview -w";
       neovim.enable = true;
-      emacs.enable = true;
       zed.enable = true;
     };
 
@@ -76,12 +75,10 @@ with lib.my;
       ];
       casks = [
         "betterdisplay"
-        "docker"
         "figma"
         "ghostty"
         "google-chrome"
         "istat-menus"
-        "jetbrains-toolbox"
         "jordanbaird-ice"
         "lunar"
         "signal"
@@ -109,6 +106,7 @@ with lib.my;
         nur.repos.charmbracelet.crush
         chatgpt
         devenv
+        podman
       ];
     };
   };

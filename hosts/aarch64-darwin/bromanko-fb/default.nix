@@ -5,7 +5,7 @@ with lib.my;
 {
   modules = {
     nix = {
-      system.enable = false; # Using determinate systems nix
+      system.enable = "determinate";
       dev.enable = true;
     };
     homeage = {
