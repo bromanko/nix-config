@@ -2,19 +2,29 @@
   {
     "context": "Editor && vim_mode == normal && vim_operator == none && !VimWaiting",
     "bindings": {
-      "space b d": "pane::CloseActiveItem",
-      "space b n": "pane::ActivateNextItem",
-      "space b p": "pane::ActivatePrevItem",
-      "space c f": "editor::Format",
-      "space f n": "workspace::NewFile",
-      "space f s": "workspace::Save",
       "space g d": "editor::GoToDefinition",
       "space g I": "editor::GoToImplementation",
       "space g R": "editor::FindAllReferences",
       "space g t": "editor::GoToTypeDefinition",
-      "space h h": "editor::Hover",
       "space p f": "file_finder::Toggle",
       "space s p": "workspace::NewSearch"
+    }
+  },
+  {
+    "context": "Editor && vim_mode == normal && (vim_operator == none || vim_operator == n) && !VimWaiting",
+    "bindings": {
+      "space b b": "tab_switcher::Toggle",
+      "space b n": "pane::ActivateNextItem",
+      "space b p": "pane::ActivatePreviousItem",
+      "space b d": "pane::CloseActiveItem",
+      "space b B": "tab_switcher::Toggle",
+      "space b X": "workspace::NewFile",
+      "space w w": "workspace::NewWindow",
+      "space w q": "workspace::CloseWindow",
+      "space f n": "workspace::NewFile",
+      "space f s": "workspace::Save",
+      "space c f": "editor::Format",
+      "space h h": "editor::Hover"
     }
   }
 ]
