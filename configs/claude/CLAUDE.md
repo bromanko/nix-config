@@ -12,8 +12,8 @@
 - `jj status` - Show working copy status
 - `jj log` - Show commit history  
 - `jj diff` - Show changes in working copy
-- `jj commit -m "message"` - Create commit with message
-- `jj new` - Create new commit
+- `jj commit -m "message"` - Create commit from current working copy changes (creates a linear history)
+- `jj new` - Create new empty commit as child of current commit (for starting next change)
 - `jj edit COMMIT` - Edit a commit
 - `jj move` - Move changes between commits
 - `jj squash` - Squash commits
