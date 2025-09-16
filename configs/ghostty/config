@@ -7,7 +7,7 @@ config-file = ?override-config
 # Appearance
 ################################################
 font-family = MonaspiceAr Nerd Font
-theme = catppuccin-mocha
+theme = Catppuccin Mocha
 window-padding-x = 10
 
 ################################################
