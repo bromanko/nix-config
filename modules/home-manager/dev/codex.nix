@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -18,6 +19,7 @@ in
     hm = {
       programs.codex = {
         enable = true;
+        package = pkgs.my.codex;
       };
     };
   };
