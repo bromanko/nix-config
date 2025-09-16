@@ -37,6 +37,17 @@ in
       nix.enable = false;
 
       determinate-nix.customSettings = {
+        extra-experimental-features = "external-builders";
+        external-builders = builtins.toJSON [
+          {
+            systems = [
+              "aarch64-linux"
+              "x86_64-linux"
+            ];
+            program = "/usr/local/bin/determinate-nixd";
+            args = [ "builder" ];
+          }
+        ];
         flake-registry = "/etc/nix/flake-registry.json";
         keep-outputs = true;
         extra-substituters = "https://devenv.cachix.org";
