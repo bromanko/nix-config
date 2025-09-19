@@ -104,6 +104,7 @@ with lib.my;
         tailscale
         my.tldx
         nur.repos.charmbracelet.crush
+        iina
         chatgpt
         devenv
         podman
