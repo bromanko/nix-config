@@ -3,7 +3,7 @@ Launch brainstorming for new product requirement document.
 
 ## Usage
 ```
-/prd-new <feature_name>
+/prd-new <$ARGUMENTS>
 ```
 
 ## Preflight Checklist

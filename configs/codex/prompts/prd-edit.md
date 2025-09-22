@@ -1,14 +1,10 @@
----
-allowed-tools: shell, update_plan
----
-
 # PRD Edit
 
 Edit an existing Product Requirements Document.
 
 ## Usage
 ```
-/pm:prd-edit <feature_name>
+/prd-edit <$ARGUMENTS>
 ```
 
 ## Instructions
@@ -40,7 +36,7 @@ Discuss clarifying questions in the chat when needed.
 If the PRD references an epic:
 - Notify the user: "This PRD links to epic {epic_name}."
 - Ask: "The epic may need updating based on these changes. Review it now? (yes/no)"
-- If yes, suggest: "Run /pm:epic-edit {epic_name} to refresh the epic."
+- If yes, suggest: "Run /epic-edit {epic_name} to refresh the epic."
 
 ### 5. Output
 ```
@@ -49,11 +45,11 @@ If the PRD references an epic:
 
 {If has epic}: ⚠️ Epic may need review: {epic_name}
 
-Next: /pm:prd-parse $ARGUMENTS to update epic
+Next: /prd-parse $ARGUMENTS to update epic
 ```
 
 ## Important Notes
 - Preserve the original `created` timestamp.
 - Keep any version history that already exists in the frontmatter.
-- Follow `/rules/frontmatter-operations.md` for YAML safety.
+- Follow `~/.codex/rules/frontmatter-operations.md` for YAML safety.
 - Use the planning tool when multiple edits require tracking.

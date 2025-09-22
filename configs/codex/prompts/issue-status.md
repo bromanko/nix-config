@@ -8,7 +8,7 @@ Check issue status (open/closed) and current state.
 
 ## Usage
 ```
-/pm:issue-status <issue_number>
+/issue-status <issue_number>
 ```
 
 ## Instructions
@@ -25,11 +25,11 @@ gh issue view #$ARGUMENTS --json state,title,labels,assignees,updatedAt
 Show concise status information:
 ```
 🎫 Issue #$ARGUMENTS: {Title}
-   
+
 📊 Status: {OPEN/CLOSED}
    Last update: {timestamp}
    Assignee: {assignee or "Unassigned"}
-   
+
 🏷️ Labels: {label1}, {label2}, {label3}
 ```
 
@@ -43,18 +43,27 @@ If issue is part of an epic:
 ```
 
 ### 4. Local Sync Status
-Check if local files are in sync:
+
+Check for an update directory:
+```bash
+update_dir=$(ls -d .claude/epics/*/updates/$ARGUMENTS 2>/dev/null | head -n1)
 ```
-💾 Local Sync:
-   Local file: {exists/missing}
-   Last local update: {timestamp}
-   Sync status: {in_sync/needs_sync/local_ahead/remote_ahead}
-```
+- If `update_dir` is missing, report `Local file: missing`
+- Otherwise prefer `progress.md` if present:
+  ```bash
+  local_file="${update_dir}/progress.md"
+  if [ ! -f "$local_file" ]; then
+    local_file=$(ls "${update_dir}"/stream-*.md 2>/dev/null | head -n1)
+  fi
+  ```
+- If neither file exists, report `Local file: missing`
+- Use the chosen file to read the most recent frontmatter `last_sync` (if available) or the file mtime for `Last local update`
+- Set `Sync status` by comparing `last_sync`/mtime against GitHub timestamps as before, and treat stream files the same as progress files when computing it
 
 ### 5. Quick Status Indicators
 Use clear visual indicators:
 - 🟢 Open and ready
-- 🟡 Open with blockers  
+- 🟡 Open with blockers
 - 🔴 Open and overdue
 - ✅ Closed and complete
 - ❌ Closed without completion
@@ -63,8 +72,8 @@ Use clear visual indicators:
 Based on status, suggest actions:
 ```
 🚀 Suggested Actions:
-   - Start work: /pm:issue-start $ARGUMENTS
-   - Sync updates: /pm:issue-sync $ARGUMENTS
+   - Start work: /issue-start $ARGUMENTS
+   - Sync updates: /issue-sync $ARGUMENTS
    - Close issue: gh issue close #$ARGUMENTS
    - Reopen issue: gh issue reopen #$ARGUMENTS
 ```
@@ -72,7 +81,7 @@ Based on status, suggest actions:
 ### 7. Batch Status
 If checking multiple issues, support comma-separated list:
 ```
-/pm:issue-status 123,124,125
+/issue-status 123,124,125
 ```
 
 Keep the output concise but informative, perfect for quick status checks during development of Issue #$ARGUMENTS.
