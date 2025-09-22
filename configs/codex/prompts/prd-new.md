@@ -1,13 +1,9 @@
----
-allowed-tools: shell, update_plan
----
-
 ## Brainstorm
 Launch brainstorming for new product requirement document.
 
 ## Usage
 ```
-/pm:prd-new <feature_name>
+/prd-new <feature_name>
 ```
 
 ## Preflight Checklist
@@ -26,7 +22,7 @@ Do not bother the user with preflight checks progress ("I'm not going to ..."). 
    - Check if `.claude/prds/$ARGUMENTS.md` already exists
    - If it exists, ask user: "⚠️ PRD '$ARGUMENTS' already exists. Do you want to overwrite it? (yes/no)"
    - Only proceed with explicit 'yes' confirmation
-   - If user says no, suggest: "Use a different name or run: /pm:prd-parse $ARGUMENTS to create an epic from the existing PRD"
+   - If user says no, suggest: "Use a different name or run: /prd-parse $ARGUMENTS to create an epic from the existing PRD"
 
 3. **Verify directory structure:**
    - Check if `.claude/prds/` directory exists
@@ -130,7 +126,7 @@ Before saving the PRD, verify:
 After successfully creating the PRD:
 1. Confirm: "✅ PRD created: .claude/prds/$ARGUMENTS.md"
 2. Show brief summary of what was captured
-3. Suggest next step: "Ready to create implementation epic? Run: /pm:prd-parse $ARGUMENTS"
+3. Suggest next step: "Ready to create implementation epic? Run: /prd-parse $ARGUMENTS"
 
 ## Error Recovery
 
