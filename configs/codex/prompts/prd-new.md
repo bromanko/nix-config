@@ -3,7 +3,9 @@ Launch brainstorming for new product requirement document.
 
 ## Usage
 ```
-/prd-new <$ARGUMENTS>
+/prd-new
+
+When this prompt is triggered, ask the user for the feature name which we will refer to as $ARGUMENTS.
 ```
 
 ## Preflight Checklist
@@ -126,7 +128,7 @@ Before saving the PRD, verify:
 After successfully creating the PRD:
 1. Confirm: "✅ PRD created: .claude/prds/$ARGUMENTS.md"
 2. Show brief summary of what was captured
-3. Suggest next step: "Ready to create implementation epic? Run: /prd-parse $ARGUMENTS"
+3. Suggest next step: "Ready to create implementation epic? Run: /prd-parse"
 
 ## Error Recovery
 

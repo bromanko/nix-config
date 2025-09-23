@@ -4,7 +4,9 @@ Edit an existing Product Requirements Document.
 
 ## Usage
 ```
-/prd-edit <$ARGUMENTS>
+/prd-edit
+
+When this prompt is triggered, ask the user for the feature name which we will refer to as $ARGUMENTS.
 ```
 
 ## Instructions
