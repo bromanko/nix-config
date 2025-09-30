@@ -1,20 +1,18 @@
----
-allowed-tools: shell, update_plan
----
-
 # Issue Sync
 
 Push local updates as GitHub issue comments for transparent audit trail.
 
 ## Usage
 ```
-/pm:issue-sync <issue_number>
+/issue-sync
+
+After running the prompt, ask the user for the issue number they want to sync. This will be referred to as $ARGUMENTS.
 ```
 
 ## Required Rules
 
 **IMPORTANT:** Before executing this command, read and follow:
-- `.claude/rules/datetime.md` - For getting real current date/time
+- `~/.codex/rules/datetime.md` - For getting real current date/time
 
 ## Preflight Checklist
 

@@ -1,14 +1,12 @@
----
-allowed-tools: shell
----
-
 # Issue Show
 
 Display issue and sub-issues with detailed information.
 
 ## Usage
 ```
-/pm:issue-show <issue_number>
+/issue-show
+
+After running the prompt, ask the user for the issue number they want to show. This will be referred to as $ARGUMENTS.
 ```
 
 ## Instructions
@@ -30,7 +28,7 @@ Display issue header:
    Assignee: {assignee}
    Created: {creation_date}
    Updated: {last_update}
-   
+
 📝 Description:
 {issue_description}
 ```
@@ -60,7 +58,7 @@ Display recent comments and updates:
 💬 Recent Activity:
    {timestamp} - {author}: {comment_preview}
    {timestamp} - {author}: {comment_preview}
-   
+
    View full thread: gh issue view #$ARGUMENTS --comments
 ```
 

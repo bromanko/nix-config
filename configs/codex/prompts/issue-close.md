@@ -1,14 +1,13 @@
----
-allowed-tools: shell, update_plan
----
-
 # Issue Close
 
 Mark an issue as complete and close it on GitHub.
 
 ## Usage
 ```
-/pm:issue-close <issue_number> [completion_notes]
+/issue-close
+
+After running the prompt, ask the user for the issue number they want to close. This will be referred to as $ARGUMENTS.
+After that ask them to provide optional completion notes. This will be referred to as $COMPLETION_NOTES.
 ```
 
 ## Codex CLI Notes
@@ -44,6 +43,8 @@ If `.claude/epics/{epic}/updates/$ARGUMENTS/progress.md` exists:
 
   $ARGUMENTS
 
+  $COMPLETION_NOTES
+
   ---
   Closed at: {timestamp}
   MD
@@ -78,10 +79,10 @@ If `.claude/epics/{epic}/updates/$ARGUMENTS/progress.md` exists:
   GitHub: Issue closed & epic updated
   Epic progress: {new_progress}% ({closed}/{total} tasks complete)
 
-Next: Run /pm:next for the next priority task
+Next: Run /pm-next for the next priority task
 ```
 
 ## Important Notes
-- Follow `/rules/frontmatter-operations.md`.
-- Follow `/rules/github-operations.md`.
+- Follow `~/.codex/rules/frontmatter-operations.md`.
+- Follow `~/.codex/rules/github-operations.md`.
 - Always sync local state before touching GitHub.

@@ -4,11 +4,13 @@ allowed-tools: shell, update_plan
 
 # Issue Start
 
-Begin work on a GitHub issue with a **single agent** in a **sequential** workflow (no parallelization).
+Begin work on a GitHub issue
 
 ## Usage
 ```
-/pm:issue-start <issue_number>
+/issue-start
+
+After running the prompt, ask the user for the issue number they want to start work on. This will be referred to as $ARGUMENTS.
 ```
 
 ## Codex CLI Notes
@@ -88,8 +90,8 @@ Next steps:
   3) Prepare for manual review and Codex diff review before merging
   4) Sync updates and update the epic checklist
 
-Monitor with: /pm:epic-status {epic_name}
-Sync updates: /pm:issue-sync $ARGUMENTS
+Monitor with: /epic-status
+Sync updates: /issue-sync
 ```
 
 ## Error Handling
@@ -104,5 +106,5 @@ If any step fails, report clearly:
 - **No parallelization:** one issue at a time; treat “streams” as a sequential plan.
 - **Reviews:** manual review is required; run a Codex review before merging.
 - **No Sub-Issues plugin:** track progress via epic task list and issue comments.
-- Follow `/rules/datetime.md` for timestamps.
+- Follow `~/.codex/rules/datetime.md` for timestamps.
 - Keep it simple - trust that GitHub and file system work.

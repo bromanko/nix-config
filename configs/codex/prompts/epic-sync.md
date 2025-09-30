@@ -1,27 +1,25 @@
----
-allowed-tools: shell, update_plan
----
-
 # Epic Sync
 
 Push epic and tasks to GitHub as issues.
 
 ## Usage
 ```
-/pm:epic-sync <feature_name>
+/epic-sync
+
+When this prompt is triggered, ask the user for the feature name which we will refer to as $ARGUMENTS.
 ```
 
 ## Quick Check
 
 ```bash
 # Verify epic exists
-test -f .claude/epics/$ARGUMENTS/epic.md || echo "❌ Epic not found. Run: /pm:prd-parse $ARGUMENTS"
+test -f .claude/epics/$ARGUMENTS/epic.md || echo "❌ Epic not found. Run: /prd-parse"
 
 # Count task files
 ls .claude/epics/$ARGUMENTS/*.md 2>/dev/null | grep -v epic.md | wc -l
 ```
 
-If no tasks found: "❌ No tasks to sync. Run: /pm:epic-decompose $ARGUMENTS"
+If no tasks found: "❌ No tasks to sync. Run: /epic-decompose"
 
 ## Instructions
 
@@ -52,7 +50,7 @@ awk '
   /^Total tasks:/ && in_tasks { total_tasks = $3; next }
   /^Parallel tasks:/ && in_tasks { parallel_tasks = $3; next }
   /^Sequential tasks:/ && in_tasks { sequential_tasks = $3; next }
-  
+
   !in_tasks { print }
   END {
     # If we were still in tasks section at EOF, add stats
@@ -346,22 +344,7 @@ echo "" >> .claude/epics/$ARGUMENTS/github-mapping.md
 echo "Synced: $(date -u +"%Y-%m-%dT%H:%M:%SZ")" >> .claude/epics/$ARGUMENTS/github-mapping.md
 ```
 
-### 7. Create Worktree
-
-Follow `/rules/worktree-operations.md` to create development worktree:
-
-```bash
-# Ensure main is current
-git checkout main
-git pull origin main
-
-# Create worktree for epic
-git worktree add ../epic-$ARGUMENTS -b epic/$ARGUMENTS
-
-echo "✅ Created worktree: ../epic-$ARGUMENTS"
-```
-
-### 8. Output
+### 7. Output
 
 ```
 ✅ Synced to GitHub
@@ -370,17 +353,16 @@ echo "✅ Created worktree: ../epic-$ARGUMENTS"
   - Labels applied: epic, task, epic:{name}
   - Files renamed: 001.md → {issue_id}.md
   - References updated: depends_on/conflicts_with now use issue IDs
-  - Worktree: ../epic-$ARGUMENTS
 
 Next steps:
-  - Start parallel execution: /pm:epic-start $ARGUMENTS
-  - Or work on single issue: /pm:issue-start {issue_number}
+  - Start parallel execution: /epic-start
+  - Or work on single issue: /issue-start
   - View epic: https://github.com/{owner}/{repo}/issues/{epic_number}
 ```
 
 ## Error Handling
 
-Follow `/rules/github-operations.md` for GitHub CLI errors.
+Follow `~/.codex/rules/github-operations.md` for GitHub CLI errors.
 
 If any issue creation fails:
 - Report what succeeded

@@ -1,14 +1,12 @@
----
-allowed-tools: shell
----
-
 # Issue Status
 
 Check issue status (open/closed) and current state.
 
 ## Usage
 ```
-/issue-status <issue_number>
+/issue-status
+
+After running the prompt, ask the user for the issue number they want to get status for. This will be referred to as $ARGUMENTS.
 ```
 
 ## Instructions

@@ -1,25 +1,23 @@
----
-allowed-tools: shell, update_plan
----
-
 # Epic Decompose
 
 Break an epic into concrete, actionable tasks.
 
 ## Usage
 ```
-/pm:epic-decompose <feature_name>
+/epic-decompose
+
+When this prompt is triggered, ask the user for the feature name which we will refer to as $ARGUMENTS.
 ```
 
 ## Codex CLI Notes
 - Use `shell` commands for filesystem work; stay rooted in the repository.
-- Codex CLI runs sequentially—plan your batches with the planning tool instead of spawning sub-agents.
+- Plan your batches with the planning tool
 - Create or update files by rewriting them atomically (e.g., with `cat <<'EOF' > file`).
 
 ## Required Rules
 
 **IMPORTANT:** Before executing this command, read and follow:
-- `.claude/rules/datetime.md` - For getting real current date/time
+- `~/.codex/rules/datetime.md` - For getting real current date/time
 
 ## Preflight Checklist
 
@@ -27,14 +25,14 @@ Complete these validation steps without narrating them to the user.
 
 1. **Verify epic exists:**
    - Check if `.claude/epics/$ARGUMENTS/epic.md` exists
-   - If not found, tell user: "❌ Epic not found: $ARGUMENTS. First create it with: /pm:prd-parse $ARGUMENTS"
+   - If not found, tell user: "❌ Epic not found: $ARGUMENTS. First create it with: /prd-parse"
    - Stop execution if epic doesn't exist
 
 2. **Check for existing tasks:**
    - Look for numbered task files (001.md, 002.md, etc.) in `.claude/epics/$ARGUMENTS/`
    - If tasks exist, list them and ask: "⚠️ Found {count} existing tasks. Delete and recreate all tasks? (yes/no)"
    - Proceed only with explicit 'yes'
-   - If user says no, suggest: "View existing tasks with: /pm:epic-show $ARGUMENTS"
+   - If user says no, suggest: "View existing tasks with: /epic-show"
 
 3. **Validate epic frontmatter:**
    - Ensure the epic has `name`, `status`, `created`, and `prd`
@@ -154,5 +152,5 @@ Provide a concise summary:
   Parallel-ready: {parallel_count}
   Sequential: {sequential_count}
 
-Next: /pm:epic-sync $ARGUMENTS to publish tasks to GitHub
+Next: /epic-sync to publish tasks to GitHub
 ```

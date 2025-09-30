@@ -1,14 +1,12 @@
----
-allowed-tools: shell, update_plan
----
-
 # Issue Edit
 
 Edit issue details locally and on GitHub.
 
 ## Usage
 ```
-/pm:issue-edit <issue_number>
+/issue-edit
+
+After running the prompt, ask the user for the issue number they want to edit. This will be referred to as $ARGUMENTS.
 ```
 
 ## Instructions
@@ -65,7 +63,7 @@ gh issue edit $ARGUMENTS --remove-label "{removed_labels}"
 ✅ Updated issue #$ARGUMENTS
   Changes:
     {list_of_changes_made}
-  
+
 Synced to GitHub: ✅
 ```
 
@@ -73,4 +71,4 @@ Synced to GitHub: ✅
 
 Always update local first, then GitHub.
 Preserve frontmatter fields not being edited.
-Follow `/rules/frontmatter-operations.md`.
+Follow `~/.codex/rules/frontmatter-operations.md`.
