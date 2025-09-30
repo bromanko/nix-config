@@ -13,7 +13,7 @@
     # System management
     determinate.url = "https://flakehub.com/f/DeterminateSystems/determinate/3";
     darwin = {
-      url = "github:LnL7/nix-darwin/master";
+      url = "github:nix-darwin/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     home-manager = {
@@ -70,8 +70,7 @@
             self.overlay
             nur.overlays.default
             emacs-overlay.overlay
-          ]
-          ++ (lib.attrValues self.overlays);
+          ] ++ (lib.attrValues self.overlays);
         }
       );
 
