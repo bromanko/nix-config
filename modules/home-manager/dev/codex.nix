@@ -9,9 +9,6 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.dev.codex;
-  promptsDir = ../../../configs/codex/prompts;
-  promptFiles = lib.filterAttrs (_: type: type == "regular") (builtins.readDir promptsDir);
-  promptFileNames = builtins.attrNames promptFiles;
 in
 {
   options.modules.dev.codex = with types; {
@@ -25,18 +22,9 @@ in
         package = pkgs.my.codex;
       };
 
-      home = {
-        file = builtins.listToAttrs (
-          map (
-            name:
-            {
-              name = ".codex/prompts/${name}";
-              value = {
-                source = config.hm.lib.file.mkNixConfigSymlink "/configs/codex/prompts/${name}";
-              };
-            }
-          ) promptFileNames
-        );
+      home.file.".codex/prompts" = {
+        source = ../../../configs/codex/prompts;
+        recursive = true;
       };
     };
   };
