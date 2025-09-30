@@ -29,7 +29,7 @@ in
 
     modules = mkIf config.modules.homebrew.enable {
       homebrew = {
-        casks = [ "docker" ];
+        casks = [ "docker-desktop" ];
       };
     };
   };
