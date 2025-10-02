@@ -29,6 +29,7 @@ in
           gnupg
           httpie
           jq
+          meld
           python3
           ripgrep
           shellcheck
