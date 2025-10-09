@@ -3,7 +3,6 @@
 {
   modules = {
     nix = {
-      enable = true;
       dev.enable = true;
     };
     shell = {
