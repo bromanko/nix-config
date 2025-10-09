@@ -1,8 +1,8 @@
-self: super: rec {
-  picom = super.picom.overrideAttrs (old: rec {
+final: prev: rec {
+  picom = prev.picom.overrideAttrs (old: rec {
     version = "8.3-ibhagwan-next";
 
-    src = super.fetchFromGitHub {
+    src = prev.fetchFromGitHub {
       owner = "ibhagwan";
       repo = "picom";
       rev = "0539616";
