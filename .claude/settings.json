@@ -1,5 +1,3 @@
 {
-  "approved_tools": [
-    "Bash(nix build*)"
-  ]
+  "approved_tools": ["Bash(nix build*)", "Bash(nix eval*)"]
 }
