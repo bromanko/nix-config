@@ -41,7 +41,7 @@ with lib.my;
 
   modules = {
     nix = {
-      enable = true;
+      system.enable = "default";
       dev.enable = true;
     };
     shell = {
