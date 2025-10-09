@@ -11,25 +11,9 @@ let
   cfg = config.modules.nix;
 in
 {
-  options.modules.nix = with types; {
-    system = {
-      enable = mkOption {
-        type = enum [
-          "determinate"
-          "default"
-          null
-        ];
-        default = null; # null represents "disabled"
-        description = "Controls the system-level Nix configuration. Possible values: 'determinate', 'default', or null (disabled).";
-      };
-
-      optimise = mkBoolOpt true;
-    };
-
-    dev = {
-      enable = mkBoolOpt true;
-    };
-  };
+  imports = [
+    ./home-manager-nix.nix
+  ];
 
   config = mkMerge [
     # Case 1: "determinate"
@@ -82,19 +66,6 @@ in
             source = ../configs/nix/nix.conf.age;
             symlinks = [ "$HOME/.config/nix/nix.conf" ];
           };
-        };
-      };
-    })
-
-    # Development tools
-    (mkIf cfg.dev.enable {
-      hm = {
-        home = {
-          packages = with pkgs; [
-            nixfmt-rfc-style
-            nix-output-monitor
-            nil
-          ];
         };
       };
     })
