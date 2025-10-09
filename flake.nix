@@ -55,6 +55,7 @@
 
       supportedSystems = [
         "aarch64-darwin"
+        "aarch64-linux"
         "x86_64-linux"
       ];
 
@@ -115,7 +116,9 @@
 
       nixosConfigurations = lib.my.mapNixosHosts ./hosts/nixos;
 
-      homeManagerConfigurations = lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux;
+      homeManagerConfigurations =
+        (lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux)
+        // (lib.my.mapHomeManagerHosts "aarch64-linux" ./hosts/aarch64-linux);
 
       isoConfigurations = lib.my.mapNixosIsos ./hosts/iso;
     };
