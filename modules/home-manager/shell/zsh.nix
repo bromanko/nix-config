@@ -62,7 +62,7 @@ in
         plugins = [
           {
             name = "zsh-bromanko-functions";
-            src = ../../configs/zsh/plugins/zsh-bromanko-functions;
+            src = ../../../configs/zsh/plugins/zsh-bromanko-functions;
           }
           {
             name = "zsh-vim-mode";
