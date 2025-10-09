@@ -37,8 +37,3 @@ provision:
 ssh:
   loadDotSSHPubKeys: true
   forwardAgent: true
-
-portForwards:
-  - guestPort: 22
-    hostPort: 60022
-    proto: tcp
