@@ -47,6 +47,12 @@ in
 
       home.sessionVariables = {
         OP_BIOMETRIC_UNLOCK_ENABLED = "true";
+        # Use 1Password SSH agent for all SSH operations (including agent forwarding)
+        # Replace ~ with $HOME since environment variables don't expand tildes
+        SSH_AUTH_SOCK =
+          if lib.hasPrefix "~/" cfg.sshSocketPath
+          then "\${HOME}" + lib.removePrefix "~" cfg.sshSocketPath
+          else cfg.sshSocketPath;
       };
 
       programs.ssh = mkIf config.modules.shell.ssh.enable {
