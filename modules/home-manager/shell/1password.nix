@@ -45,17 +45,20 @@ in
         [ _1password-cli ]
         ++ optionals config.modules.editor.emacs.enable [ emacsPackages.auth-source-1password ];
 
-      home.sessionVariables = {
-        OP_BIOMETRIC_UNLOCK_ENABLED = "true";
-        # Use 1Password SSH agent for all SSH operations (including agent forwarding)
-        # Replace ~ with $HOME since environment variables don't expand tildes
-        SSH_AUTH_SOCK =
-          if lib.hasPrefix "~/" cfg.sshSocketPath
-          then "\${HOME}" + lib.removePrefix "~" cfg.sshSocketPath
-          else cfg.sshSocketPath;
-      };
+      home.sessionVariables = mkMerge [
+        { OP_BIOMETRIC_UNLOCK_ENABLED = "true"; }
+        # Only set SSH_AUTH_SOCK on macOS. On Linux, use forwarded agent from host.
+        (mkIf pkgs.stdenv.isDarwin {
+          # Use 1Password SSH agent for all SSH operations (including agent forwarding)
+          # Replace ~ with $HOME since environment variables don't expand tildes
+          SSH_AUTH_SOCK =
+            if lib.hasPrefix "~/" cfg.sshSocketPath
+            then "\${HOME}" + lib.removePrefix "~" cfg.sshSocketPath
+            else cfg.sshSocketPath;
+        })
+      ];
 
-      programs.ssh = mkIf config.modules.shell.ssh.enable {
+      programs.ssh = mkIf (config.modules.shell.ssh.enable && pkgs.stdenv.isDarwin) {
         matchBlocks = {
           "1password" = {
             host = "*";
