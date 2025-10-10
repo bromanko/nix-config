@@ -1,7 +1,9 @@
 { lib, ... }:
 
 {
-  home.homeDirectory = lib.mkForce "/home/bromanko.linux";
+  home = {
+    homeDirectory = lib.mkForce "/home/bromanko.linux";
+  };
 
   modules = {
     nix = {
@@ -15,10 +17,7 @@
       commonPkgs.enable = true;
       openssh.enable = true;
       ssh.enable = true;
-      "1password" = {
-        enable = true;
-        sshSocketPath = "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock";
-      };
+      "1password".enable = true;
       fish.enable = true;
       bat.enable = true;
       git.enable = true;
