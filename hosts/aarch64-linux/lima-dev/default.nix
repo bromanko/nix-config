@@ -1,8 +1,9 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 {
   home = {
     homeDirectory = lib.mkForce "/home/bromanko.linux";
+    packages = with pkgs; [ ncurses ];
   };
 
   modules = {
