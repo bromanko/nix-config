@@ -22,6 +22,7 @@
     shell = {
       commonPkgs.enable = true;
       openssh.enable = true;
+      ssh.enable = true;
       fish.enable = true;
       bat.enable = true;
       git.enable = true;
