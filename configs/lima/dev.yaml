@@ -1,0 +1,39 @@
+vmType: "vz"
+os: "Linux"
+arch: "default"
+
+images:
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+    arch: "x86_64"
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-arm64.img"
+    arch: "aarch64"
+
+cpus: 4
+memory: "8GiB"
+disk: "100GiB"
+
+containerd:
+  system: false
+  user: false
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      export DEBIAN_FRONTEND=noninteractive
+      apt-get update
+      apt-get install -y curl git build-essential
+
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      # Install Nix
+      if [ ! -d ~/.nix-profile ]; then
+        curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --no-confirm
+      fi
+
+ssh:
+  loadDotSSHPubKeys: true
+  forwardAgent: true

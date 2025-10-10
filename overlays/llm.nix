@@ -1,14 +1,14 @@
-self: super: {
+final: prev: {
   llm =
     rec {
       pyWithPackages = (
-        super.python3.withPackages (ps: [
+        prev.python3.withPackages (ps: [
           ps.llm
-          super.my.llm-gemini
-          super.my.llm-claude-3
+          prev.my.llm-gemini
+          prev.my.llm-claude-3
         ])
       );
-      llm = super.runCommandNoCCLocal "llm" { } ''
+      llm = prev.runCommandNoCCLocal "llm" { } ''
         mkdir -p $out/bin
         ln -s ${pyWithPackages}/bin/llm $out/bin/llm
       '';

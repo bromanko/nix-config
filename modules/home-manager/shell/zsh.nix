@@ -42,7 +42,7 @@ in
       programs.zsh = {
         enable = true;
 
-        enableAutosuggestions = true;
+        autosuggestion.enable = true;
         syntaxHighlighting.enable = true;
         enableCompletion = true;
         history.extended = true;
@@ -62,7 +62,7 @@ in
         plugins = [
           {
             name = "zsh-bromanko-functions";
-            src = ../../configs/zsh/plugins/zsh-bromanko-functions;
+            src = ../../../configs/zsh/plugins/zsh-bromanko-functions;
           }
           {
             name = "zsh-vim-mode";
