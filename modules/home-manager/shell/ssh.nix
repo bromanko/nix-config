@@ -18,12 +18,14 @@ in
     hm = {
       programs.ssh = {
         enable = true;
-
-        forwardAgent = true;
-        controlMaster = "auto";
-        controlPersist = "1800";
+        enableDefaultConfig = false;
 
         matchBlocks = {
+          "*" = {
+            forwardAgent = true;
+            controlMaster = "auto";
+            controlPersist = "1800";
+          };
           keychain = {
             host = "*";
             extraOptions = {
