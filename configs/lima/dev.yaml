@@ -24,6 +24,9 @@ provision:
       export DEBIAN_FRONTEND=noninteractive
       apt-get update
       apt-get install -y curl git build-essential
+      # Ensure passwordless sudo
+      echo "${LIMA_CIDATA_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lima-user
+      chmod 440 /etc/sudoers.d/lima-user
 
   - mode: user
     script: |
@@ -33,6 +36,10 @@ provision:
       if [ ! -d ~/.nix-profile ]; then
         curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --no-confirm
       fi
+
+mounts:
+  - location: "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
+    writable: false
 
 ssh:
   loadDotSSHPubKeys: true
