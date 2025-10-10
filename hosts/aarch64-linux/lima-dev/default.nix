@@ -29,7 +29,6 @@
       idea.enable = true;
       psql.enable = true;
       nodejs.enable = true;
-      aider-chat.enable = true;
       codex.enable = true;
       claude-code.enable = true;
       lima.enable = true;
