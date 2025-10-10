@@ -64,6 +64,7 @@ in
         shellAliases = {
           "reload!" = "source ~/.config/fish/config.fish";
           "less" = "less -R";
+          "dev" = "LIMA_SHELL=fish limactl shell lima-dev";
         };
 
         interactiveShellInit = ''
