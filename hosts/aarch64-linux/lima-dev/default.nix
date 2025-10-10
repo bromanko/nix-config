@@ -18,6 +18,7 @@
       commonPkgs.enable = true;
       openssh.enable = true;
       ssh.enable = true;
+      "1password".enable = true;
       fish.enable = true;
       bat.enable = true;
       git.enable = true;
