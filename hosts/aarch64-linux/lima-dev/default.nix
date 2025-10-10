@@ -1,6 +1,8 @@
-{ ... }:
+{ lib, ... }:
 
 {
+  home.homeDirectory = lib.mkForce "/home/bromanko.linux";
+
   modules = {
     nix = {
       system.enable = "determinate";
