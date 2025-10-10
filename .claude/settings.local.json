@@ -1,8 +1,9 @@
 {
-  "outputStyle": "default",
   "permissions": {
     "allow": [
-      "Bash(nix repl:*)"
+      "Bash(nix repl:*)",
+      "Bash(jj diff:*)"
     ]
-  }
+  },
+  "outputStyle": "default"
 }
