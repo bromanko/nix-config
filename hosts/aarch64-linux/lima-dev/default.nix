@@ -1,7 +1,15 @@
-{ lib, ... }:
+{ lib, pkgs, ... }:
 
 {
-  home.homeDirectory = lib.mkForce "/home/bromanko.linux";
+  home = {
+    homeDirectory = lib.mkForce "/home/bromanko.linux";
+    packages = with pkgs; [
+      _1password-cli
+    ];
+    sessionVariables = {
+      OP_BIOMETRIC_UNLOCK_ENABLED = "true";
+    };
+  };
 
   modules = {
     nix = {
