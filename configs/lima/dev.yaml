@@ -23,7 +23,7 @@ provision:
       set -eux -o pipefail
       export DEBIAN_FRONTEND=noninteractive
       apt-get update
-      apt-get install -y curl git build-essential ufw
+      apt-get install -y curl git build-essential ufw dnsmasq
 
       # Configure UFW firewall with deny-by-default outbound policy
       # Reset to clean state
@@ -53,11 +53,68 @@ provision:
       # Allow DNS queries to localhost (prep for dnsmasq)
       ufw allow out to 127.0.0.1 proto udp port 53 comment 'DNS to localhost'
 
+      # Allow outbound DNS from VM to upstream resolvers (so dnsmasq can query)
+      ufw allow out proto udp to any port 53 comment 'DNS to upstream resolvers'
+
+      # Allow HTTP/HTTPS (required for git, nix, apt, etc. - DNS whitelist controls which domains)
+      ufw allow out proto tcp to any port 80 comment 'HTTP for package managers/etc'
+      ufw allow out proto tcp to any port 443 comment 'HTTPS for git/nix/etc'
+
       # Enable firewall
       ufw --force enable
 
       echo "UFW Status:"
       ufw status verbose
+
+      # Configure dnsmasq (already installed)
+      # Backup original dnsmasq config
+      cp /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
+
+      # Create whitelist-only dnsmasq configuration
+      printf '%s\n' \
+        '# Listen on localhost only' \
+        'listen-address=127.0.0.1' \
+        'bind-interfaces' \
+        '' \
+        '# Do not read /etc/resolv.conf or /etc/hosts' \
+        'no-resolv' \
+        'no-hosts' \
+        '' \
+        '# Default: return NXDOMAIN for everything (block all)' \
+        'address=/#/' \
+        '' \
+        '# Whitelist: GitHub domains' \
+        'server=/github.com/8.8.8.8' \
+        'server=/githubusercontent.com/8.8.8.8' \
+        'server=/github.io/8.8.8.8' \
+        'server=/githubassets.com/8.8.8.8' \
+        '' \
+        '# Whitelist: Nix/Nixpkgs infrastructure' \
+        'server=/nixos.org/8.8.8.8' \
+        'server=/cache.nixos.org/8.8.8.8' \
+        '' \
+        '# Cache settings' \
+        'cache-size=1000' \
+        > /etc/dnsmasq.conf
+
+      # Restart dnsmasq
+      systemctl restart dnsmasq
+      systemctl enable dnsmasq
+
+      # Configure system to use local dnsmasq
+      # Disable systemd-resolved's stub resolver
+      systemctl disable systemd-resolved
+      systemctl stop systemd-resolved
+      rm -f /etc/resolv.conf
+
+      # Point to localhost for DNS
+      echo "nameserver 127.0.0.1" > /etc/resolv.conf
+      chattr +i /etc/resolv.conf  # Make immutable so nothing overwrites it
+
+      echo "dnsmasq configuration complete. Testing DNS resolution..."
+      # Test DNS resolution
+      nslookup github.com 127.0.0.1 || echo "GitHub DNS resolution test failed"
+      nslookup google.com 127.0.0.1 && echo "ERROR: google.com should be blocked!" || echo "Google correctly blocked"
 
   - mode: user
     script: |
