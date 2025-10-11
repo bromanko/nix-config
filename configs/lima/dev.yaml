@@ -23,7 +23,41 @@ provision:
       set -eux -o pipefail
       export DEBIAN_FRONTEND=noninteractive
       apt-get update
-      apt-get install -y curl git build-essential
+      apt-get install -y curl git build-essential ufw
+
+      # Configure UFW firewall with deny-by-default outbound policy
+      # Reset to clean state
+      ufw --force reset
+
+      # Default policies
+      ufw default deny outgoing
+      ufw default deny incoming
+
+      # Allow all traffic on loopback interface (for localhost services like dnsmasq)
+      ufw allow out on lo
+      ufw allow in on lo
+
+      # Allow incoming SSH from Lima host (required for VM access)
+      ufw allow in from any to any port 22 proto tcp comment 'SSH from Lima host'
+
+      # Note: UFW automatically allows established/related connections
+      # via its underlying iptables rules, no need to explicitly configure
+
+      # Allow SSH to Lima host (needed for agent forwarding)
+      # In vzNAT mode, the Lima host is the default gateway
+      GATEWAY_IP=$(ip route show default | awk '/default/ {print $3}')
+      if [ -n "$GATEWAY_IP" ]; then
+        ufw allow out to $GATEWAY_IP proto tcp port 22 comment 'SSH to Lima host for agent forwarding'
+      fi
+
+      # Allow DNS queries to localhost (prep for dnsmasq)
+      ufw allow out to 127.0.0.1 proto udp port 53 comment 'DNS to localhost'
+
+      # Enable firewall
+      ufw --force enable
+
+      echo "UFW Status:"
+      ufw status verbose
 
   - mode: user
     script: |
