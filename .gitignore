@@ -1,3 +1,4 @@
 private.nix
 result
 .idea
+.claude/*.local.json
