@@ -36,27 +36,18 @@ stdenv.mkDerivation {
     install -Dm755 lockdown-network.sh $out/bin/lockdown-network
 
     # Wrap scripts with PATH to required tools
-    wrapProgram $out/bin/allowlist-domain \
-      --prefix PATH : ${
-        lib.makeBinPath [
-          coreutils
-          gnugrep
-          gnused
-          systemd
-          bind
-        ]
-      }
-
-    wrapProgram $out/bin/lockdown-network \
-      --prefix PATH : ${
-        lib.makeBinPath [
-          coreutils
-          gnugrep
-          gnused
-          systemd
-          bind
-        ]
-      }
+    for script in allowlist-domain lockdown-network; do
+      wrapProgram $out/bin/$script \
+        --prefix PATH : ${
+          lib.makeBinPath [
+            coreutils
+            gnugrep
+            gnused
+            systemd
+            bind
+          ]
+        }
+    done
 
     runHook postInstall
   '';

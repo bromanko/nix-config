@@ -107,12 +107,8 @@ ufw allow in on lo
 # Allow incoming SSH from Lima host
 ufw allow in from any to any port 22 proto tcp comment 'SSH from Lima host'
 
-# Allow SSH to Lima host (for agent forwarding)
-GATEWAY_IP=$(ip route show default | awk '/default/ {print $3}')
-if [ -n "$GATEWAY_IP" ]; then
-  ufw allow out to "$GATEWAY_IP" proto tcp port 22 comment 'SSH to Lima host for agent forwarding'
-  echo "Allowed SSH to Lima host at $GATEWAY_IP"
-fi
+# Allow outbound SSH (for git operations and agent forwarding)
+ufw allow out proto tcp to any port 22 comment 'SSH for git and agent forwarding'
 
 # Allow DNS queries to localhost
 ufw allow out to 127.0.0.1 proto udp port 53 comment 'DNS to localhost'
