@@ -16,10 +16,11 @@ EOF
   exit 1
 }
 
+# If not running as root, re-exec with sudo using full path
 if [ "$EUID" -ne 0 ]; then
-  echo "Error: This script must be run as root (use sudo)" >&2
-  echo "" >&2
-  usage
+  SCRIPT_PATH="$(readlink -f "$0")"
+  echo "Re-executing with sudo: $SCRIPT_PATH"
+  exec sudo "$SCRIPT_PATH" "$@"
 fi
 
 echo "=== Network Lockdown ==="
