@@ -3,7 +3,10 @@
 {
   home = {
     homeDirectory = lib.mkForce "/home/bromanko.linux";
-    packages = with pkgs; [ ncurses ];
+    packages = with pkgs; [
+      ncurses
+      my.dev-vm-scripts
+    ];
   };
 
   modules = {
