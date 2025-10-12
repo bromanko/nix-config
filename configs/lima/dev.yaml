@@ -23,15 +23,19 @@ provision:
       set -eux -o pipefail
       export DEBIAN_FRONTEND=noninteractive
       apt-get update
-      apt-get install -y curl git build-essential ufw dnsmasq
-      # Ensure passwordless sudo
-      echo "${LIMA_CIDATA_USER} ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/lima-user
-      chmod 440 /etc/sudoers.d/lima-user
+      apt-get install -y curl git build-essential
+
+      # Add hostname to /etc/hosts to prevent sudo warnings
+      HOSTNAME=$(hostname)
+      if ! grep -q "127.0.1.1.*$HOSTNAME" /etc/hosts; then
+        echo "127.0.1.1 $HOSTNAME" >> /etc/hosts
+      fi
 
   - mode: user
     script: |
       #!/bin/bash
       set -eux -o pipefail
+
       # Install Nix
       if [ ! -d ~/.nix-profile ]; then
         curl --proto '=https' --tlsv1.2 -sSf -L https://install.determinate.systems/nix | sh -s -- install linux --no-confirm
@@ -44,116 +48,7 @@ provision:
       nix build github:bromanko/nix-config#homeManagerConfigurations.lima-dev.activationPackage
       ./result/activate
 
-      # Now that home-manager is activated, reconfigure dnsmasq with whitelist-only DNS
-      sudo bash <<'DNSMASQ_SCRIPT'
-      printf '%s\n' \
-        '# Listen on localhost only' \
-        'listen-address=127.0.0.1' \
-        'bind-interfaces' \
-        '' \
-        '# Do not read /etc/resolv.conf or /etc/hosts' \
-        'no-resolv' \
-        'no-hosts' \
-        '' \
-        '# Default: return NXDOMAIN for everything (block all)' \
-        'address=/#/' \
-        '' \
-        '# Whitelist: GitHub domains' \
-        'server=/github.com/8.8.8.8' \
-        'server=/githubusercontent.com/8.8.8.8' \
-        'server=/github.io/8.8.8.8' \
-        'server=/githubassets.com/8.8.8.8' \
-        '' \
-        '# Whitelist: Nix/Nixpkgs infrastructure' \
-        'server=/nixos.org/8.8.8.8' \
-        'server=/cache.nixos.org/8.8.8.8' \
-        '' \
-        '# Cache settings' \
-        'cache-size=1000' \
-        > /etc/dnsmasq.conf
-      systemctl restart dnsmasq
-      echo "dnsmasq reconfigured with whitelist-only DNS"
-      DNSMASQ_SCRIPT
-
-  - mode: system
-    script: |
-      #!/bin/bash
-      set -eux -o pipefail
-
-      # Configure UFW firewall with deny-by-default outbound policy
-      # Reset to clean state
-      ufw --force reset
-
-      # Default policies
-      ufw default deny outgoing
-      ufw default deny incoming
-
-      # Allow all traffic on loopback interface (for localhost services like dnsmasq)
-      ufw allow out on lo
-      ufw allow in on lo
-
-      # Allow incoming SSH from Lima host (required for VM access)
-      ufw allow in from any to any port 22 proto tcp comment 'SSH from Lima host'
-
-      # Note: UFW automatically allows established/related connections
-      # via its underlying iptables rules, no need to explicitly configure
-
-      # Allow SSH to Lima host (needed for agent forwarding)
-      # In vzNAT mode, the Lima host is the default gateway
-      GATEWAY_IP=$(ip route show default | awk '/default/ {print $3}')
-      if [ -n "$GATEWAY_IP" ]; then
-        ufw allow out to $GATEWAY_IP proto tcp port 22 comment 'SSH to Lima host for agent forwarding'
-      fi
-
-      # Allow DNS queries to localhost (prep for dnsmasq)
-      ufw allow out to 127.0.0.1 proto udp port 53 comment 'DNS to localhost'
-
-      # Allow outbound DNS from VM to upstream resolvers (so dnsmasq can query)
-      ufw allow out proto udp to any port 53 comment 'DNS to upstream resolvers'
-
-      # Allow HTTP/HTTPS (required for git, nix, apt, etc. - DNS whitelist controls which domains)
-      ufw allow out proto tcp to any port 80 comment 'HTTP for package managers/etc'
-      ufw allow out proto tcp to any port 443 comment 'HTTPS for git/nix/etc'
-
-      # Enable firewall
-      ufw --force enable
-
-      echo "UFW Status:"
-      ufw status verbose
-
-      # Configure dnsmasq (already installed)
-      # Backup original dnsmasq config
-      cp /etc/dnsmasq.conf /etc/dnsmasq.conf.orig
-
-      # TEMPORARILY configure dnsmasq to allow all domains during initial provisioning
-      # This will be reconfigured to whitelist-only after home-manager activation
-      printf '%s\n' \
-        '# Listen on localhost only' \
-        'listen-address=127.0.0.1' \
-        'bind-interfaces' \
-        '' \
-        '# Forward all queries to upstream DNS (temporary - will be restricted later)' \
-        'server=8.8.8.8' \
-        '' \
-        '# Cache settings' \
-        'cache-size=1000' \
-        > /etc/dnsmasq.conf
-
-      # Restart dnsmasq
-      systemctl restart dnsmasq
-      systemctl enable dnsmasq
-
-      # Configure system to use local dnsmasq
-      # Disable systemd-resolved's stub resolver
-      systemctl disable systemd-resolved
-      systemctl stop systemd-resolved
-      rm -f /etc/resolv.conf
-
-      # Point to localhost for DNS
-      echo "nameserver 127.0.0.1" > /etc/resolv.conf
-      chattr +i /etc/resolv.conf  # Make immutable so nothing overwrites it
-
-      echo "dnsmasq configured with unrestricted DNS for initial provisioning..."
+      echo "Home-manager activated successfully"
 
 ssh:
   loadDotSSHPubKeys: true
