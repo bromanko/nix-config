@@ -16,7 +16,7 @@ rustPlatform.buildRustPackage rec {
     hash = "sha256-mzALi9iAQv08FHNQTzOx6JteMz9TmQrSbFhKCKtAJkE=";
   };
 
-  cargoHash = lib.fakeHash;
+  cargoHash = "sha256-41QUCNIsbg1mYzJgaMUPKY1jfn9m6a5XzGz9dqYS3eE=";
 
   buildInputs = lib.optionals stdenv.isDarwin [
     apple-sdk_11
