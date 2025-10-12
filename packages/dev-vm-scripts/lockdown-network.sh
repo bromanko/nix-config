@@ -84,6 +84,9 @@ systemctl restart dnsmasq
 # Disable systemd-resolved and point to localhost DNS
 systemctl disable systemd-resolved || true
 systemctl stop systemd-resolved || true
+
+# Remove immutable attribute if it exists, then recreate resolv.conf
+chattr -i /etc/resolv.conf 2>/dev/null || true
 rm -f /etc/resolv.conf
 echo "nameserver 127.0.0.1" > /etc/resolv.conf
 chattr +i /etc/resolv.conf  # Make immutable
