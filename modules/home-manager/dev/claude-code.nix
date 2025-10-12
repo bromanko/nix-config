@@ -25,6 +25,10 @@ in
           ".claude/CLAUDE.md".source = config.hm.lib.file.mkNixConfigSymlink "/configs/claude/CLAUDE.md";
         };
       };
+
+      programs.fish.shellAliases = {
+        claude-yolo = "claude --dangerously-skip-permissions";
+      };
     };
   };
 }
