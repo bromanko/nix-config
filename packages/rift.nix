@@ -1,6 +1,5 @@
 {
   lib,
-  stdenv,
   rustPlatform,
   fetchFromGitHub,
   darwin,
@@ -12,7 +11,7 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "acsandmann";
     repo = "rift";
-    rev = "main";
+    rev = "c0b2846b3342bcaa92a293453e35a092fe490aa4";
     hash = lib.fakeHash;
   };
 
