@@ -32,11 +32,22 @@ stdenv.mkDerivation {
 
     mkdir -p $out/bin
 
-    # Install allowlist-domain script
     install -Dm755 allowlist-domain.sh $out/bin/allowlist-domain
+    install -Dm755 lockdown-network.sh $out/bin/lockdown-network
 
-    # Wrap script with PATH to required tools
+    # Wrap scripts with PATH to required tools
     wrapProgram $out/bin/allowlist-domain \
+      --prefix PATH : ${
+        lib.makeBinPath [
+          coreutils
+          gnugrep
+          gnused
+          systemd
+          bind
+        ]
+      }
+
+    wrapProgram $out/bin/lockdown-network \
       --prefix PATH : ${
         lib.makeBinPath [
           coreutils
