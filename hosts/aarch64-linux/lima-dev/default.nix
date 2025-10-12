@@ -9,6 +9,10 @@
     ];
   };
 
+  programs.fish.shellAliases = {
+    rebuild = "nix build --refresh github:bromanko/nix-config#homeManagerConfigurations.lima-dev.activationPackage";
+  };
+
   modules = {
     nix = {
       system.enable = "determinate";
