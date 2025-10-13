@@ -45,6 +45,11 @@ in
           alt-shift-k = "move up";
           alt-shift-l = "move right";
 
+          alt-shift-left = "focus left";
+          alt-shift-down = "focus down";
+          alt-shift-up = "focus up";
+          alt-shift-right = "focus right";
+
           alt-minus = "resize smart -50";
           alt-equal = "resize smart +50";
 
@@ -75,8 +80,8 @@ in
           alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
         };
         gaps = {
-          inner.horizontal = 3;
-          inner.vertical = 3;
+          inner.horizontal = 13;
+          inner.vertical = 13;
           outer.left = 3;
           outer.bottom = 3;
           outer.top = 3;
@@ -84,6 +89,28 @@ in
         };
         after-startup-command = [
           "exec-and-forget ${pkgs.jankyborders}/bin/borders active_color=0xff89b4fa inactive_color=0xff45475a width=5.0 style=round hidpi=on"
+        ];
+        on-window-detected = [
+          {
+            "if".app-id = "app.zen-browser.zen";
+            run = "move-node-to-workspace 1";
+          }
+          {
+            "if".app-id = "com.google.Chrome";
+            run = "move-node-to-workspace 1";
+          }
+          {
+            "if".app-id = "dev.zed.Zed-Preview";
+            run = "move-node-to-workspace 2";
+          }
+          {
+            "if".app-id = "com.mitchellh.ghostty";
+            run = "move-node-to-workspace 3";
+          }
+          {
+            # Catch-all: move everything else to workspace 5
+            run = "move-node-to-workspace 5";
+          }
         ];
       };
     };
