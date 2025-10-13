@@ -83,7 +83,7 @@ in
           outer.right = 3;
         };
         after-startup-command = [
-          "exec-and-forget borders active_color=0xff89b4fa inactive_color=0xff45475a width=5.0 style=round hidpi=on"
+          "exec-and-forget ${pkgs.jankyborders}/bin/borders active_color=0xff89b4fa inactive_color=0xff45475a width=5.0 style=round hidpi=on"
         ];
       };
     };
