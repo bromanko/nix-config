@@ -39,6 +39,7 @@ with lib.my;
       dictionaries.enable = true;
       apps = {
         "1Password".enable = true;
+        aerospace.enable = true;
         raycast.enable = true;
         hammerspoon.enable = true;
         vimari.enable = true;
@@ -65,12 +66,12 @@ with lib.my;
       brewPrefix = "/Users/bromanko/homebrew/bin";
       casks = [
         "badgeify"
+        "bartender"
         "betterdisplay"
         "camo-studio"
         "figma"
         "homerow"
         "istat-menus"
-        "jordanbaird-ice"
         "lunar"
         "signal"
         "google-drive"
