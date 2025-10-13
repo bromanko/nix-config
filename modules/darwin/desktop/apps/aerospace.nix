@@ -25,10 +25,10 @@ in
         key-mapping = {
           key-notation-to-key-code = {
             # colemak is not supported yet in nix-darwin
-            h = "n";
-            j = "e";
-            k = "i";
-            l = "o";
+            h = "m";
+            j = "n";
+            k = "e";
+            l = "i";
           };
         };
         mode.main.binding = {
