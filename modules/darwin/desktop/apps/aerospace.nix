@@ -121,6 +121,9 @@ in
 
           alt-tab = "workspace-back-and-forth";
           alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
+
+          alt-ctrl-left = "workspace prev --wrap-around";
+          alt-ctrl-right = "workspace next --wrap-around";
         };
         gaps = {
           inner.horizontal = cfg.gaps.inner.horizontal;
