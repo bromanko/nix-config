@@ -67,10 +67,6 @@ with lib.my;
               "if".app-id = "com.apple.mail";
               run = "move-node-to-workspace 4";
             }
-            {
-              # Catch-all: move everything else to workspace 5
-              run = "move-node-to-workspace 5";
-            }
           ];
         };
         autoraise.enable = true;
