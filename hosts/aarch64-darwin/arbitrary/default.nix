@@ -67,6 +67,31 @@ with lib.my;
               "if".app-id = "com.apple.mail";
               run = "move-node-to-workspace 4";
             }
+            {
+              "if".app-id = "com.openai.chat";
+              run = "move-node-to-workspace 5";
+            }
+            {
+              "if".app-id = "com.anthropic.claudefordesktop";
+              run = "move-node-to-workspace 5";
+            }
+            {
+              "if".app-id = "com.raycast.macos";
+              "if".window-title-regex-substring = "AI Chat";
+              run = "move-node-to-workspace 5";
+            }
+            {
+              "if".app-id = "com.1password.1password";
+              run = "move-node-to-workspace 6";
+            }
+            {
+              "if".app-id = "com.apple.finder";
+              run = "move-node-to-workspace 6";
+            }
+            {
+              "if".app-id = "com.apple.Music";
+              run = "move-node-to-workspace 7";
+            }
           ];
         };
         autoraise.enable = true;
