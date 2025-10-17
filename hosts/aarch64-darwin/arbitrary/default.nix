@@ -76,8 +76,10 @@ with lib.my;
               run = "move-node-to-workspace 5";
             }
             {
-              "if".app-id = "com.raycast.macos";
-              "if".window-title-regex-substring = "AI Chat";
+              "if" = {
+                app-id = "com.raycast.macos";
+                window-title-regex-substring = "AI Chat";
+              };
               run = "move-node-to-workspace 5";
             }
             {
