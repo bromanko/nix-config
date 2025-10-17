@@ -7,11 +7,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1717530060,
-        "narHash": "sha256-mJa9gQ3D46T/vF0yaF2bBBFh1jzNlIjxetvupIPE8PQ=",
+        "lastModified": 1760321496,
+        "narHash": "sha256-em5Heor01988U9sZs6hmbCIM8wag8GPP5f0r30kTRfw=",
         "owner": "bromanko",
         "repo": "age-plugin-op",
-        "rev": "f4dc4bea66e54526a12a1bec5217131b11fe9ebc",
+        "rev": "3601d836bbaeb5eac9583175804da8b76396bd51",
         "type": "github"
       },
       "original": {
@@ -416,11 +416,11 @@
     },
     "nixpkgs_4": {
       "locked": {
-        "lastModified": 1757535280,
-        "narHash": "sha256-RjRuRhSMxBMUVNs5HGYSu0D0XUflcAiK8fDwJQf65xo=",
+        "lastModified": 1760320108,
+        "narHash": "sha256-31hUKge/6VMHdFWlo0ygiKTz8toQZCKFwzAcC1jwvfw=",
         "owner": "nixos",
         "repo": "nixpkgs",
-        "rev": "592791ed7d3f941644effc2cc920007b724e308f",
+        "rev": "2be31db77db3971555e5c91db20bb6b63162addd",
         "type": "github"
       },
       "original": {

@@ -44,7 +44,35 @@ with lib.my;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
-        aerospace.enable = true;
+        aerospace = {
+          enable = true;
+          windowRules = [
+            {
+              "if".app-id = "app.zen-browser.zen";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-id = "dev.zed.Zed-Preview";
+              run = "move-node-to-workspace 2";
+            }
+            {
+              "if".app-id = "com.mitchellh.ghostty";
+              run = "move-node-to-workspace 3";
+            }
+            {
+              "if".app-id = "com.apple.MobileSMS";
+              run = "move-node-to-workspace 4";
+            }
+            {
+              "if".app-id = "com.apple.mail";
+              run = "move-node-to-workspace 4";
+            }
+            {
+              # Catch-all: move everything else to workspace 5
+              run = "move-node-to-workspace 5";
+            }
+          ];
+        };
       };
     };
     dev = {

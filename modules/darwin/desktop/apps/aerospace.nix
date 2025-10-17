@@ -13,6 +13,49 @@ in
 {
   options.modules.desktop.apps.aerospace = {
     enable = mkBoolOpt false;
+
+    windowRules = mkOption {
+      type = types.listOf types.attrs;
+      default = [ ];
+      description = "Window detection rules for automatic workspace assignment";
+    };
+
+    gaps = {
+      inner = {
+        horizontal = mkOption {
+          type = types.int;
+          default = 13;
+          description = "Horizontal inner gap size";
+        };
+        vertical = mkOption {
+          type = types.int;
+          default = 13;
+          description = "Vertical inner gap size";
+        };
+      };
+      outer = {
+        left = mkOption {
+          type = types.int;
+          default = 3;
+          description = "Left outer gap size";
+        };
+        right = mkOption {
+          type = types.int;
+          default = 3;
+          description = "Right outer gap size";
+        };
+        top = mkOption {
+          type = types.int;
+          default = 3;
+          description = "Top outer gap size";
+        };
+        bottom = mkOption {
+          type = types.int;
+          default = 3;
+          description = "Bottom outer gap size";
+        };
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -45,6 +88,11 @@ in
           alt-shift-k = "move up";
           alt-shift-l = "move right";
 
+          alt-shift-left = "focus left";
+          alt-shift-down = "focus down";
+          alt-shift-up = "focus up";
+          alt-shift-right = "focus right";
+
           alt-minus = "resize smart -50";
           alt-equal = "resize smart +50";
 
@@ -75,16 +123,17 @@ in
           alt-shift-tab = "move-workspace-to-monitor --wrap-around next";
         };
         gaps = {
-          inner.horizontal = 3;
-          inner.vertical = 3;
-          outer.left = 3;
-          outer.bottom = 3;
-          outer.top = 3;
-          outer.right = 3;
+          inner.horizontal = cfg.gaps.inner.horizontal;
+          inner.vertical = cfg.gaps.inner.vertical;
+          outer.left = cfg.gaps.outer.left;
+          outer.bottom = cfg.gaps.outer.bottom;
+          outer.top = cfg.gaps.outer.top;
+          outer.right = cfg.gaps.outer.right;
         };
         after-startup-command = [
-          "exec-and-forget borders active_color=0xff89b4fa inactive_color=0xff45475a width=5.0 style=round hidpi=on"
+          "exec-and-forget ${pkgs.jankyborders}/bin/borders active_color=0xfff9e2af inactive_color=0x00000000 width=5.0 style=round hidpi=on"
         ];
+        on-window-detected = cfg.windowRules;
       };
     };
   };

@@ -47,6 +47,27 @@ with lib.my;
           enable = true;
           mode = "server";
         };
+        aerospace = {
+          enable = true;
+          windowRules = [
+            {
+              "if".app-id = "com.google.Chrome";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-id = "com.mitchellh.ghostty";
+              run = "move-node-to-workspace 3";
+            }
+            {
+              "if".app-id = "com.apple.mail";
+              run = "move-node-to-workspace 4";
+            }
+            {
+              # Catch-all: move everything else to workspace 5
+              run = "move-node-to-workspace 5";
+            }
+          ];
+        };
       };
     };
     dev = {
