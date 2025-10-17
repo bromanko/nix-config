@@ -18,7 +18,7 @@
       "model": "claude-sonnet-4"
     },
   },
-  "theme": "Alabaster",
+  "theme": "Catppuccin Mocha",
   "ui_font_size": 15,
   "relative_line_numbers": true,
   "buffer_font_size": 13,
