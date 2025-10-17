@@ -73,6 +73,7 @@ with lib.my;
             }
           ];
         };
+        autoraise.enable = true;
       };
     };
     dev = {
