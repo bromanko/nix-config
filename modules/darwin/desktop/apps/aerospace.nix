@@ -88,11 +88,6 @@ in
           alt-shift-k = "move up";
           alt-shift-l = "move right";
 
-          alt-shift-left = "focus left";
-          alt-shift-down = "focus down";
-          alt-shift-up = "focus up";
-          alt-shift-right = "focus right";
-
           alt-minus = "resize smart -50";
           alt-equal = "resize smart +50";
 
