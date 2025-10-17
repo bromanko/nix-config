@@ -44,6 +44,7 @@ with lib.my;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
+        multitouch.enable = true;
         aerospace = {
           enable = true;
           windowRules = [
