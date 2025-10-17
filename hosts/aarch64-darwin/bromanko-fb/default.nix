@@ -91,7 +91,6 @@ with lib.my;
     };
     dev = {
       nodejs.enable = true;
-      idea.enable = true;
     };
     term = {
       ghostty.enable = true;
@@ -108,13 +107,12 @@ with lib.my;
         "badgeify"
         "bartender"
         "betterdisplay"
-        "camo-studio"
         "figma"
         "homerow"
         "istat-menus"
         "lunar"
+        "macwhisper"
         "signal"
-        "google-drive"
         "obsidian"
         "onedrive"
         "steermouse"
