@@ -41,12 +41,7 @@ with lib.my;
         "1Password".enable = true;
         aerospace.enable = true;
         raycast.enable = true;
-        hammerspoon.enable = true;
-        vimari.enable = true;
-        synergy = {
-          enable = true;
-          mode = "server";
-        };
+        autoraise.enable = true;
         aerospace = {
           enable = true;
           windowRules = [
