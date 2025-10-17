@@ -55,7 +55,31 @@ with lib.my;
               run = "move-node-to-workspace 1";
             }
             {
+              "if".app-id = "us.zoom.xos";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-name-regex-substring = "Workchat";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-name-regex-substring = "Calendar";
+              run = "move-node-to-workspace 2";
+            }
+            {
+              "if".app-id = "md.obsidian";
+              run = "move-node-to-workspace 2";
+            }
+            {
+              "if".app-name-regex-substring = "Metamate";
+              run = "move-node-to-workspace 2";
+            }
+            {
               "if".app-id = "com.mitchellh.ghostty";
+              run = "move-node-to-workspace 3";
+            }
+            {
+              "if".app-id = "com.facebook.fbvscode";
               run = "move-node-to-workspace 3";
             }
             {
