@@ -39,7 +39,6 @@ with lib.my;
       dictionaries.enable = true;
       apps = {
         "1Password".enable = true;
-        aerospace.enable = true;
         raycast.enable = true;
         multitouch.enable = true;
         autoraise.enable = true;
