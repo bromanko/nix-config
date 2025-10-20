@@ -82,8 +82,8 @@ with lib.my;
               run = "move-node-to-workspace 4";
             }
             {
-              # Catch-all: move everything else to workspace 5
-              run = "move-node-to-workspace 5";
+              "if".app-id = "com.goodsnooze.MacWhisper";
+              run = "move-node-to-workspace 6";
             }
           ];
         };
