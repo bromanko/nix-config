@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 let
   brewPath = "/opt/homebrew/bin";
@@ -163,6 +168,7 @@ with lib.my;
         chatgpt
         devenv
         podman
+        inputs.beads.packages.${pkgs.system}.default
       ];
     };
   };

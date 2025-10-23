@@ -35,6 +35,10 @@
       url = "github:bromanko/homeage/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    beads = {
+      url = "github:steveyegge/beads";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -71,7 +75,8 @@
             self.overlay
             nur.overlays.default
             emacs-overlay.overlay
-          ] ++ (lib.attrValues self.overlays);
+          ]
+          ++ (lib.attrValues self.overlays);
         }
       );
 
