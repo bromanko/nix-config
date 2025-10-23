@@ -1,4 +1,9 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   home = {
@@ -6,6 +11,7 @@
     packages = with pkgs; [
       ncurses
       my.dev-vm-scripts
+      inputs.beads.packages.${pkgs.system}.default
     ];
   };
 
