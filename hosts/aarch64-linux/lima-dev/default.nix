@@ -47,7 +47,7 @@
       idea.enable = true;
       psql.enable = true;
       nodejs.enable = true;
-      codex.enable = true;
+      # codex.enable = true;  # Disabled - build OOMs on this VM
       claude-code.enable = true;
       lima.enable = true;
     };
