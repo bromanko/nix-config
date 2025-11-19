@@ -1,0 +1,12 @@
+{
+  "security": {
+    "auth": {
+      "selectedType": "oauth-personal"
+    }
+  },
+  "general": {
+    "vimMode": true,
+    "disableAutoUpdate": true,
+    "enablePromptCompletion": true
+  }
+}
