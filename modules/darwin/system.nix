@@ -1,11 +1,7 @@
 {
-  config,
-  lib,
-  pkgs,
   ...
 }:
 
-with lib;
 {
   system.keyboard.enableKeyMapping = true;
   system.keyboard.remapCapsLockToEscape = true;
@@ -55,8 +51,11 @@ with lib;
   # Dock - Minimize apps to their icon.
   system.defaults.dock.minimize-to-application = true;
 
-  # Don’t automatically rearrange Spaces based on most recent use.
+  # Don't automatically rearrange Spaces based on most recent use.
   system.defaults.dock.mru-spaces = false;
+
+  # Spaces - Span displays across all monitors.
+  system.defaults.spaces.spans-displays = true;
 
   # Move the dock to the left.
   system.defaults.dock.orientation = "left";

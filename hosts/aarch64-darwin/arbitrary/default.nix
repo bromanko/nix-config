@@ -1,4 +1,9 @@
-{ pkgs, lib, ... }:
+{
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 let
   brewPath = "/opt/homebrew/bin";
@@ -44,6 +49,60 @@ with lib.my;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
+        multitouch.enable = true;
+        aerospace = {
+          enable = true;
+          windowRules = [
+            {
+              "if".app-id = "app.zen-browser.zen";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-id = "dev.zed.Zed-Preview";
+              run = "move-node-to-workspace 2";
+            }
+            {
+              "if".app-id = "com.mitchellh.ghostty";
+              run = "move-node-to-workspace 3";
+            }
+            {
+              "if".app-id = "com.apple.MobileSMS";
+              run = "move-node-to-workspace 4";
+            }
+            {
+              "if".app-id = "com.apple.mail";
+              run = "move-node-to-workspace 4";
+            }
+            {
+              "if".app-id = "com.openai.chat";
+              run = "move-node-to-workspace 5";
+            }
+            {
+              "if".app-id = "com.anthropic.claudefordesktop";
+              run = "move-node-to-workspace 5";
+            }
+            {
+              "if" = {
+                app-id = "com.raycast.macos";
+                window-title-regex-substring = "AI Chat";
+              };
+              run = "move-node-to-workspace 5";
+            }
+            {
+              "if".app-id = "com.1password.1password";
+              run = "move-node-to-workspace 6";
+            }
+            {
+              "if".app-id = "com.apple.finder";
+              run = "move-node-to-workspace 6";
+            }
+            {
+              "if".app-id = "com.apple.Music";
+              run = "move-node-to-workspace 7";
+            }
+          ];
+        };
+        autoraise.enable = true;
       };
     };
     dev = {
@@ -109,6 +168,7 @@ with lib.my;
         chatgpt
         devenv
         podman
+        inputs.beads.packages.${pkgs.system}.default
       ];
     };
   };

@@ -49,7 +49,7 @@ in
 
           # Rust
           fill-labs.dependi
-          rust-lang.rust-analyzer
+          # rust-lang.rust-analyzer # TODO: Temporarily disabled due to keytar build failure
 
           # Elixir
           elixir-lsp.vscode-elixir-ls

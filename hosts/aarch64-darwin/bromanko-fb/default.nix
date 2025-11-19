@@ -40,17 +40,57 @@ with lib.my;
       apps = {
         "1Password".enable = true;
         raycast.enable = true;
-        hammerspoon.enable = true;
-        vimari.enable = true;
-        synergy = {
+        multitouch.enable = true;
+        autoraise.enable = true;
+        aerospace = {
           enable = true;
-          mode = "server";
+          windowRules = [
+            {
+              "if".app-id = "com.google.Chrome";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-id = "us.zoom.xos";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-name-regex-substring = "Workchat";
+              run = "move-node-to-workspace 1";
+            }
+            {
+              "if".app-name-regex-substring = "Calendar";
+              run = "move-node-to-workspace 2";
+            }
+            {
+              "if".app-id = "md.obsidian";
+              run = "move-node-to-workspace 2";
+            }
+            {
+              "if".app-name-regex-substring = "Metamate";
+              run = "move-node-to-workspace 2";
+            }
+            {
+              "if".app-id = "com.mitchellh.ghostty";
+              run = "move-node-to-workspace 3";
+            }
+            {
+              "if".app-id = "com.facebook.fbvscode";
+              run = "move-node-to-workspace 3";
+            }
+            {
+              "if".app-id = "com.apple.mail";
+              run = "move-node-to-workspace 4";
+            }
+            {
+              # Catch-all: move everything else to workspace 5
+              run = "move-node-to-workspace 5";
+            }
+          ];
         };
       };
     };
     dev = {
       nodejs.enable = true;
-      idea.enable = true;
     };
     term = {
       ghostty.enable = true;
@@ -65,15 +105,14 @@ with lib.my;
       brewPrefix = "/Users/bromanko/homebrew/bin";
       casks = [
         "badgeify"
+        "bartender"
         "betterdisplay"
-        "camo-studio"
         "figma"
         "homerow"
         "istat-menus"
-        "jordanbaird-ice"
         "lunar"
+        "macwhisper"
         "signal"
-        "google-drive"
         "obsidian"
         "onedrive"
         "steermouse"

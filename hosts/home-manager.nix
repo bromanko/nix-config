@@ -63,6 +63,9 @@ in
         "${config.home.homeDirectory}/Code/nix-config" + removePrefix (toString inputs.self) (toString path)
       );
 
+    # Enable Nix daemon integration for standalone home-manager on non-NixOS Linux
+    targets.genericLinux.enable = true;
+
     # Disable manual generation - causes Python multiprocessing issues in sandbox
     manual.manpages.enable = false;
   };

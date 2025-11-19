@@ -1,9 +1,22 @@
-{ lib, pkgs, ... }:
+{
+  lib,
+  pkgs,
+  inputs,
+  ...
+}:
 
 {
   home = {
     homeDirectory = lib.mkForce "/home/bromanko.linux";
-    packages = with pkgs; [ ncurses ];
+    packages = with pkgs; [
+      ncurses
+      my.dev-vm-scripts
+      inputs.beads.packages.${pkgs.system}.default
+    ];
+  };
+
+  programs.fish.shellAliases = {
+    rebuild = "nix build --refresh github:bromanko/nix-config#homeManagerConfigurations.lima-dev.activationPackage";
   };
 
   modules = {
@@ -34,7 +47,7 @@
       idea.enable = true;
       psql.enable = true;
       nodejs.enable = true;
-      codex.enable = true;
+      # codex.enable = true;  # Disabled - build OOMs on this VM
       claude-code.enable = true;
       lima.enable = true;
     };

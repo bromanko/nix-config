@@ -32,6 +32,9 @@ rustPlatform.buildRustPackage (finalAttrs: {
 
   buildInputs = [ openssl ];
 
+  # Disable cargo-auditable due to panic in rustc_wrapper.rs:109
+  auditable = false;
+
   # NOTE: part of the test suite requires access to networking, local shells,
   # apple system configuration, etc. since this is a very fast moving target
   # (for now), with releases happening every other day, constantly figuring out
