@@ -26,6 +26,10 @@ in
             config.hm.lib.file.mkNixConfigSymlink ../../../configs/gemini/settings.json;
         };
       };
+
+      programs.fish.shellAliases = {
+        gemini-yolo = "gemini --yolo";
+      };
     };
   };
 }
