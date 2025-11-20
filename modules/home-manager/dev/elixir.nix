@@ -18,7 +18,7 @@ in
   config = mkIf cfg.enable {
     hm = {
       home = {
-        packages = with pkgs; [ elixir_ls ];
+        packages = with pkgs; [ elixir-ls ];
         file.".iex.exs".source = ../../../configs/elixir/iex.exs;
       };
 

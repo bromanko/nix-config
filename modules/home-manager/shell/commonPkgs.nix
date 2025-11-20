@@ -25,7 +25,7 @@ in
           delta
           difftastic
           duf
-          du-dust
+          dust
           gnupg
           httpie
           jq
