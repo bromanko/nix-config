@@ -41,6 +41,7 @@
       direnv.enable = true;
       exa.enable = true;
       fd.enable = true;
+      gemini.enable = true;
     };
     dev = {
       elixir.enable = true;

@@ -40,6 +40,7 @@ with lib.my;
       exa.enable = true;
       fd.enable = true;
       llm.enable = true;
+      gemini.enable = true;
     };
     desktop = {
       fonts.enable = true;
