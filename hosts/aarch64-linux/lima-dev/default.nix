@@ -11,6 +11,7 @@
     packages = with pkgs; [
       ncurses
       my.dev-vm-scripts
+      devenv
       inputs.beads.packages.${pkgs.system}.default
     ];
   };
