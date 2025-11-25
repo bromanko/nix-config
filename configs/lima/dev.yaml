@@ -71,6 +71,10 @@ provision:
 
       echo "Home-manager activated successfully"
 
+portForwards:
+  - guestPortRange: [1024, 65535]
+    hostPortRange: [1024, 65535]
+
 ssh:
   loadDotSSHPubKeys: true
   forwardAgent: true
