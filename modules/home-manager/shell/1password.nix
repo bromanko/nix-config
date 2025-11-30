@@ -77,7 +77,7 @@ in
               signByDefault = true;
               key = cfg.gitSigningKey;
             };
-            extraConfig.gpg = {
+            settings.gpg = {
               format = "ssh";
               ssh.program = cfg.sshSigningProgramPath;
             };
