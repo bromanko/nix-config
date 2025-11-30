@@ -1,0 +1,50 @@
+name: FlakeHub Update & Build
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 5 * * *' # 5 AM Daily
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  update-flake-lock:
+    name: Update Flake Lock
+    runs-on: ubuntu-latest
+    if: github.event_name == 'schedule' || github.event_name == 'workflow_dispatch'
+    permissions:
+      contents: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update Flake Lock
+        uses: DeterminateSystems/update-flake-lock@v24
+        with:
+          pr-title: "chore: update flake.lock"
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+  build-darwin:
+    name: Build Darwin Hosts
+    runs-on: macos-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Install Nix
+        uses: DeterminateSystems/nix-installer-action@v16
+        
+      - name: Setup FlakeHub Cache
+        uses: DeterminateSystems/flakehub-cache-action@v1
+
+      - name: Build arbitrary
+        run: nix build .#darwinConfigurations.arbitrary.config.system.build.toplevel
+
+      - name: Build gray-area
+        run: nix build .#darwinConfigurations.gray-area.config.system.build.toplevel
+        
+      - name: Build bromanko-fb
+        run: nix build .#darwinConfigurations.bromanko-fb.config.system.build.toplevel
