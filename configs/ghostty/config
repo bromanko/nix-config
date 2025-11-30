@@ -26,6 +26,7 @@ quick-terminal-autohide = true
 
 # General
 keybind = ctrl+space>h>r>r=reload_config
+keybind = shift+enter=text:\x1b\r
 
 # Tabs
 keybind = ctrl+space>b>shift+n=new_tab
