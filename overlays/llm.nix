@@ -8,7 +8,7 @@ final: prev: {
           prev.my.llm-claude-3
         ])
       );
-      llm = prev.runCommandNoCCLocal "llm" { } ''
+      llm = prev.runCommandLocal "llm" { } ''
         mkdir -p $out/bin
         ln -s ${pyWithPackages}/bin/llm $out/bin/llm
       '';

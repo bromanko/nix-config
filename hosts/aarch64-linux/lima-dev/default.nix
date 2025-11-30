@@ -12,7 +12,7 @@
       ncurses
       my.dev-vm-scripts
       devenv
-      inputs.beads.packages.${pkgs.system}.default
+      inputs.beads.packages.${pkgs.stdenv.hostPlatform.system}.default
     ];
   };
 

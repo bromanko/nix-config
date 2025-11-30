@@ -15,7 +15,7 @@ in
     enable = mkBoolOpt false;
   };
 
-  config = mkIf (cfg.enable && pkgs.hostPlatform.isDarwin) {
+  config = mkIf (cfg.enable && pkgs.stdenv.hostPlatform.isDarwin) {
     modules.homebrew = {
       casks = [ "claude" ];
     };

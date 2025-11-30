@@ -66,7 +66,7 @@ in
         pkg = pkgs.my.age-with-plugins;
 
         mount =
-          if pkgs.hostPlatform.isDarwin then "$HOME/.config/age/secrets" else "/run/user/$UID/secrets";
+          if pkgs.stdenv.hostPlatform.isDarwin then "$HOME/.config/age/secrets" else "/run/user/$UID/secrets";
 
         identityPaths = [ "$HOME/.config/age/age-identity.txt" ];
       };

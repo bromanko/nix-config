@@ -17,7 +17,7 @@ in
     sshSocketPath = mkOption {
       type = types.str;
       default =
-        if pkgs.stdenv.isDarwin then
+        if pkgs.stdenv.hostPlatform.isDarwin then
           "~/Library/Group Containers/2BUA8C4S2C.com.1password/t/agent.sock"
         else
           "~/.1password/agent.sock";
@@ -27,7 +27,7 @@ in
     sshSigningProgramPath = mkOption {
       type = types.nullOr types.str;
       default =
-        if pkgs.stdenv.isDarwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else null;
+        if pkgs.stdenv.hostPlatform.isDarwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else null;
       description = "Path to op-ssh-sign for git commit signing. Set to null to disable signing.";
     };
 
@@ -48,7 +48,7 @@ in
       home.sessionVariables = mkMerge [
         { OP_BIOMETRIC_UNLOCK_ENABLED = "true"; }
         # Only set SSH_AUTH_SOCK on macOS. On Linux, use forwarded agent from host.
-        (mkIf pkgs.stdenv.isDarwin {
+        (mkIf pkgs.stdenv.hostPlatform.isDarwin {
           # Use 1Password SSH agent for all SSH operations (including agent forwarding)
           # Replace ~ with $HOME since environment variables don't expand tildes
           SSH_AUTH_SOCK =
@@ -58,7 +58,7 @@ in
         })
       ];
 
-      programs.ssh = mkIf (config.modules.shell.ssh.enable && pkgs.stdenv.isDarwin) {
+      programs.ssh = mkIf (config.modules.shell.ssh.enable && pkgs.stdenv.hostPlatform.isDarwin) {
         matchBlocks = {
           "1password" = {
             host = "*";

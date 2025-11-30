@@ -9,7 +9,7 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.homebrew;
-  enabled = cfg.enable && pkgs.hostPlatform.isDarwin;
+  enabled = cfg.enable && pkgs.stdenv.hostPlatform.isDarwin;
 in
 {
   options.modules.homebrew = with types; {

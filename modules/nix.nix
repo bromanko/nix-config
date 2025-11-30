@@ -53,7 +53,7 @@ in
           extra-substituters = https://devenv.cachix.org
           extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw=
         ''
-        + optionalString pkgs.stdenv.isDarwin ''
+        + optionalString pkgs.stdenv.hostPlatform.isDarwin ''
           extra-platforms = x86_64-darwin aarch64-darwin
         '';
       };
