@@ -41,6 +41,8 @@ jobs:
         
       - name: Setup FlakeHub Cache
         uses: DeterminateSystems/flakehub-cache-action@v1
+        with:
+          flakehub-flake-name: bromanko/nix-config
 
       - name: Build arbitrary
         run: nix build .#darwinConfigurations.arbitrary.config.system.build.toplevel
