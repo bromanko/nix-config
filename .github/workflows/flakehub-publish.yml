@@ -25,7 +25,7 @@ jobs:
         uses: DeterminateSystems/update-flake-lock@v24
         with:
           pr-title: "chore: update flake.lock"
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN_FOR_UPDATES }}
 
   build-darwin:
     name: Build Darwin Hosts
