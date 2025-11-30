@@ -112,13 +112,11 @@ with lib.my;
       psql.enable = true;
       docker.enable = true;
       nodejs.enable = true;
-      aider-chat.enable = true;
       codex.enable = true;
       claude-code.enable = true;
       lima.enable = true;
     };
     term = {
-      wezterm.enable = true;
       ghostty.enable = true;
     };
     editor = {
