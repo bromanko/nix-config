@@ -129,7 +129,7 @@ in
           outer.right = cfg.gaps.outer.right;
         };
         after-startup-command = [
-          "exec-and-forget ${pkgs.jankyborders}/bin/borders active_color=0xfff9e2af inactive_color=0x00000000 width=5.0 style=round hidpi=on"
+          "exec-and-forget ${pkgs.jankyborders}/bin/borders active_color=0xfffab387 inactive_color=0x00000000 width=7.0 style=round hidpi=on"
         ];
         on-window-detected = cfg.windowRules;
       };
