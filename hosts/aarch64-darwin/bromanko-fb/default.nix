@@ -111,6 +111,7 @@ with lib.my;
         "badgeify"
         "bartender"
         "betterdisplay"
+        "camo-studio"
         "figma"
         "homerow"
         "istat-menus"
