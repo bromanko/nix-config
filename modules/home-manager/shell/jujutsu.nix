@@ -57,7 +57,11 @@ in
           };
           git = {
             subprocess = true;
-            push-new-bookmarks = true;
+          };
+          remotes = {
+            origin = {
+              auto-track-bookmarks = "glob:*";
+            };
           };
           aliases = {
             n = [ "new" ];
