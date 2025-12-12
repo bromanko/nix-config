@@ -66,8 +66,5 @@ jobs:
       - name: Setup FlakeHub Cache
         uses: DeterminateSystems/flakehub-cache-action@v2.2.0
 
-      - name: Build lima-dev
-        run: nix build .#homeManagerConfigurations.lima-dev.activationPackage
-
       - name: Build fb-devserver
         run: nix build .#homeManagerConfigurations.fb-devserver.activationPackage
