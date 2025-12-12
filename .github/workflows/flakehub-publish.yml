@@ -50,3 +50,24 @@ jobs:
         
       - name: Build bromanko-fb
         run: nix build .#darwinConfigurations.bromanko-fb.config.system.build.toplevel
+
+  build-home-manager:
+    name: Build Home Manager Configurations
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+      contents: read
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Nix
+        uses: DeterminateSystems/determinate-nix-action@main
+
+      - name: Setup FlakeHub Cache
+        uses: DeterminateSystems/flakehub-cache-action@v2.2.0
+
+      - name: Build lima-dev
+        run: nix build .#homeManagerConfigurations.lima-dev.activationPackage
+
+      - name: Build fb-devserver
+        run: nix build .#homeManagerConfigurations.fb-devserver.activationPackage
