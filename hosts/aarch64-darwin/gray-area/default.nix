@@ -67,7 +67,6 @@ in
         "zen"
       ];
       masApps = {
-        Tailscale = 1470499037;
         Xcode = 497799835;
       };
     };
@@ -76,6 +75,7 @@ in
     home = {
       packages = with pkgs; [
         my.claude-code
+        tailscale
       ];
     };
   };
