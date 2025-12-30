@@ -39,6 +39,10 @@
       url = "github:steveyegge/beads";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    dealmail = {
+      url = "https://flakehub.com/f/bromanko/dealmail/*";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -52,6 +56,7 @@
       emacs-overlay,
       age-plugin-op,
       jujutsu,
+      dealmail,
       ...
     }:
     let
