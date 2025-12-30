@@ -1,0 +1,23 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(nix:*)",
+      "Bash(jj:*)",
+      "WebSearch"
+    ]
+  },
+  "enabledPlugins": {
+    "jj@bromanko-for-claude": true,
+    "word-explorer@bromanko-for-claude": true,
+    "beads@beads-marketplace": true,
+    "code-review@claude-code-plugins": true,
+    "hookify@claude-code-plugins": true,
+    "plugin-dev@claude-code-plugins": true
+  },
+  "outputStyle": "default",
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": false
+  },
+  "alwaysThinkingEnabled": true
+}

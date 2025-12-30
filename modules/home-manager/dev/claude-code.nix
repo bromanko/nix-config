@@ -23,6 +23,8 @@ in
         ];
         file = {
           ".claude/CLAUDE.md".source = config.hm.lib.file.mkNixConfigSymlink "/configs/claude/CLAUDE.md";
+          ".claude/settings.json".source =
+            config.hm.lib.file.mkNixConfigSymlink "/configs/claude/settings.json";
         };
       };
 
