@@ -12,6 +12,9 @@ in
       system.enable = "determinate";
       dev.enable = true;
     };
+    homeage = {
+      enable = true;
+    };
     shell = {
       commonPkgs.enable = true;
       ssh.enable = true;
@@ -37,6 +40,7 @@ in
       apps = {
         raycast.enable = true;
         "1Password".enable = true;
+        dealmail.enable = true;
       };
     };
     dev = {
