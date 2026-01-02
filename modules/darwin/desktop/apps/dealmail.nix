@@ -42,6 +42,9 @@ let
       exit 1
     fi
 
+    # Set Puppeteer to use system Chrome
+    export PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
+
     # Run dealmail process-deals
     ${inputs.dealmail.packages.${pkgs.system}.process-deals}/bin/process-deals
   '';
@@ -76,6 +79,9 @@ let
       rm -f "$LOCKFILE"
       exit 1
     fi
+
+    # Set Puppeteer to use system Chrome
+    export PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
     # Run emails-to-feed
     ${inputs.dealmail.packages.${pkgs.system}.emails-to-feed}/bin/emails-to-feed
