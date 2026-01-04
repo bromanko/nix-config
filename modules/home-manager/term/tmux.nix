@@ -82,8 +82,8 @@ in
         ];
 
         extraConfig = ''
-          # Use user's default shell
-          set-option -g default-shell $SHELL
+          # Use user's default shell via reattach-to-user-namespace for macOS clipboard access
+          set-option -g default-command "${pkgs.reattach-to-user-namespace}/bin/reattach-to-user-namespace -l $SHELL"
 
           # Show keybindings help (Prefix + ?)
           bind ? list-keys
