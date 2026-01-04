@@ -9,6 +9,27 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.term.tmux;
+
+  # Default smug project for development work
+  defaultSmugProject = {
+    session = "\${session}";
+    root = "\${root}";
+    windows = [
+      {
+        name = "shell";
+        commands = [ "tmux rename-window shell" ];
+      }
+      {
+        name = "jjui";
+        commands = [ "jjui" ];
+      }
+      {
+        name = "claude";
+        commands = [ "claude --resume" ];
+      }
+    ];
+  };
+
   whichKeyXdgEnable = pkgs.writeTextFile {
     name = "tmux-which-key-xdg-enable";
     destination = "/enable.tmux";
@@ -28,9 +49,22 @@ in
 
   config = mkIf cfg.enable {
     hm = {
+      # Add smug package
+      home.packages = [ pkgs.smug ];
+
+      programs.fish.shellAliases = {
+        # Smug aliases
+        smd = "smug start dev session=(basename (pwd)) root=(pwd)"; # Start dev session named after current directory
+        smstop = "smug stop dev session=(basename (pwd))"; # Stop dev session for current directory
+        sml = "smug list"; # List smug projects
+      };
+
       xdg.configFile = {
         "tmux-powerline/config.sh".source = ../../../configs/tmux-powerline/config.sh;
         "tmux-powerline/themes/custom.sh".source = ../../../configs/tmux-powerline/themes/custom.sh;
+
+        # Default smug project configuration
+        "smug/dev.yml".source = (pkgs.formats.yaml { }).generate "dev.yml" defaultSmugProject;
       };
 
       programs.tmux = {
