@@ -9,6 +9,17 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.term.tmux;
+  whichKeyXdgEnable = pkgs.writeTextFile {
+    name = "tmux-which-key-xdg-enable";
+    destination = "/enable.tmux";
+    executable = true;
+    text = ''
+      #!/usr/bin/env sh
+      set -e
+      tmux set -g @tmux-which-key-xdg-enable 1
+    '';
+  };
+  pythonWithYaml = pkgs.python3.withPackages (ps: [ ps.pyyaml ]);
 in
 {
   options.modules.term.tmux = with types; {
@@ -36,6 +47,38 @@ in
           sensible
           yank
           tmux-powerline
+          (mkTmuxPlugin {
+            pluginName = "tmux-which-key-xdg-enable";
+            version = "1";
+            rtpFilePath = "enable.tmux";
+            src = whichKeyXdgEnable;
+          })
+          (mkTmuxPlugin {
+            pluginName = "tmux-which-key";
+            version = "unstable-2024-01-06";
+            rtpFilePath = "plugin.sh.tmux";
+            src = pkgs.fetchFromGitHub {
+              owner = "alexwforsythe";
+              repo = "tmux-which-key";
+              rev = "1f419775caf136a60aac8e3a269b51ad10b51eb6";
+              sha256 = "sha256-X7FunHrAexDgAlZfN+JOUJvXFZeyVj9yu6WRnxMEA8E=";
+            };
+            postPatch = ''
+              substituteInPlace plugin.sh.tmux \
+                --replace-fail 'readlink' '${pkgs.coreutils}/bin/readlink' \
+                --replace-fail 'realpath' '${pkgs.coreutils}/bin/realpath' \
+                --replace-fail 'python3' '${lib.getExe pythonWithYaml}' \
+                --replace-fail 'cp "$root_dir/config.example.yaml" "$config_file"' 'cp "$root_dir/config.example.yaml" "$config_file" && chmod u+w "$config_file"' \
+                --replace-fail 'cp "$plugin_dir/init.example.tmux" "$init_file"' 'cp "$plugin_dir/init.example.tmux" "$init_file" && chmod u+w "$init_file"'
+            '';
+            preInstall = ''
+              rm -rf plugin/pyyaml
+              ln -s ${pkgs.python3.pkgs.pyyaml.src} plugin/pyyaml
+            '';
+            postInstall = ''
+              patchShebangs plugin.sh.tmux plugin/build.py
+            '';
+          })
         ];
 
         extraConfig = ''
