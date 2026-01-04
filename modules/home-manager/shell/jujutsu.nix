@@ -26,6 +26,9 @@ in
   };
 
   config = mkIf cfg.enable {
+    # Enable delta for beautiful diffs
+    modules.shell.delta.enable = true;
+
     hm = {
       programs.jujutsu = {
         enable = true;
@@ -38,14 +41,39 @@ in
             backend = "watchman";
           };
           ui = {
-            diff-formatter = [
-              "difft"
-              "--color=always"
+            # Use delta for beautiful side-by-side diffs with syntax highlighting
+            # Mimics vim-fugitive's :Gdiff with background highlights and preserved syntax
+            # Reference the delta tool defined in merge-tools
+            diff-formatter = "delta";
+            diff-editor = ":builtin";
+            # Use 'auto' pagination so delta can detect terminal width properly
+            # This allows delta to use full terminal width in side-by-side mode
+            paginate = "auto";
+            pager = "less -FRX";
+            default-command = "l";
+          };
+          # Custom delta feature for jj that emphasizes changes while preserving syntax
+          merge-tools.delta = {
+            program = "delta";
+            diff-args = [
+              "--true-color"
+              "always"
+              "--side-by-side"
+              "--line-numbers"
+              "--width=$width"
+              "--syntax-theme"
+              "Catppuccin Mocha"
+              "--features"
+              "catppuccin-custom"
               "$left"
               "$right"
             ];
-            paginate = "never";
-            default-command = "l";
+            # Delta exits with status 1 when there are differences (standard diff behavior)
+            # This tells jj that both 0 (no differences) and 1 (differences found) are expected
+            diff-expected-exit-codes = [
+              0
+              1
+            ];
           };
           templates = {
             log-node = ''
@@ -93,6 +121,7 @@ in
       programs.git = {
         ignores = [ ".jj" ];
       };
+
       home.packages = with pkgs; [
         jjui
         watchman

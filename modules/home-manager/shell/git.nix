@@ -26,6 +26,9 @@ let
 in
 {
   config = mkIf cfg.enable {
+    # Enable delta for beautiful diffs
+    modules.shell.delta.enable = true;
+
     hm = {
       programs.git = {
         enable = true;
@@ -166,16 +169,6 @@ in
           ".DS_Store"
           ".Trash"
         ];
-      };
-
-      programs.delta = {
-        enable = true;
-        enableGitIntegration = true;
-        options = {
-          features = "decorations";
-          side-by-side = true;
-          syntax-theme = "Monokai Extended";
-        };
       };
 
       programs.gh = {
