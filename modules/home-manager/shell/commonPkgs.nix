@@ -35,7 +35,6 @@ in
           shellcheck
           shfmt
           tldr
-          tmux
           tree
           yq
         ];
