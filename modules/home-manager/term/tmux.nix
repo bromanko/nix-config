@@ -35,22 +35,7 @@ in
         plugins = with pkgs.tmuxPlugins; [
           sensible
           yank
-          {
-            plugin = pkgs.tmuxPlugins.mkTmuxPlugin {
-              pluginName = "tmux2k";
-              version = "1.8";
-              rtpFilePath = "2k.tmux";
-              src = pkgs.fetchFromGitHub {
-                owner = "2KAbhishek";
-                repo = "tmux2k";
-                rev = "2f7a613793a982401d9233fa2755dc2f5a916219";
-                sha256 = "sha256-xg6ka8FJsii/LetYE3Cp+9kIiAg8AbK39Wpe7YEVEK8=";
-              };
-            };
-            extraConfig = ''
-              set -g @tmux2k-theme 'catppuccin'
-            '';
-          }
+          tmux-powerline
         ];
 
         extraConfig = ''
