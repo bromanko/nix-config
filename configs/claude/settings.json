@@ -14,7 +14,8 @@
     "hookify@claude-code-plugins": true,
     "plugin-dev@claude-code-plugins": true,
     "fp-ts@bromanko-for-claude": true,
-    "zinsser-writing@bromanko-for-claude": true
+    "zinsser-writing@bromanko-for-claude": true,
+    "tmux-titles@motlin-claude-code-plugins": true
   },
   "outputStyle": "default",
   "sandbox": {
