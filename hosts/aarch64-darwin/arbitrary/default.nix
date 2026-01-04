@@ -118,6 +118,7 @@ with lib.my;
     };
     term = {
       ghostty.enable = true;
+      tmux.enable = true;
     };
     editor = {
       default = "nvim";

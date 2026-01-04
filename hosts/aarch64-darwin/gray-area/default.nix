@@ -48,6 +48,7 @@ in
     };
     term = {
       ghostty.enable = true;
+      tmux.enable = true;
     };
     editor = {
       default = "nvim";
