@@ -127,7 +127,7 @@ if [ -z "$TMUX_POWERLINE_LEFT_STATUS_SEGMENTS" ]; then
 		#"ifstat_sys 30 255"
 		#"lan_ip $sky $base"
 		#"wan_ip $sky $base"
-		"vcs_branch $overlay2 $crust"
+		#"vcs_branch $overlay2 $crust"
 		#"air ${TMUX_POWERLINE_SEG_AIR_COLOR} $base"
 		#"vcs_compare 60 255"
 		#"vcs_staged 64 255"
