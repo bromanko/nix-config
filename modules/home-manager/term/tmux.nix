@@ -65,6 +65,9 @@ in
 
         # Default smug project configuration
         "smug/dev.yml".source = (pkgs.formats.yaml { }).generate "dev.yml" defaultSmugProject;
+
+        # tmux-which-key configuration
+        "tmux/plugins/tmux-which-key/config.yaml".source = ../../../configs/tmux-which-key/config.yaml;
       };
 
       programs.tmux = {
