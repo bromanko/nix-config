@@ -62,7 +62,7 @@ in
         };
 
         shellAliases = {
-          "reload!" = "source ~/.config/fish/config.fish";
+          "reload!" = "exec fish";
           "less" = "less -R";
           "dev" = "limactl shell --shell /home/bromanko.linux/.nix-profile/bin/fish lima-dev";
         };
