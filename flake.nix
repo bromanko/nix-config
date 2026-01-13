@@ -47,12 +47,9 @@
       nixpkgs,
       nixpkgs-stable,
       nur,
-      determinate,
       home-manager,
       emacs-overlay,
       age-plugin-op,
-      jujutsu,
-      dealmail,
       ...
     }:
     let
