@@ -1,7 +1,6 @@
 {
   lib,
   pkgs,
-  inputs,
   ...
 }:
 
@@ -12,7 +11,7 @@
       ncurses
       my.dev-vm-scripts
       devenv
-      inputs.beads.packages.${pkgs.stdenv.hostPlatform.system}.default
+      beads
     ];
   };
 

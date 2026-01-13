@@ -35,10 +35,6 @@
       url = "github:bromanko/homeage/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    beads = {
-      url = "github:steveyegge/beads";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     dealmail = {
       url = "https://flakehub.com/f/bromanko/dealmail/*";
       inputs.nixpkgs.follows = "nixpkgs";

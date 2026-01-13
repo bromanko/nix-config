@@ -169,7 +169,7 @@ with lib.my;
         chatgpt
         devenv
         podman
-        inputs.beads.packages.${pkgs.stdenv.hostPlatform.system}.default
+        beads
       ];
     };
   };
