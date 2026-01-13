@@ -36,7 +36,7 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
     beads = {
-      url = "github:steveyegge/beads";
+      url = "github:steveyegge/beads/a326df945d1675b65dce6fd538282e58a7e9a631";
       inputs.nixpkgs.follows = "nixpkgs";
     };
     dealmail = {
