@@ -39,6 +39,7 @@ with lib.my;
       dictionaries.enable = true;
       apps = {
         "1Password".enable = true;
+        activitywatch.enable = true;
         raycast.enable = true;
         multitouch.enable = true;
         autoraise.enable = true;
@@ -98,6 +99,7 @@ with lib.my;
     };
     term = {
       ghostty.enable = true;
+      tmux.enable = true;
     };
     editor = {
       neovim.enable = true;
