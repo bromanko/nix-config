@@ -163,12 +163,13 @@ with lib.my;
         slack
         tailscale
         my.tldx
+        my.sprite
         nur.repos.charmbracelet.crush
         iina
         chatgpt
         devenv
         podman
-        inputs.beads.packages.${pkgs.stdenv.hostPlatform.system}.default
+        beads
       ];
     };
   };

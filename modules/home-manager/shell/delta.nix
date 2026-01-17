@@ -29,12 +29,11 @@ in
           # - +/- indicators in the gutter
           features = "catppuccin-custom";
 
-          catppuccin-custom = {
-            # Core display settings
-            side-by-side = true;
-            line-numbers = true;
+          # Base catppuccin styles (shared between split and non-split views)
+          catppuccin-base = {
             syntax-theme = "Catppuccin Mocha";
             true-color = "always";
+            line-numbers = true;
 
             # Keep +/- markers like vim-gitgutter
             keep-plus-minus-markers = true;
@@ -70,6 +69,18 @@ in
             hunk-header-decoration-style = "#6c7086 box";
             hunk-header-file-style = "#89b4fa";
             hunk-header-line-number-style = "#a6e3a1";
+          };
+
+          # Side-by-side view (default for full terminal)
+          catppuccin-custom = {
+            features = "catppuccin-base";
+            side-by-side = true;
+          };
+
+          # Non-split view for constrained spaces like jjui preview
+          catppuccin-non-split = {
+            features = "catppuccin-base";
+            side-by-side = false;
           };
         };
       };

@@ -75,6 +75,21 @@ in
               1
             ];
           };
+          # Non-split delta for jjui preview (avoids width detection issues)
+          merge-tools.delta-non-split = {
+            program = "delta";
+            diff-args = [
+              "--width=$width"
+              "--features"
+              "catppuccin-non-split"
+              "$left"
+              "$right"
+            ];
+            diff-expected-exit-codes = [
+              0
+              1
+            ];
+          };
           templates = {
             log-node = ''
               if(self && !current_working_copy && !immutable && !conflict && in_branch(self),
@@ -212,6 +227,12 @@ in
 
       xdg.configFile."jjui/config.toml".text = ''
         theme = "base24-catppuccin-mocha"
+
+        # Use non-split delta in preview to avoid width detection issues
+        # Side-by-side still works in full terminal via jj diff
+        [preview]
+        revision_command = ["show", "--color", "always", "-r", "$change_id", "--config", "ui.diff-formatter=delta-non-split"]
+        file_command = ["diff", "--color", "always", "-r", "$change_id", "--config", "ui.diff-formatter=delta-non-split", "$file"]
       '';
     };
   };
