@@ -164,6 +164,7 @@ with lib.my;
         tailscale
         my.tldx
         my.sprite
+        my.ticket
         nur.repos.charmbracelet.crush
         iina
         chatgpt
