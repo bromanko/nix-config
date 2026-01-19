@@ -9,7 +9,7 @@
   "enabledPlugins": {
     "jj@bromanko-for-claude": true,
     "word-explorer@bromanko-for-claude": true,
-    "beads@beads-marketplace": true,
+    "beads@beads-marketplace": false,
     "code-review@claude-code-plugins": true,
     "hookify@claude-code-plugins": true,
     "plugin-dev@claude-code-plugins": true,
@@ -22,5 +22,5 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": false
   },
-  "alwaysThinkingEnabled": false
+  "alwaysThinkingEnabled": true
 }
