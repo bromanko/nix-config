@@ -100,7 +100,7 @@
       devShells = forAllSystems (system: {
         default = pkgs.${system}.mkShell {
           packages = with pkgs.${system}; [
-            nixfmt-rfc-style
+            nixfmt
           ];
         };
       });

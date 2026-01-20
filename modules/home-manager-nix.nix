@@ -36,7 +36,7 @@ in
     hm = {
       home = {
         packages = with pkgs; [
-          nixfmt-rfc-style
+          nixfmt
           nix-output-monitor
           nil
         ];
