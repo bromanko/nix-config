@@ -45,6 +45,7 @@ in
     };
     dev = {
       docker.enable = true;
+      claude-code.enable = true;
     };
     term = {
       ghostty.enable = true;
@@ -80,7 +81,6 @@ in
   hm = {
     home = {
       packages = with pkgs; [
-        my.claude-code
         tailscale
       ];
     };
