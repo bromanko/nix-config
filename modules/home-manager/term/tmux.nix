@@ -73,7 +73,7 @@ in
       programs.tmux = {
         enable = true;
         shell = "${pkgs.fish}/bin/fish";
-        terminal = "screen-256color";
+        terminal = "tmux-256color";
         historyLimit = 50000;
         keyMode = "vi";
         mouse = true;
@@ -119,6 +119,9 @@ in
         ];
 
         extraConfig = ''
+          # Allow cursor shape changes to pass through (fixes fish vi-mode cursor)
+          set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
+
           # Use user's default shell via reattach-to-user-namespace for macOS clipboard access
           set-option -g default-command "${pkgs.reattach-to-user-namespace}/bin/reattach-to-user-namespace -l $SHELL"
 
