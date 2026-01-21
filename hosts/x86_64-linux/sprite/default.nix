@@ -17,17 +17,8 @@
     ];
   };
 
-  programs.fish = {
-    shellAliases = {
-      rebuild = "nix build --refresh github:bromanko/nix-config#homeManagerConfigurations.sprite.activationPackage && ./result/activate";
-    };
-    interactiveShellInit = ''
-      # Set tmux pane option to indicate we're in a sprite
-      if test -d /.sprite; and set -q TMUX
-        set -l sprite_name (hostname -s)
-        tmux set-option -p @pane_sprite "$sprite_name" 2>/dev/null
-      end
-    '';
+  programs.fish.shellAliases = {
+    rebuild = "nix build --refresh github:bromanko/nix-config#homeManagerConfigurations.sprite.activationPackage && ./result/activate";
   };
 
   modules = {
