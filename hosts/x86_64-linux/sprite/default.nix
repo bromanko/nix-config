@@ -6,6 +6,8 @@
 
 {
   home = {
+    username = lib.mkForce "sprite";
+    homeDirectory = lib.mkForce "/home/sprite";
     packages = with pkgs; [
       ncurses
       curl
