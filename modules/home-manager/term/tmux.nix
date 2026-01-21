@@ -62,6 +62,14 @@ in
       xdg.configFile = {
         "tmux-powerline/config.sh".source = ../../../configs/tmux-powerline/config.sh;
         "tmux-powerline/themes/custom.sh".source = ../../../configs/tmux-powerline/themes/custom.sh;
+        "tmux-powerline/segments/hostname_not_sprite.sh" = {
+          source = ../../../configs/tmux-powerline/segments/hostname_not_sprite.sh;
+          executable = true;
+        };
+        "tmux-powerline/segments/sprite.sh" = {
+          source = ../../../configs/tmux-powerline/segments/sprite.sh;
+          executable = true;
+        };
 
         # Default smug project configuration
         "smug/dev.yml".source = (pkgs.formats.yaml { }).generate "dev.yml" defaultSmugProject;

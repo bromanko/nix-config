@@ -122,7 +122,8 @@ fi
 if [ -z "$TMUX_POWERLINE_LEFT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_LEFT_STATUS_SEGMENTS=(
 		"tmux_session_info $blue $base"
-		"hostname $lavender $base"
+		"hostname_not_sprite $lavender $base"
+		"sprite $green $base"
 		#"ifstat 30 255"
 		#"ifstat_sys 30 255"
 		#"lan_ip $sky $base"
