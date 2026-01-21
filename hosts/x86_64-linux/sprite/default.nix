@@ -38,9 +38,7 @@
       exa.enable = true;
       fd.enable = true;
     };
-    dev = {
-      claude-code.enable = true;
-    };
+    dev = { };
     editor = {
       default = "nvim";
       neovim.enable = true;
