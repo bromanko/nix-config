@@ -70,6 +70,10 @@ in
           source = ../../../configs/tmux-powerline/segments/sprite.sh;
           executable = true;
         };
+        "tmux-powerline/segments/lima.sh" = {
+          source = ../../../configs/tmux-powerline/segments/lima.sh;
+          executable = true;
+        };
 
         # Default smug project configuration
         "smug/dev.yml".source = (pkgs.formats.yaml { }).generate "dev.yml" defaultSmugProject;

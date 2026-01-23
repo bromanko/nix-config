@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Displays hostname only when NOT in a sprite
+# Displays hostname only when NOT in a sprite or Lima VM
 
 TMUX_POWERLINE_SEG_HOSTNAME_NOT_SPRITE_FORMAT="${TMUX_POWERLINE_SEG_HOSTNAME_NOT_SPRITE_FORMAT:-short}"
 
@@ -11,13 +11,14 @@ EORC
 	echo "$rccontents"
 }
 
-is_in_sprite() {
+# Check if a process matching the pattern is a descendant of the pane
+is_descendant_of_pane() {
+	local pattern="$1"
 	local pane_pid
 	pane_pid=$(tmux display-message -p '#{pane_pid}')
 
-	# Search all sprite processes and check if they're descendants of our pane
 	local found
-	found=$(ps -eo pid,command | grep -E 'sprite (exec|console|c|x)' | grep -v grep | awk '{print $1}' | while read pid; do
+	found=$(ps -eo pid,command | grep -E "$pattern" | grep -v grep | awk '{print $1}' | while read pid; do
 		local check_pid=$pid
 		while [[ "$check_pid" -gt 1 ]]; do
 			if [[ "$check_pid" == "$pane_pid" ]]; then
@@ -31,14 +32,22 @@ is_in_sprite() {
 	[[ "$found" == "found" ]]
 }
 
+is_in_sprite() {
+	is_descendant_of_pane 'sprite (exec|console|c|x)'
+}
+
+is_in_lima() {
+	is_descendant_of_pane 'limactl shell'
+}
+
 run_segment() {
-	# Only show hostname if NOT in a sprite
-	if ! is_in_sprite; then
+	# Only show hostname if NOT in a sprite or Lima VM
+	if ! is_in_sprite && ! is_in_lima; then
 		if [[ "${TMUX_POWERLINE_SEG_HOSTNAME_NOT_SPRITE_FORMAT}" == "short" ]]; then
 			hostname -s
 		else
 			hostname -f
 		fi
 	fi
-	# Return nothing if in a sprite (segment hidden)
+	# Return nothing if in a sprite or Lima VM (segment hidden)
 }
