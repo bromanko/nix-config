@@ -101,6 +101,10 @@ with lib.my;
               "if".app-id = "com.apple.Music";
               run = "move-node-to-workspace 7";
             }
+            {
+              "if".app-id = "com.goodsnooze.MacWhisper";
+              run = "move-node-to-workspace 7";
+            }
           ];
         };
         autoraise.enable = true;
@@ -134,13 +138,14 @@ with lib.my;
         "homebrew/services"
       ];
       casks = [
+        "bartender"
         "betterdisplay"
         "figma"
         "ghostty"
         "google-chrome"
         "istat-menus"
-        "jordanbaird-ice"
         "lunar"
+        "macwhisper"
         "signal"
         "utm"
         "crystalfetch"
