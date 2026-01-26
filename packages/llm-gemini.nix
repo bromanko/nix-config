@@ -42,6 +42,5 @@ python3.pkgs.buildPythonPackage rec {
     homepage = "https://github.com/simonw/llm-gemini";
     license = licenses.asl20;
     maintainers = [ ];
-    mainProgram = "llm-gemini";
   };
 }

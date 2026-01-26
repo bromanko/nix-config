@@ -38,10 +38,9 @@ python3.pkgs.buildPythonPackage rec {
   dontCheckRuntimeDeps = true;
 
   meta = with lib; {
-    description = "";
+    description = "LLM plugin to access Anthropic's Claude 3 family of models";
     homepage = "https://github.com/simonw/llm-claude-3";
     license = licenses.asl20;
     maintainers = [ ];
-    mainProgram = "llm-claude-3";
   };
 }

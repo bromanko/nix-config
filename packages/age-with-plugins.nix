@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ pkgs, lib, ... }:
 
 pkgs.writeShellApplication {
   name = "age";
@@ -9,4 +9,10 @@ pkgs.writeShellApplication {
   text = ''
     ${pkgs.age}/bin/age "$@"
   '';
+  meta = with lib; {
+    description = "age encryption tool with 1Password plugin support";
+    homepage = "https://github.com/FiloSottile/age";
+    license = licenses.bsd3;
+    platforms = platforms.all;
+  };
 }
