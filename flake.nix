@@ -95,7 +95,19 @@
         packages = self.packages;
       };
 
-      packages = forAllSystems (system: mapModules ./packages (p: pkgs.${system}.callPackage p { }));
+      packages = forAllSystems (
+        system:
+        let
+          allPkgs = mapModules ./packages (p: pkgs.${system}.callPackage p { });
+        in
+        lib.filterAttrs (
+          _: pkg:
+          let
+            platforms = pkg.meta.platforms or lib.platforms.all;
+          in
+          lib.elem system platforms
+        ) allPkgs
+      );
 
       devShells = forAllSystems (system: {
         default = pkgs.${system}.mkShell {
@@ -105,7 +117,7 @@
         };
       });
 
-      formatter = forAllSystems (system: pkgs.${system}.nixfmt);
+      formatter = forAllSystems (system: pkgs.${system}.nixfmt-tree);
 
       checks = forAllSystems (
         system:
@@ -113,14 +125,20 @@
           pkgsForSystem = pkgs.${system};
         in
         {
-          formatting = pkgsForSystem.runCommand "check-formatting" {
-            nativeBuildInputs = [ pkgsForSystem.nixfmt ];
-            src = self;
-          } ''
-            cd $src
-            nixfmt --check .
-            touch $out
-          '';
+          formatting =
+            pkgsForSystem.runCommand "check-formatting"
+              {
+                nativeBuildInputs = [
+                  pkgsForSystem.nixfmt
+                  pkgsForSystem.findutils
+                ];
+                src = self;
+              }
+              ''
+                cd $src
+                find . -name '*.nix' -type f -exec nixfmt --check {} +
+                touch $out
+              '';
         }
         # Darwin configs (aarch64-darwin only)
         // lib.optionalAttrs (system == "aarch64-darwin") (
@@ -128,21 +146,9 @@
             name: config: lib.nameValuePair "darwin-${name}" config.config.system.build.toplevel
           ) self.darwinConfigurations
         )
-        # NixOS configs (x86_64-linux only, based on current hosts)
-        // lib.optionalAttrs (system == "x86_64-linux") (
-          lib.mapAttrs' (
-            name: config: lib.nameValuePair "nixos-${name}" config.config.system.build.toplevel
-          ) self.nixosConfigurations
-        )
         # Home Manager configs - filter by system
-        // lib.mapAttrs' (
-          name: config: lib.nameValuePair "hm-${name}" config.activationPackage
-        ) (lib.filterAttrs (_: config: config.pkgs.system == system) self.homeManagerConfigurations)
-        # ISO configs (x86_64-linux only)
-        // lib.optionalAttrs (system == "x86_64-linux") (
-          lib.mapAttrs' (
-            name: config: lib.nameValuePair "iso-${name}" config.config.system.build.isoImage
-          ) self.isoConfigurations
+        // lib.mapAttrs' (name: config: lib.nameValuePair "hm-${name}" config.activationPackage) (
+          lib.filterAttrs (_: config: config.pkgs.system == system) self.homeManagerConfigurations
         )
       );
 
@@ -157,12 +163,8 @@
 
       darwinConfigurations = (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
-      nixosConfigurations = lib.my.mapNixosHosts ./hosts/nixos;
-
       homeManagerConfigurations =
         (lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux)
         // (lib.my.mapHomeManagerHosts "aarch64-linux" ./hosts/aarch64-linux);
-
-      isoConfigurations = lib.my.mapNixosIsos ./hosts/iso;
     };
 }

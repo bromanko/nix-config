@@ -155,7 +155,7 @@ in
         "HOST_GID" = "1000";
         "HOST_UID" = "1000";
         "REDIS_HOST" = "archivist-redis";
-        "TA_HOST" = "macmini tubearchivist";
+        "TA_HOST" = "localhost tubearchivist";
         "TA_PASSWORD" = "verysecret";
         "TA_USERNAME" = "tubearchivist";
         "TZ" = "America/Los_Angeles";
