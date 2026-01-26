@@ -1,0 +1,26 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Edit|Write",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "for f in $CLAUDE_FILE_PATHS; do [[ \"$f\" == *.nix ]] && nix fmt -- \"$f\" 2>/dev/null; done; true"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "matcher": "",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "Before finishing, run `nix flake check` to validate formatting and builds. Fix any errors that are related to your changes."
+          }
+        ]
+      }
+    ]
+  }
+}
