@@ -139,14 +139,16 @@
         )
         # Home Manager configs - filter by system
         // lib.mapAttrs' (name: config: lib.nameValuePair "hm-${name}" config.activationPackage) (
-          lib.filterAttrs (_: config: config.pkgs.system == system) self.homeManagerConfigurations
+          lib.filterAttrs (
+            _: config: config.pkgs.stdenv.hostPlatform.system == system
+          ) self.homeManagerConfigurations
         )
       );
 
       overlays = mapModules ./overlays import // {
         default = final: prev: {
-          my = self.packages.${prev.system} // {
-            age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
+          my = self.packages.${prev.stdenv.hostPlatform.system} // {
+            age-plugin-op = age-plugin-op.defaultPackage.${prev.stdenv.hostPlatform.system};
           };
         };
       };

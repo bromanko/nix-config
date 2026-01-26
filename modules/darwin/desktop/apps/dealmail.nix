@@ -46,7 +46,7 @@ let
     export PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
     # Run dealmail process-deals
-    ${inputs.dealmail.packages.${pkgs.system}.process-deals}/bin/process-deals
+    ${inputs.dealmail.packages.${pkgs.stdenv.hostPlatform.system}.process-deals}/bin/process-deals
   '';
 
   # Script that sources secrets and runs emails-to-feed
@@ -84,7 +84,7 @@ let
     export PUPPETEER_EXECUTABLE_PATH="/Applications/Google Chrome.app/Contents/MacOS/Google Chrome"
 
     # Run emails-to-feed
-    ${inputs.dealmail.packages.${pkgs.system}.emails-to-feed}/bin/emails-to-feed
+    ${inputs.dealmail.packages.${pkgs.stdenv.hostPlatform.system}.emails-to-feed}/bin/emails-to-feed
   '';
 in
 {
@@ -113,7 +113,7 @@ in
   config = mkIf cfg.enable {
     hm = {
       home.packages = with pkgs; [
-        inputs.dealmail.packages.${pkgs.system}.default
+        inputs.dealmail.packages.${pkgs.stdenv.hostPlatform.system}.default
       ];
 
       # Configure homeage secret for dealmail
