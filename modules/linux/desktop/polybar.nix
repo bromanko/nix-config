@@ -1,10 +1,20 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.polybar;
-in {
-  options.modules.desktop.polybar = { enable = mkBoolOpt false; };
+let
+  cfg = config.modules.desktop.polybar;
+in
+{
+  options.modules.desktop.polybar = {
+    enable = mkBoolOpt false;
+  };
 
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}" = {

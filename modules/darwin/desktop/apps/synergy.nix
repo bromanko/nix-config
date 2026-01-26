@@ -1,13 +1,23 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.apps.synergy;
-in {
+let
+  cfg = config.modules.desktop.apps.synergy;
+in
+{
   options.modules.desktop.apps.synergy = with types; {
     enable = mkBoolOpt false;
     mode = mkOption {
-      type = types.enum [ "client" "server" ];
+      type = types.enum [
+        "client"
+        "server"
+      ];
       default = "client";
       description = "Whether to run as a client or server.";
     };

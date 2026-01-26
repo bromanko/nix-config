@@ -27,7 +27,10 @@ in
     sshSigningProgramPath = mkOption {
       type = types.nullOr types.str;
       default =
-        if pkgs.stdenv.hostPlatform.isDarwin then "/Applications/1Password.app/Contents/MacOS/op-ssh-sign" else null;
+        if pkgs.stdenv.hostPlatform.isDarwin then
+          "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+        else
+          null;
       description = "Path to op-ssh-sign for git commit signing. Set to null to disable signing.";
     };
 
@@ -52,9 +55,10 @@ in
           # Use 1Password SSH agent for all SSH operations (including agent forwarding)
           # Replace ~ with $HOME since environment variables don't expand tildes
           SSH_AUTH_SOCK =
-            if lib.hasPrefix "~/" cfg.sshSocketPath
-            then "\${HOME}" + lib.removePrefix "~" cfg.sshSocketPath
-            else cfg.sshSocketPath;
+            if lib.hasPrefix "~/" cfg.sshSocketPath then
+              "\${HOME}" + lib.removePrefix "~" cfg.sshSocketPath
+            else
+              cfg.sshSocketPath;
         })
       ];
 

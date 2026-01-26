@@ -3,9 +3,13 @@
 with lib;
 with lib.my;
 
-let cfg = config.modules.term.wezterm;
-in {
-  options.modules.term.wezterm = with types; { enable = mkBoolOpt false; };
+let
+  cfg = config.modules.term.wezterm;
+in
+{
+  options.modules.term.wezterm = with types; {
+    enable = mkBoolOpt false;
+  };
 
   config = mkIf cfg.enable {
     hm = {

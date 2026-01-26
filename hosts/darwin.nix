@@ -8,18 +8,17 @@
 with lib;
 with lib.my;
 {
-  imports =
-    [
-      inputs.home-manager.darwinModules.home-manager
-      ../modules/users.nix
-      ../modules/fonts.nix
-      ../modules/home-manager.nix
-      ../modules/homeage.nix
-      ../modules/nix.nix
-    ]
-    # Must toString the path so that nix doesn't attempt to import it to the store
-    ++ (mapModulesRec' (toString ../modules/home-manager) import)
-    ++ (mapModulesRec' (toString ../modules/darwin) import);
+  imports = [
+    inputs.home-manager.darwinModules.home-manager
+    ../modules/users.nix
+    ../modules/fonts.nix
+    ../modules/home-manager.nix
+    ../modules/homeage.nix
+    ../modules/nix.nix
+  ]
+  # Must toString the path so that nix doesn't attempt to import it to the store
+  ++ (mapModulesRec' (toString ../modules/home-manager) import)
+  ++ (mapModulesRec' (toString ../modules/darwin) import);
 
   config = {
     users.users.${config.user.name} = mkAliasDefinitions config.user;

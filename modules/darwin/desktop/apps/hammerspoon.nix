@@ -1,13 +1,24 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.apps.hammerspoon;
-in {
-  options.modules.desktop.apps.hammerspoon = { enable = mkBoolOpt false; };
+let
+  cfg = config.modules.desktop.apps.hammerspoon;
+in
+{
+  options.modules.desktop.apps.hammerspoon = {
+    enable = mkBoolOpt false;
+  };
 
   config = mkIf cfg.enable {
-    modules.homebrew = { casks = [ "hammerspoon" ]; };
+    modules.homebrew = {
+      casks = [ "hammerspoon" ];
+    };
     hm = {
       home = {
         packages = with pkgs; [

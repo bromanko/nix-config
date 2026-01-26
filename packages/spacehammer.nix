@@ -1,9 +1,15 @@
-{ lib, stdenv, fetchFromGitHub, ... }:
+{
+  lib,
+  stdenv,
+  fetchFromGitHub,
+  ...
+}:
 
 let
   pname = "spacehammer";
   version = "1a0526c";
-in stdenv.mkDerivation {
+in
+stdenv.mkDerivation {
   inherit pname version;
 
   src = fetchFromGitHub {

@@ -1,10 +1,20 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.picom;
-in {
-  options.modules.desktop.picom = { enable = mkBoolOpt false; };
+let
+  cfg = config.modules.desktop.picom;
+in
+{
+  options.modules.desktop.picom = {
+    enable = mkBoolOpt false;
+  };
 
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}" = {

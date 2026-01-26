@@ -1,9 +1,16 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.desktop.dictionaries;
-in {
+let
+  cfg = config.modules.desktop.dictionaries;
+in
+{
   options.modules.desktop.dictionaries = with types; {
     enable = mkBoolOpt false;
 
@@ -16,20 +23,19 @@ in {
   };
 
   config = mkIf cfg.enable {
-    home-manager.users."${config.user.name}".home.activation.installDictionaries =
-      ''
-        # Set up dictionaries.
-        echo "configuring dictionaries..." >&2
-        mkdir -p $HOME/Library/Dictionaries
+    home-manager.users."${config.user.name}".home.activation.installDictionaries = ''
+      # Set up dictionaries.
+      echo "configuring dictionaries..." >&2
+      mkdir -p $HOME/Library/Dictionaries
 
-        declare -a dictionaries=( ${toString (lib.toList cfg.dictionaries)} )
-        for path in $dictionaries; do
-          find -L $path -type d -name "*.dictionary" -print0 | while IFS= read -rd "" f; do
-            # Must copy the dictionary since symlinks don't work with Dictionary.app
-            cp -rf "$f" $HOME/Library/Dictionaries
-          done
+      declare -a dictionaries=( ${toString (lib.toList cfg.dictionaries)} )
+      for path in $dictionaries; do
+        find -L $path -type d -name "*.dictionary" -print0 | while IFS= read -rd "" f; do
+          # Must copy the dictionary since symlinks don't work with Dictionary.app
+          cp -rf "$f" $HOME/Library/Dictionaries
         done
-        chmod -R 755 $HOME/Library/Dictionaries/
-      '';
+      done
+      chmod -R 755 $HOME/Library/Dictionaries/
+    '';
   };
 }

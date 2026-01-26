@@ -1,16 +1,22 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 with lib.my;
-let cfg = config.modules.editor.emacs;
+let
+  cfg = config.modules.editor.emacs;
 
-in {
+in
+{
   config = mkIf cfg.enable {
     home-manager.users."${config.user.name}" = {
       home.packages = with pkgs; [
         binutils # native-comp needs "as", provided here
-        ((emacsPackagesFor emacs-pgtk).emacsWithPackages
-          (epkgs: [ epkgs.vterm ]))
+        ((emacsPackagesFor emacs-pgtk).emacsWithPackages (epkgs: [ epkgs.vterm ]))
       ];
     };
   };

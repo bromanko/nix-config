@@ -1,22 +1,43 @@
-{ lib, stdenvNoCC, curl, jq, unzip, runCommand }:
+{
+  lib,
+  stdenvNoCC,
+  curl,
+  jq,
+  unzip,
+  runCommand,
+}:
 
 let
-  fetchFromAppCenter = { owner, app, group, version }:
-    runCommand "fetchFromAppCenter" { buildInputs = [ curl jq ]; } ''
-      RELEASE_ID=$(
-        curl -k "https://install.appcenter.ms/api/v0.1/apps/${owner}/${app}/distribution_groups/${group}/public_releases" \
-          -H "user-agent: Chrome/118.0.0.0" \
-          | jq -r ".[] | select(.short_version == \"0.21\") | .id"
-      )
-      DOWNLOAD_URL=$(
-        curl -k "https://install.appcenter.ms/api/v0.1/apps/${owner}/${app}/distribution_groups/${group}/releases/$RELEASE_ID" \
-          -H "user-agent: Chrome/118.0.0.0" \
-          | jq -r ".download_url"
-      )
-      curl -kL "$DOWNLOAD_URL" -o "$out"
-    '';
+  fetchFromAppCenter =
+    {
+      owner,
+      app,
+      group,
+      version,
+    }:
+    runCommand "fetchFromAppCenter"
+      {
+        buildInputs = [
+          curl
+          jq
+        ];
+      }
+      ''
+        RELEASE_ID=$(
+          curl -k "https://install.appcenter.ms/api/v0.1/apps/${owner}/${app}/distribution_groups/${group}/public_releases" \
+            -H "user-agent: Chrome/118.0.0.0" \
+            | jq -r ".[] | select(.short_version == \"0.21\") | .id"
+        )
+        DOWNLOAD_URL=$(
+          curl -k "https://install.appcenter.ms/api/v0.1/apps/${owner}/${app}/distribution_groups/${group}/releases/$RELEASE_ID" \
+            -H "user-agent: Chrome/118.0.0.0" \
+            | jq -r ".download_url"
+        )
+        curl -kL "$DOWNLOAD_URL" -o "$out"
+      '';
 
-in stdenvNoCC.mkDerivation rec {
+in
+stdenvNoCC.mkDerivation rec {
   pname = "homerow";
   version = "0.21";
 

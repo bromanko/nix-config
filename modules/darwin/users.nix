@@ -1,5 +1,13 @@
-{ config, options, lib, pkgs, ... }:
+{
+  config,
+  options,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
-  users.users.${config.user.name} = { home = "/Users/${config.user.name}"; };
+  users.users.${config.user.name} = {
+    home = "/Users/${config.user.name}";
+  };
 }

@@ -9,17 +9,16 @@
 with lib;
 with lib.my;
 {
-  imports =
-    [
-      inputs.home-manager.nixosModules.home-manager
-      ../modules/users.nix
-      ../modules/fonts.nix
-      ../modules/home-manager.nix
-      ../modules/nix.nix
-    ]
-    # Must toString the path so that nix doesn't attempt to import it to the store
-    ++ (mapModulesRec' (toString ../modules/home-manager) import)
-    ++ (mapModulesRec' (toString ../modules/linux) import);
+  imports = [
+    inputs.home-manager.nixosModules.home-manager
+    ../modules/users.nix
+    ../modules/fonts.nix
+    ../modules/home-manager.nix
+    ../modules/nix.nix
+  ]
+  # Must toString the path so that nix doesn't attempt to import it to the store
+  ++ (mapModulesRec' (toString ../modules/home-manager) import)
+  ++ (mapModulesRec' (toString ../modules/linux) import);
 
   modules.nix = {
     enable = true;

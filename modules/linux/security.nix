@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # tmpfs = /tmp is mounted in ram. Doing so makes temp file management speedy
