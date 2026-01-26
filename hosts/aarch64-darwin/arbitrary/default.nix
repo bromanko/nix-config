@@ -119,6 +119,7 @@ with lib.my;
       codex.enable = true;
       claude-code.enable = true;
       lima.enable = true;
+      toad.enable = true;
     };
     term = {
       ghostty.enable = true;
