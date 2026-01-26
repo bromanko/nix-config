@@ -68,7 +68,6 @@
           config.allowUnfree = true;
           config.input-fonts.acceptLicense = true;
           overlays = [
-            self.overlay
             nur.overlays.default
             emacs-overlay.overlay
           ]
@@ -87,12 +86,6 @@
       );
     in
     {
-      # For debugging
-      passthru = {
-        inherit pkgs lib;
-        packages = self.packages;
-      };
-
       packages = forAllSystems (
         system:
         let
@@ -150,13 +143,13 @@
         )
       );
 
-      overlay = final: prev: {
-        my = self.packages.${prev.system} // {
-          age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
+      overlays = mapModules ./overlays import // {
+        default = final: prev: {
+          my = self.packages.${prev.system} // {
+            age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
+          };
         };
       };
-
-      overlays = mapModules ./overlays import;
 
       darwinConfigurations = (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
