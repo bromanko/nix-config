@@ -4,7 +4,6 @@
   inputs = {
     # Package sets
     nixpkgs.url = "github:nixos/nixpkgs/master";
-    nixpkgs-stable.url = "github:nixos/nixpkgs/nixos-21.11";
     nur = {
       url = "github:nix-community/NUR";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,7 +44,6 @@
     inputs@{
       self,
       nixpkgs,
-      nixpkgs-stable,
       nur,
       home-manager,
       emacs-overlay,
@@ -153,7 +151,6 @@
       );
 
       overlay = final: prev: {
-        stable = nixpkgs-stable.legacyPackages.${prev.system};
         my = self.packages.${prev.system} // {
           age-plugin-op = age-plugin-op.defaultPackage.${prev.system};
         };
