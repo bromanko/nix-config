@@ -105,6 +105,47 @@
         };
       });
 
+      formatter = forAllSystems (system: pkgs.${system}.nixfmt);
+
+      checks = forAllSystems (
+        system:
+        let
+          pkgsForSystem = pkgs.${system};
+        in
+        {
+          formatting = pkgsForSystem.runCommand "check-formatting" {
+            nativeBuildInputs = [ pkgsForSystem.nixfmt ];
+            src = self;
+          } ''
+            cd $src
+            nixfmt --check .
+            touch $out
+          '';
+        }
+        # Darwin configs (aarch64-darwin only)
+        // lib.optionalAttrs (system == "aarch64-darwin") (
+          lib.mapAttrs' (
+            name: config: lib.nameValuePair "darwin-${name}" config.config.system.build.toplevel
+          ) self.darwinConfigurations
+        )
+        # NixOS configs (x86_64-linux only, based on current hosts)
+        // lib.optionalAttrs (system == "x86_64-linux") (
+          lib.mapAttrs' (
+            name: config: lib.nameValuePair "nixos-${name}" config.config.system.build.toplevel
+          ) self.nixosConfigurations
+        )
+        # Home Manager configs - filter by system
+        // lib.mapAttrs' (
+          name: config: lib.nameValuePair "hm-${name}" config.activationPackage
+        ) (lib.filterAttrs (_: config: config.pkgs.system == system) self.homeManagerConfigurations)
+        # ISO configs (x86_64-linux only)
+        // lib.optionalAttrs (system == "x86_64-linux") (
+          lib.mapAttrs' (
+            name: config: lib.nameValuePair "iso-${name}" config.config.system.build.isoImage
+          ) self.isoConfigurations
+        )
+      );
+
       overlay = final: prev: {
         stable = nixpkgs-stable.legacyPackages.${prev.system};
         my = self.packages.${prev.system} // {
