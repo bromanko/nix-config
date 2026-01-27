@@ -22,9 +22,19 @@ sketchybar --bar color="$BAR_COLOR"
 ITEMS=(
   apple
   space.1 space.2 space.3 space.4 space.5 space.6 space.7 space.8 space.9 space.10
-  control_center tailscale cpu memory weather battery wifi clock
+  clock weather memory cpu tailscale
+)
+
+# Alias items need alias.color instead of icon.color
+ALIAS_ITEMS=(
+  "Control Center,Battery"
+  "Control Center,WiFi"
 )
 
 for item in "${ITEMS[@]}"; do
   sketchybar --set "$item" icon.color="$ICON_COLOR" label.color="$LABEL_COLOR" 2>/dev/null
+done
+
+for item in "${ALIAS_ITEMS[@]}"; do
+  sketchybar --set "$item" alias.color="$ICON_COLOR" 2>/dev/null
 done

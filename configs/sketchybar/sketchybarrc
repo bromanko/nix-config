@@ -32,7 +32,7 @@ sketchybar --add item apple left \
   --set apple \
     icon=􀣺 \
     icon.font="SF Pro:Regular:16.0" \
-    icon.padding_left=8 \
+    icon.padding_left=9 \
     icon.padding_right=8 \
     icon.y_offset=0 \
     padding_right=8 \
@@ -80,65 +80,141 @@ sketchybar --add item aerospace_handler left \
     script="$PLUGIN_DIR/aerospace.sh" \
   --subscribe aerospace_handler aerospace_workspace_change
 
-# Right items
-sketchybar --add item control_center right \
-  --set control_center \
-    icon=􀜊 \
-    icon.font="SF Pro:Regular:16.0" \
-    label.drawing=off \
-    click_script="$PLUGIN_DIR/control_center.sh"
+# Right items (note: added right-to-left, so clock is rightmost)
 
-sketchybar --add event tailscale_update
-sketchybar --add item tailscale right \
-  --set tailscale \
-    icon.font="Symbols Nerd Font:Regular:16.0" \
-    update_freq=30 \
-    script="$PLUGIN_DIR/tailscale.sh" \
-    click_script="$PLUGIN_DIR/tailscale_click.sh" \
-  --subscribe tailscale tailscale_update
+# Clock
+sketchybar --add item clock right \
+  --set clock \
+    icon.drawing=off \
+    label.padding_left=8 \
+    label.padding_right=8 \
+    update_freq=10 \
+    script="$PLUGIN_DIR/clock.sh"
+
+sketchybar --add bracket clock_bracket clock \
+  --set clock_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
+
+# Spacer
+sketchybar --add item spacer.right0 right \
+  --set spacer.right0 \
+    width=8 \
+    background.drawing=off
+
+# Battery (alias of system battery)
+sketchybar --add alias "Control Center,Battery" right \
+  --set "Control Center,Battery" \
+    alias.color=0xff1e1e2e \
+    padding_left=8 \
+    padding_right=8
+
+sketchybar --add bracket battery_bracket "Control Center,Battery" \
+  --set battery_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
+
+# Spacer
+sketchybar --add item spacer.right0b right \
+  --set spacer.right0b \
+    width=8 \
+    background.drawing=off
+
+# Weather
+sketchybar --add item weather right \
+  --set weather \
+    icon.padding_left=8 \
+    label.padding_right=8 \
+    update_freq=1800 \
+    script="$PLUGIN_DIR/weather.sh"
+
+sketchybar --add bracket weather_bracket weather \
+  --set weather_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
+
+# Spacer
+sketchybar --add item spacer.right1 right \
+  --set spacer.right1 \
+    width=8 \
+    background.drawing=off
+
+# Wifi (alias of system wifi)
+sketchybar --add alias "Control Center,WiFi" right \
+  --set "Control Center,WiFi" \
+    alias.color=0xff1e1e2e \
+    padding_left=8 \
+    padding_right=8
+
+sketchybar --add bracket wifi_bracket "Control Center,WiFi" \
+  --set wifi_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
+
+# Spacer
+sketchybar --add item spacer.right2 right \
+  --set spacer.right2 \
+    width=8 \
+    background.drawing=off
+
+# System resources group (cpu, memory)
+sketchybar --add item memory right \
+  --set memory \
+    icon=􀫦 \
+    icon.font="SF Pro:Regular:16.0" \
+    icon.padding_left=8 \
+    label.padding_right=8 \
+    update_freq=15 \
+    script="$PLUGIN_DIR/memory.sh"
 
 sketchybar --add item cpu right \
   --set cpu \
     icon=􀫥 \
     icon.font="SF Pro:Regular:16.0" \
+    icon.padding_left=8 \
+    label.padding_right=4 \
     update_freq=5 \
     script="$PLUGIN_DIR/cpu.sh"
 
-sketchybar --add item memory right \
-  --set memory \
-    icon=􀫦 \
-    icon.font="SF Pro:Regular:16.0" \
-    update_freq=15 \
-    script="$PLUGIN_DIR/memory.sh"
+sketchybar --add bracket resources_bracket cpu memory \
+  --set resources_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
 
-sketchybar --add item weather right \
-  --set weather \
-    update_freq=1800 \
-    script="$PLUGIN_DIR/weather.sh"
+# Spacer
+sketchybar --add item spacer.right3 right \
+  --set spacer.right3 \
+    width=8 \
+    background.drawing=off
 
-sketchybar --add item battery right \
-  --set battery \
-    icon.font="SF Pro:Regular:16.0" \
-    update_freq=120 \
-    script="$PLUGIN_DIR/battery.sh" \
-  --subscribe battery power_source_change system_woke
-
-sketchybar --add item wifi right \
-  --set wifi \
-    icon.font="SF Pro:Regular:16.0" \
+# Tailscale
+sketchybar --add event tailscale_update
+sketchybar --add item tailscale right \
+  --set tailscale \
+    icon.font="Symbols Nerd Font:Regular:16.0" \
+    icon.padding_left=8 \
+    icon.padding_right=8 \
     update_freq=30 \
-    script="$PLUGIN_DIR/wifi.sh" \
-  --subscribe wifi wifi_change
+    script="$PLUGIN_DIR/tailscale.sh" \
+    click_script="$PLUGIN_DIR/tailscale_click.sh" \
+  --subscribe tailscale tailscale_update
 
-sketchybar --add item clock right \
-  --set clock \
-    update_freq=10 \
-    script="$PLUGIN_DIR/clock.sh"
+sketchybar --add bracket tailscale_bracket tailscale \
+  --set tailscale_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
 
 # Appearance change handler (light/dark mode)
-sketchybar --add item appearance_handler right \
+sketchybar --add item appearance_handler left \
   --set appearance_handler \
     drawing=off \
+    width=0 \
     script="$PLUGIN_DIR/appearance.sh" \
   --subscribe appearance_handler system_appearance_change
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-SSID="$(/System/Library/PrivateFrameworks/Apple80211.framework/Resources/airport -I | awk -F': ' '/^ *SSID/ {print $2}')"
+SSID=$(networksetup -getairportnetwork en0 2>/dev/null | sed 's/Current Wi-Fi Network: //')
 
-if [ -n "$SSID" ]; then
+if [ -n "$SSID" ] && [ "$SSID" != "You are not associated with an AirPort network." ]; then
   ICON="􀙇"
   LABEL="$SSID"
 else
