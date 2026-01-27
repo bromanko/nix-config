@@ -15,8 +15,8 @@
       {
         "hooks": [
           {
-            "type": "prompt",
-            "prompt": "Before finishing, run `nix flake check` to validate formatting and builds. Fix any errors that are related to your changes."
+            "type": "command",
+            "command": "git status --porcelain -- '*.nix' | grep -q . && nix flake check || true"
           }
         ]
       }

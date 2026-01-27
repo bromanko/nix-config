@@ -161,6 +161,7 @@ in
           # Set window notifications
           setw -g monitor-activity on
           set -g visual-activity off
+          set -g window-status-activity-style "none"
 
           # Claude Code tmux-titles plugin - preserve custom window names
           set -g automatic-rename off
