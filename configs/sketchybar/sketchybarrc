@@ -7,13 +7,14 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 # Bar appearance
 sketchybar --bar \
-  height=37 \
+  height=38 \
   blur_radius=30 \
   position=top \
   sticky=off \
   padding_left=10 \
   padding_right=10 \
-  color=0xa024273a
+  corner_radius=6 \
+  color=0x651e1e2e
 
 # Default item settings
 sketchybar --default \
@@ -120,8 +121,18 @@ sketchybar --add item clock right \
     update_freq=10 \
     script="$PLUGIN_DIR/clock.sh"
 
+# Appearance change handler (light/dark mode)
+sketchybar --add item appearance_handler right \
+  --set appearance_handler \
+    drawing=off \
+    script="$PLUGIN_DIR/appearance.sh" \
+  --subscribe appearance_handler system_appearance_change
+
 # Initialize
 sketchybar --update
 
 # Force initial aerospace workspace update
 $PLUGIN_DIR/aerospace.sh
+
+# Set initial appearance colors
+$PLUGIN_DIR/appearance.sh
