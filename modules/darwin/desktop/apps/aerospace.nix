@@ -9,6 +9,7 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.desktop.apps.aerospace;
+  sketchybarCfg = config.modules.desktop.apps.sketchybar;
 in
 {
   options.modules.desktop.apps.aerospace = {
@@ -130,6 +131,11 @@ in
         };
         after-startup-command = [
           "exec-and-forget ${pkgs.jankyborders}/bin/borders active_color=0xfffab387 inactive_color=0x00000000 width=7.0 style=round hidpi=on"
+        ];
+        exec-on-workspace-change = mkIf sketchybarCfg.enable [
+          "/bin/bash"
+          "-c"
+          "${sketchybarCfg.package}/bin/sketchybar --trigger aerospace_workspace_change FOCUSED_WORKSPACE=$AEROSPACE_FOCUSED_WORKSPACE"
         ];
         on-window-detected = cfg.windowRules;
       };

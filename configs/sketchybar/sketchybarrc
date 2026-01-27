@@ -1,0 +1,127 @@
+#!/bin/bash
+
+# This is a basic sketchybar configuration
+# See https://felixkratz.github.io/SketchyBar/ for documentation
+
+PLUGIN_DIR="$CONFIG_DIR/plugins"
+
+# Bar appearance
+sketchybar --bar \
+  height=37 \
+  blur_radius=30 \
+  position=top \
+  sticky=off \
+  padding_left=10 \
+  padding_right=10 \
+  color=0xa024273a
+
+# Default item settings
+sketchybar --default \
+  icon.font="SF Pro:Regular:14.0" \
+  icon.color=0xffffffff \
+  icon.y_offset=4 \
+  label.font="SF Pro Text:Regular:12.0" \
+  label.color=0xffffffff \
+  label.y_offset=4 \
+  padding_left=5 \
+  padding_right=5
+
+# Left items
+sketchybar --add item apple left \
+  --set apple \
+    icon=􀣺 \
+    icon.font="SF Pro:Regular:16.0" \
+    icon.padding_left=5 \
+    icon.padding_right=5 \
+    icon.y_offset=3 \
+    background.color=0x00000000 \
+    background.corner_radius=11 \
+    background.height=22 \
+    background.padding_left=8 \
+    background.padding_right=8 \
+    label.drawing=off \
+    click_script="$PLUGIN_DIR/apple.sh"
+
+# Aerospace workspaces
+sketchybar --add event aerospace_workspace_change
+
+for i in {1..10}; do
+  sketchybar --add item "space.$i" left \
+    --set "space.$i" \
+      icon="$i" \
+      icon.padding_left=8 \
+      icon.padding_right=8 \
+      icon.y_offset=3 \
+      background.corner_radius=5 \
+      background.height=20 \
+      label.drawing=off \
+      click_script="$PLUGIN_DIR/aerospace_switch.sh $i"
+done
+
+# Single handler for all workspace updates
+sketchybar --add item aerospace_handler left \
+  --set aerospace_handler \
+    drawing=off \
+    script="$PLUGIN_DIR/aerospace.sh" \
+  --subscribe aerospace_handler aerospace_workspace_change
+
+# Right items
+sketchybar --add item control_center right \
+  --set control_center \
+    icon=􀜊 \
+    icon.font="SF Pro:Regular:16.0" \
+    label.drawing=off \
+    click_script="$PLUGIN_DIR/control_center.sh"
+
+sketchybar --add event tailscale_update
+sketchybar --add item tailscale right \
+  --set tailscale \
+    icon.font="Symbols Nerd Font:Regular:16.0" \
+    update_freq=30 \
+    script="$PLUGIN_DIR/tailscale.sh" \
+    click_script="$PLUGIN_DIR/tailscale_click.sh" \
+  --subscribe tailscale tailscale_update
+
+sketchybar --add item cpu right \
+  --set cpu \
+    icon=􀫥 \
+    icon.font="SF Pro:Regular:16.0" \
+    update_freq=5 \
+    script="$PLUGIN_DIR/cpu.sh"
+
+sketchybar --add item memory right \
+  --set memory \
+    icon=􀫦 \
+    icon.font="SF Pro:Regular:16.0" \
+    update_freq=15 \
+    script="$PLUGIN_DIR/memory.sh"
+
+sketchybar --add item weather right \
+  --set weather \
+    update_freq=1800 \
+    script="$PLUGIN_DIR/weather.sh"
+
+sketchybar --add item battery right \
+  --set battery \
+    icon.font="SF Pro:Regular:16.0" \
+    update_freq=120 \
+    script="$PLUGIN_DIR/battery.sh" \
+  --subscribe battery power_source_change system_woke
+
+sketchybar --add item wifi right \
+  --set wifi \
+    icon.font="SF Pro:Regular:16.0" \
+    update_freq=30 \
+    script="$PLUGIN_DIR/wifi.sh" \
+  --subscribe wifi wifi_change
+
+sketchybar --add item clock right \
+  --set clock \
+    update_freq=10 \
+    script="$PLUGIN_DIR/clock.sh"
+
+# Initialize
+sketchybar --update
+
+# Force initial aerospace workspace update
+$PLUGIN_DIR/aerospace.sh
