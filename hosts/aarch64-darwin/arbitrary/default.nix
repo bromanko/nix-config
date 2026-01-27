@@ -108,6 +108,7 @@ with lib.my;
           ];
         };
         autoraise.enable = true;
+        sketchybar.enable = true;
       };
     };
     dev = {
@@ -139,6 +140,7 @@ with lib.my;
         "homebrew/services"
       ];
       casks = [
+        "anki"
         "bartender"
         "betterdisplay"
         "figma"
