@@ -138,11 +138,14 @@
           ) self.darwinConfigurations
         )
         # Home Manager configs - filter by system
-        // lib.mapAttrs' (name: config: lib.nameValuePair "hm-${name}" config.activationPackage) (
-          lib.filterAttrs (
-            _: config: config.pkgs.stdenv.hostPlatform.system == system
-          ) self.homeManagerConfigurations
-        )
+        // (let
+          hmConfigsBySystem = {
+            "x86_64-linux" = lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux;
+            "aarch64-linux" = lib.my.mapHomeManagerHosts "aarch64-linux" ./hosts/aarch64-linux;
+          };
+        in lib.mapAttrs' (name: config: lib.nameValuePair "hm-${name}" config.activationPackage) (
+          hmConfigsBySystem.${system} or {}
+        ))
       );
 
       overlays = mapModules ./overlays import // {
