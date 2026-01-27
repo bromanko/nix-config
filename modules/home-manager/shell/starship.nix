@@ -65,6 +65,17 @@ in
           fossil_branch.symbol = mkDefault " ";
           gcloud.symbol = mkDefault " ";
           git_branch.symbol = mkDefault " ";
+          git_branch.disabled = true;
+
+          # Jujutsu support (custom module)
+          custom.jj = {
+            command = "jj log -r @ --no-graph --color=always -T 'change_id.shortest(8)'";
+            when = "test -d .jj";
+            symbol = "◇ ";
+            style = "bold purple";
+            format = "[$symbol]($style)$output ";
+          };
+          git_commit.disabled = true;
           git_commit.tag_symbol = mkDefault " ";
           git_status.ahead = mkDefault " ";
           git_status.behind = mkDefault " ";
@@ -150,3 +161,5 @@ in
     };
   };
 }
+
+# This won't work - need to add inside settings block
