@@ -17,21 +17,12 @@ in
 
   config = mkMerge [
     # Case 1: "determinate"
+    # Note: external-builders is now managed by determinate-nixd itself and cannot
+    # be customized via customSettings in newer versions of the determinate module
     (mkIf (cfg.system.enable == "determinate") {
       nix.enable = false;
 
       determinate-nix.customSettings = {
-        extra-experimental-features = "external-builders";
-        external-builders = builtins.toJSON [
-          {
-            systems = [
-              "aarch64-linux"
-              "x86_64-linux"
-            ];
-            program = "/usr/local/bin/determinate-nixd";
-            args = [ "builder" ];
-          }
-        ];
         flake-registry = "/etc/nix/flake-registry.json";
         keep-outputs = true;
         extra-substituters = "https://devenv.cachix.org";
