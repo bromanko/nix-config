@@ -7,7 +7,7 @@ PLUGIN_DIR="$CONFIG_DIR/plugins"
 
 # Bar appearance
 sketchybar --bar \
-  height=38 \
+  height=30 \
   blur_radius=30 \
   position=top \
   sticky=off \
@@ -20,10 +20,10 @@ sketchybar --bar \
 sketchybar --default \
   icon.font="SF Pro:Regular:14.0" \
   icon.color=0xffffffff \
-  icon.y_offset=4 \
+  icon.y_offset=0 \
   label.font="SF Pro Text:Regular:12.0" \
   label.color=0xffffffff \
-  label.y_offset=4 \
+  label.y_offset=0 \
   padding_left=5 \
   padding_right=5
 
@@ -32,19 +32,28 @@ sketchybar --add item apple left \
   --set apple \
     icon=􀣺 \
     icon.font="SF Pro:Regular:16.0" \
-    icon.padding_left=5 \
-    icon.padding_right=5 \
-    icon.y_offset=3 \
-    background.color=0x00000000 \
-    background.corner_radius=11 \
-    background.height=22 \
-    background.padding_left=8 \
-    background.padding_right=8 \
+    icon.padding_left=8 \
+    icon.padding_right=8 \
+    icon.y_offset=0 \
+    padding_right=8 \
     label.drawing=off \
     click_script="$PLUGIN_DIR/apple.sh"
 
+# Bracket for apple with background
+sketchybar --add bracket apple_bracket apple \
+  --set apple_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
+
 # Aerospace workspaces
 sketchybar --add event aerospace_workspace_change
+
+# Spacer between apple and workspaces
+sketchybar --add item spacer.left left \
+  --set spacer.left \
+    width=8 \
+    background.drawing=off
 
 for i in {1..10}; do
   sketchybar --add item "space.$i" left \
@@ -52,12 +61,17 @@ for i in {1..10}; do
       icon="$i" \
       icon.padding_left=8 \
       icon.padding_right=8 \
-      icon.y_offset=3 \
-      background.corner_radius=5 \
-      background.height=20 \
+      icon.y_offset=0 \
       label.drawing=off \
       click_script="$PLUGIN_DIR/aerospace_switch.sh $i"
 done
+
+# Bracket for all spaces with shared background
+sketchybar --add bracket spaces_bracket space.1 space.2 space.3 space.4 space.5 space.6 space.7 space.8 space.9 space.10 \
+  --set spaces_bracket \
+    background.color=0x30ffffff \
+    background.corner_radius=8 \
+    background.height=22
 
 # Single handler for all workspace updates
 sketchybar --add item aerospace_handler left \
