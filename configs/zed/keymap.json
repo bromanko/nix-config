@@ -24,7 +24,12 @@
       "space f n": "workspace::NewFile",
       "space f s": "workspace::Save",
       "space c f": "editor::Format",
-      "space h h": "editor::Hover"
+      "space c a": "editor::ToggleCodeActions",
+      "space c r": "editor::Rename",
+      "space h h": "editor::Hover",
+      "space t e": "workspace::ToggleLeftDock",
+      "space t t": "terminal::ToggleFocus",
+      "space t a": "agent::ToggleFocus"
     }
   }
 ]

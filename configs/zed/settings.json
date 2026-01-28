@@ -7,20 +7,24 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "which_key": {
+    "enabled": true,
+    "delay_ms": 0,
+  },
   "features": {
-    "edit_prediction_provider": "zed"
+    "edit_prediction_provider": "zed",
   },
   "agent": {
     "default_profile": "write",
     "always_allow_tool_actions": true,
     "default_model": {
       "provider": "zed.dev",
-      "model": "claude-sonnet-4"
+      "model": "claude-sonnet-4",
     },
   },
   "theme": "Catppuccin Mocha",
   "ui_font_size": 15,
-  "relative_line_numbers": true,
+  "relative_line_numbers": "enabled",
   "buffer_font_size": 13,
   "buffer_font_family": "MonaspiceAr Nerd Font Propo",
   "vim_mode": true,
@@ -30,9 +34,9 @@
       "formatter": {
         "external": {
           "command": "nixfmt",
-          "arguments": ["-"]
-        }
-      }
-    }
-  }
+          "arguments": ["-"],
+        },
+      },
+    },
+  },
 }
