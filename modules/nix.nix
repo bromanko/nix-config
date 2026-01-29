@@ -22,7 +22,7 @@ in
     (mkIf (cfg.system.enable == "determinate") {
       nix.enable = false;
 
-      determinate-nix.customSettings = {
+      determinateNix.customSettings = {
         flake-registry = "/etc/nix/flake-registry.json";
         keep-outputs = true;
         extra-substituters = "https://devenv.cachix.org";
