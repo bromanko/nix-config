@@ -27,6 +27,27 @@ let
     ];
   };
 
+  # Lima variant - same layout but runs inside the Lima dev VM
+  # Uses lima_root for the VM-translated path
+  limaSmugProject = {
+    session = "\${session}";
+    root = "\${root}";
+    windows = [
+      {
+        name = "shell";
+        commands = [ "limactl shell --workdir \${lima_root} lima-dev" ];
+      }
+      {
+        name = "jjui";
+        commands = [ "limactl shell --workdir \${lima_root} lima-dev -- jjui" ];
+      }
+      {
+        name = "claude";
+        commands = [ "limactl shell --workdir \${lima_root} lima-dev -- claude --resume" ];
+      }
+    ];
+  };
+
   whichKeyXdgEnable = pkgs.writeTextFile {
     name = "tmux-which-key-xdg-enable";
     destination = "/enable.tmux";
@@ -56,6 +77,17 @@ in
         sml = "smug list"; # List smug projects
       };
 
+      programs.fish.functions = {
+        # Start dev session in Lima VM, translating host path to VM path
+        smdl = ''
+          set -l host_home $HOME
+          set -l lima_home /home/bromanko.linux
+          set -l host_root (pwd)
+          set -l lima_root (string replace "$host_home" "$lima_home" "$host_root")
+          smug start dev-lima session=(basename (pwd)) root="$host_root" lima_root="$lima_root"
+        '';
+      };
+
       xdg.configFile = {
         "tmux-powerline/config.sh".source = ../../../configs/tmux-powerline/config.sh;
         "tmux-powerline/themes/custom.sh".source = ../../../configs/tmux-powerline/themes/custom.sh;
@@ -74,6 +106,7 @@ in
 
         # Default smug project configuration
         "smug/dev.yml".source = (pkgs.formats.yaml { }).generate "dev.yml" defaultSmugProject;
+        "smug/dev-lima.yml".source = (pkgs.formats.yaml { }).generate "dev-lima.yml" limaSmugProject;
 
         # tmux-which-key configuration
         "tmux/plugins/tmux-which-key/config.yaml".source = ../../../configs/tmux-which-key/config.yaml;
