@@ -108,7 +108,6 @@ with lib.my;
           ];
         };
         autoraise.enable = true;
-        sketchybar.enable = true;
       };
     };
     dev = {
