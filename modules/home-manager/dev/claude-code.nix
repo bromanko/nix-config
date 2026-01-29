@@ -18,7 +18,10 @@ in
   config = mkIf cfg.enable {
     hm = {
       home = {
-        packages = [ pkgs.my.claude-code ];
+        packages = [
+          pkgs.my.claude-code
+          pkgs.my.ccstatusline
+        ];
         file = {
           ".claude/CLAUDE.md".source = config.hm.lib.file.mkNixConfigSymlink "/configs/claude/CLAUDE.md";
           ".claude/settings.json".source =
