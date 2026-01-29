@@ -1,0 +1,82 @@
+{
+  "version": 3,
+  "lines": [
+    [
+      {
+        "id": "1",
+        "type": "model",
+        "color": "magenta"
+      },
+      {
+        "id": "2",
+        "type": "separator"
+      },
+      {
+        "id": "3",
+        "type": "context-percentage-usable",
+        "color": "brightBlack"
+      },
+      {
+        "id": "e8b8dbac-e733-4c1d-9d5c-d2a25ed984a6",
+        "type": "custom-text",
+        "customText": " ◆ ",
+        "color": "brightBlack"
+      },
+      {
+        "id": "ab45f46c-0560-4f10-80d9-02cc6d470934",
+        "type": "block-timer",
+        "color": "brightBlack"
+      },
+      {
+        "id": "4",
+        "type": "separator"
+      },
+      {
+        "id": "5",
+        "type": "custom-command",
+        "color": "cyan",
+        "commandPath": "ws=$(jj workspace list 2>/dev/null | head -1 | cut -d: -f1); [ \"$ws\" = \"default\" ] && echo main || echo \"$ws\"",
+        "timeout": 1000
+      },
+      {
+        "id": "6",
+        "type": "separator"
+      },
+      {
+        "id": "7",
+        "type": "custom-command",
+        "color": "cyan",
+        "commandPath": "jj diff --stat 2>/dev/null | tail -1 | sed -n 's/.* \\([0-9]*\\) insertion.* \\([0-9]*\\) deletion.*/(+\\1,-\\2)/p'",
+        "timeout": 1000
+      },
+      {
+        "id": "352f81d9-f28c-491f-bcc8-5ccb6e3de7b7",
+        "type": "flex-separator"
+      },
+      {
+        "id": "ce8654fa-3be7-4b6c-995d-863a4fa5f9ab",
+        "type": "current-working-dir",
+        "color": "brightBlue"
+      }
+    ],
+    [],
+    []
+  ],
+  "flexMode": "full-minus-40",
+  "compactThreshold": 60,
+  "colorLevel": 3,
+  "inheritSeparatorColors": false,
+  "globalBold": false,
+  "powerline": {
+    "enabled": false,
+    "separators": [
+      ""
+    ],
+    "separatorInvertBackground": [
+      false
+    ],
+    "startCaps": [],
+    "endCaps": [],
+    "autoAlign": false
+  }
+}

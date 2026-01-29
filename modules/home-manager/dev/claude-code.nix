@@ -29,6 +29,11 @@ in
         };
       };
 
+      xdg.configFile = {
+        "ccstatusline/settings.json".source =
+          config.hm.lib.file.mkNixConfigSymlink "/configs/ccstatusline/settings.json";
+      };
+
       programs.fish.shellAliases = {
         claude-yolo = "claude --dangerously-skip-permissions";
       };
