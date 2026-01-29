@@ -71,7 +71,7 @@ fi
 if [ -z "$TMUX_POWERLINE_WINDOW_STATUS_FORMAT" ]; then
 	TMUX_POWERLINE_WINDOW_STATUS_FORMAT=(
 		"#[$(format regular)]"
-		"  #I#{?window_last_flag, 󰁍,}#{?window_activity_flag, 󱐋,}#{?window_bell_flag, 󰂟,}#{?window_zoomed_flag, 󰁌,} "
+		"  #I#{?window_last_flag, #[fg=${yellow}]←#[$(format regular)],}#{?window_activity_flag, 󱐋,}#{?window_bell_flag, 󰂟,}#{?window_zoomed_flag, 󰁌,} "
 		"$TMUX_POWERLINE_SEPARATOR_THIN"
 		" #W "
 	)
