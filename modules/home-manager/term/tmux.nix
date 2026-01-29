@@ -15,10 +15,7 @@ let
     session = "\${session}";
     root = "\${root}";
     windows = [
-      {
-        name = "shell";
-        commands = [ "tmux rename-window shell" ];
-      }
+      { name = "shell"; }
       {
         name = "jjui";
         commands = [ "jjui" ];
@@ -131,11 +128,11 @@ in
         ];
 
         extraConfig = ''
+          # Override tmux-sensible's reattach-to-user-namespace default-command (unnecessary on modern macOS)
+          set -g default-command ""
+
           # Allow cursor shape changes to pass through (fixes fish vi-mode cursor)
           set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
-
-          # Use user's default shell via reattach-to-user-namespace for macOS clipboard access
-          set-option -g default-command "${pkgs.reattach-to-user-namespace}/bin/reattach-to-user-namespace -l $SHELL"
 
           # Show keybindings help (Prefix + ?)
           bind ? list-keys
