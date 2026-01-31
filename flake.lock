@@ -20,6 +20,26 @@
         "type": "github"
       }
     },
+    "claude-code-overlay": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1769898648,
+        "narHash": "sha256-OoiLudkOVsNKaCqVzVwkNe91zlWegZrVVYrUw+EXUWs=",
+        "owner": "ryoppippi",
+        "repo": "claude-code-overlay",
+        "rev": "a485681ab5459a7efd5d1c7e64cb044e82e534f8",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ryoppippi",
+        "repo": "claude-code-overlay",
+        "type": "github"
+      }
+    },
     "darwin": {
       "inputs": {
         "nixpkgs": [
@@ -472,6 +492,7 @@
     "root": {
       "inputs": {
         "age-plugin-op": "age-plugin-op",
+        "claude-code-overlay": "claude-code-overlay",
         "darwin": "darwin",
         "dealmail": "dealmail",
         "determinate": "determinate",

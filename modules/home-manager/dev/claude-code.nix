@@ -19,7 +19,7 @@ in
     hm = {
       home = {
         packages = [
-          pkgs.my.claude-code
+          pkgs.claude-code
           pkgs.my.ccstatusline
         ];
         file = {
