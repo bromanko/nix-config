@@ -35,7 +35,7 @@
         "id": "5",
         "type": "custom-command",
         "color": "cyan",
-        "commandPath": "ws=$(jj workspace list 2>/dev/null | head -1 | cut -d: -f1); [ \"$ws\" = \"default\" ] && echo main || echo \"$ws\"",
+        "commandPath": "ws=$(jj workspace list 2>/dev/null | head -1 | cut -d: -f1); [ \"$ws\" = \"default\" ] && ws=main; echo \"$ws $(date +%H:%M:%S)\"",
         "timeout": 1000
       },
       {
