@@ -125,6 +125,20 @@ in
         plugins = with pkgs.tmuxPlugins; [
           sensible
           yank
+          {
+            plugin = resurrect;
+            extraConfig = ''
+              set -g @resurrect-capture-pane-contents 'on'
+              set -g @resurrect-strategy-default 'blank'
+            '';
+          }
+          {
+            plugin = continuum;
+            extraConfig = ''
+              set -g @continuum-restore 'on'
+              set -g @continuum-save-interval '15'
+            '';
+          }
           tmux-powerline
           (mkTmuxPlugin {
             pluginName = "tmux-which-key-xdg-enable";
