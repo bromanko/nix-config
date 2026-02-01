@@ -19,7 +19,7 @@ in
     hm = {
       programs.codex = {
         enable = true;
-        package = pkgs.my.codex;
+        package = pkgs.llm-agents.codex;
       };
 
       home.file.".codex/prompts" = {

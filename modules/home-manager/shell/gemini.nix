@@ -19,7 +19,7 @@ in
     hm = {
       home = {
         packages = [
-          pkgs.gemini-cli
+          pkgs.llm-agents.gemini-cli
         ];
         file = {
           ".gemini/settings.json".source =

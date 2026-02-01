@@ -26,9 +26,8 @@
       url = "github:bromanko/age-plugin-op";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    claude-code-overlay = {
-      url = "github:ryoppippi/claude-code-overlay";
-      inputs.nixpkgs.follows = "nixpkgs";
+    llm-agents = {
+      url = "github:numtide/llm-agents.nix";
     };
     jujutsu = {
       url = "github:jj-vcs/jj";
@@ -74,7 +73,7 @@
           overlays = [
             nur.overlays.default
             emacs-overlay.overlay
-            inputs.claude-code-overlay.overlays.default
+            inputs.llm-agents.overlays.default
           ]
           ++ (lib.attrValues self.overlays);
         }

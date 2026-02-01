@@ -20,7 +20,7 @@ in
       home = {
         packages = [
           pkgs.my.toad
-          pkgs.claude-code-acp
+          pkgs.llm-agents.claude-code-acp
         ];
       };
     };

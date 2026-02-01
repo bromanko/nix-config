@@ -3,7 +3,7 @@
   fetchPypi,
   lib,
   makeWrapper,
-  claude-code-acp,
+  llm-agents,
 }:
 
 python314.pkgs.buildPythonApplication rec {
@@ -53,7 +53,7 @@ python314.pkgs.buildPythonApplication rec {
 
   postFixup = ''
     wrapProgram $out/bin/toad \
-      --prefix PATH : ${lib.makeBinPath [ claude-code-acp ]}
+      --prefix PATH : ${lib.makeBinPath [ llm-agents.claude-code-acp ]}
   '';
 
   meta = {
