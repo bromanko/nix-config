@@ -25,8 +25,8 @@ in
       determinateNix.customSettings = {
         flake-registry = "/etc/nix/flake-registry.json";
         keep-outputs = true;
-        extra-substituters = "https://devenv.cachix.org https://cache.numtide.com";
-        extra-trusted-public-keys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw= niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=";
+        extra-substituters = cfg.caches.extraSubstituters;
+        extra-trusted-public-keys = cfg.caches.extraTrustedPublicKeys;
       };
     })
 
@@ -41,8 +41,8 @@ in
           experimental-features = nix-command flakes
           keep-derivations = true
           keep-outputs = true
-          extra-substituters = https://devenv.cachix.org https://cache.numtide.com
-          extra-trusted-public-keys = devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw= niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=
+          extra-substituters = ${cfg.caches.extraSubstituters}
+          extra-trusted-public-keys = ${cfg.caches.extraTrustedPublicKeys}
         ''
         + optionalString pkgs.stdenv.hostPlatform.isDarwin ''
           extra-platforms = x86_64-darwin aarch64-darwin

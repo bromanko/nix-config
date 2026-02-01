@@ -10,6 +10,8 @@ with lib.my;
 let
   cfg = config.modules.nix;
 
+  extraSubstituters = "https://devenv.cachix.org https://cache.numtide.com";
+  extraTrustedPublicKeys = "devenv.cachix.org-1:w1cLUi8dv3hnoSPGAuibQv+f9TZLr6cv/Hm9XgU50cw= niks3.numtide.com-1:DTx8wZduET09hRmMtKdQDxNNthLQETkc/yaX7M4qK0g=";
 in
 {
   options.modules.nix = with types; {
@@ -25,6 +27,19 @@ in
       };
 
       optimise = mkBoolOpt true;
+    };
+
+    caches = {
+      extraSubstituters = mkOption {
+        type = str;
+        default = extraSubstituters;
+        description = "Extra binary cache substituters.";
+      };
+      extraTrustedPublicKeys = mkOption {
+        type = str;
+        default = extraTrustedPublicKeys;
+        description = "Extra trusted public keys for binary caches.";
+      };
     };
 
     dev = {
