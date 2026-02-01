@@ -118,6 +118,7 @@ with lib.my;
       nodejs.enable = true;
       codex.enable = true;
       claude-code.enable = true;
+      pi.enable = true;
       lima.enable = true;
       toad.enable = true;
     };
