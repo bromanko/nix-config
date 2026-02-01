@@ -32,15 +32,28 @@ in
     };
   };
 
-  config = mkIf cfg.dev.enable {
-    hm = {
-      home = {
-        packages = with pkgs; [
-          nixfmt
-          nix-output-monitor
-          nil
-        ];
+  config = mkMerge [
+    (mkIf cfg.dev.enable {
+      hm = {
+        home = {
+          packages = with pkgs; [
+            nixfmt
+            nix-output-monitor
+            nil
+          ];
+        };
       };
-    };
-  };
+    })
+
+    # In standalone home-manager mode (Linux), determinateNix.customSettings is
+    # not available. Write substituter config to ~/.config/nix/nix.conf so the
+    # nix daemon picks up our extra binary caches. On darwin, the system-level
+    # nix module handles this via determinateNix.customSettings or nix.extraOptions.
+    (mkIf (cfg.system.enable == "determinate" && pkgs.stdenv.hostPlatform.isLinux) {
+      hm.xdg.configFile."nix/nix.conf".text = ''
+        extra-substituters = ${cfg.caches.extraSubstituters}
+        extra-trusted-public-keys = ${cfg.caches.extraTrustedPublicKeys}
+      '';
+    })
+  ];
 }
