@@ -48,7 +48,7 @@
       idea.enable = true;
       psql.enable = true;
       nodejs.enable = true;
-      codex.enable = true;
+      codex.enable = false; # temporarily disabled
       claude-code.enable = true;
       pi.enable = true;
       lima.enable = true;
