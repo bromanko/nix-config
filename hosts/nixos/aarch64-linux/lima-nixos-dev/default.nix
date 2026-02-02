@@ -11,6 +11,7 @@
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     inputs.nixos-lima.nixosModules.lima
+    inputs.determinate.nixosModules.default
   ];
 
   # Lima guest agent and boot-time configuration
