@@ -44,6 +44,7 @@ in
           "kitty_mod+e" = "kitten hints";
           "kitty_mod+p>f" = "kitten hints --type path --program -";
           "kitty_mod+p>shift+f" = "kitten hints --type path";
+          "shift+enter" = ''send_text all \n'';
         };
         settings = {
           cursor_shape = "beam";
