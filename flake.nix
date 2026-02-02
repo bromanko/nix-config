@@ -37,6 +37,10 @@
       url = "github:bromanko/homeage/main";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    nixos-lima = {
+      url = "github:nixos-lima/nixos-lima";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
     dealmail = {
       url = "https://flakehub.com/f/bromanko/dealmail/*";
       inputs.nixpkgs.follows = "nixpkgs";

@@ -31,15 +31,15 @@ with inputs;
     };
 
   mkNixosHost =
-    path:
+    system: path:
     nixosSystem {
       specialArgs = {
         inherit lib inputs;
       };
-      system = "x86_64-linux";
+      inherit system;
       modules = [
         {
-          nixpkgs.pkgs = pkgs.x86_64-linux;
+          nixpkgs.pkgs = pkgs.${system};
           networking.hostName = mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
         ../hosts/nixos.nix
@@ -88,7 +88,7 @@ with inputs;
 
   mapDarwinHosts = system: dir: mapModules dir (hostPath: mkDarwinHost system hostPath);
 
-  mapNixosHosts = dir: mapModules dir (hostPath: mkNixosHost hostPath);
+  mapNixosHosts = system: dir: mapModules dir (hostPath: mkNixosHost system hostPath);
 
   mapNixosIsos = dir: mapModules dir (isoPath: mkNixosIso isoPath);
 
