@@ -85,7 +85,46 @@
     ncurses
   ];
 
-  # Home Manager configuration
+  # Module configuration (defines both system and HM settings via hm.* internally)
+  modules = {
+    nix = {
+      dev.enable = true;
+    };
+    homeage = {
+      enable = true;
+    };
+    shell = {
+      commonPkgs.enable = true;
+      openssh.enable = true;
+      ssh.enable = true;
+      "1password".enable = true;
+      fish.enable = true;
+      bat.enable = true;
+      git.enable = true;
+      jujutsu.enable = true;
+      starship.enable = true;
+      fzf.enable = true;
+      direnv.enable = true;
+      exa.enable = true;
+      fd.enable = true;
+      gemini.enable = true;
+    };
+    dev = {
+      elixir.enable = true;
+      idea.enable = true;
+      psql.enable = true;
+      nodejs.enable = true;
+      codex.enable = true;
+      claude-code.enable = true;
+      pi.enable = true;
+    };
+    editor = {
+      default = "nvim";
+      neovim.enable = true;
+    };
+  };
+
+  # Home Manager user configuration
   hm = {
     home = {
       homeDirectory = lib.mkForce "/home/bromanko.linux";
@@ -97,44 +136,6 @@
 
     programs.fish.shellAliases = {
       rebuild = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-nixos-dev";
-    };
-
-    modules = {
-      nix = {
-        dev.enable = true;
-      };
-      homeage = {
-        enable = true;
-      };
-      shell = {
-        commonPkgs.enable = true;
-        openssh.enable = true;
-        ssh.enable = true;
-        "1password".enable = true;
-        fish.enable = true;
-        bat.enable = true;
-        git.enable = true;
-        jujutsu.enable = true;
-        starship.enable = true;
-        fzf.enable = true;
-        direnv.enable = true;
-        exa.enable = true;
-        fd.enable = true;
-        gemini.enable = true;
-      };
-      dev = {
-        elixir.enable = true;
-        idea.enable = true;
-        psql.enable = true;
-        nodejs.enable = true;
-        codex.enable = true;
-        claude-code.enable = true;
-        pi.enable = true;
-      };
-      editor = {
-        default = "nvim";
-        neovim.enable = true;
-      };
     };
   };
 

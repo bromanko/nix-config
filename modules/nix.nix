@@ -1,5 +1,6 @@
 {
   config,
+  options,
   lib,
   pkgs,
   ...
@@ -19,20 +20,24 @@ in
     # Case 1: "determinate"
     # Note: external-builders is now managed by determinate-nixd itself and cannot
     # be customized via customSettings in newer versions of the determinate module
-    (mkIf (cfg.system.enable == "determinate") {
-      nix.enable = false;
-
-      determinateNix.customSettings = {
-        flake-registry = "/etc/nix/flake-registry.json";
-        keep-outputs = true;
-        extra-substituters = cfg.caches.extraSubstituters;
-        extra-trusted-public-keys = cfg.caches.extraTrustedPublicKeys;
-      };
-    })
+    # Only set determinateNix options when the module is available (darwin only)
+    (mkIf (cfg.system.enable == "determinate") (
+      {
+        nix.enable = false;
+      }
+      // optionalAttrs (options ? determinateNix) {
+        determinateNix.customSettings = {
+          flake-registry = "/etc/nix/flake-registry.json";
+          keep-outputs = true;
+          extra-substituters = cfg.caches.extraSubstituters;
+          extra-trusted-public-keys = cfg.caches.extraTrustedPublicKeys;
+        };
+      }
+    ))
 
     # Case 2: "default" or null
     (mkIf (cfg.system.enable == "default" || cfg.system.enable == null) {
-      nix.enable = cfg.system.enable or null;
+      nix.enable = if cfg.system.enable == "default" then true else null;
 
       nix = {
         optimise.automatic = cfg.system.optimise;

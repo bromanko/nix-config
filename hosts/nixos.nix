@@ -14,6 +14,7 @@ with lib.my;
     ../modules/users.nix
     ../modules/fonts.nix
     ../modules/home-manager.nix
+    ../modules/homeage.nix
     ../modules/nix.nix
   ]
   # Must toString the path so that nix doesn't attempt to import it to the store
@@ -21,7 +22,7 @@ with lib.my;
   ++ (mapModulesRec' (toString ../modules/linux) import);
 
   modules.nix = {
-    enable = true;
+    system.enable = "default";
   };
 
   users.users.${config.user.name} = mkAliasDefinitions config.user;
