@@ -145,6 +145,17 @@
             name: config: lib.nameValuePair "darwin-${name}" config.config.system.build.toplevel
           ) self.darwinConfigurations
         )
+        # NixOS configs - filter by system
+        // (
+          let
+            nixosConfigsBySystem = {
+              "aarch64-linux" = lib.my.mapNixosHosts "aarch64-linux" ./hosts/nixos/aarch64-linux;
+            };
+          in
+          lib.mapAttrs' (
+            name: config: lib.nameValuePair "nixos-${name}" config.config.system.build.toplevel
+          ) (nixosConfigsBySystem.${system} or { })
+        )
         # Home Manager configs - filter by system
         // (
           let
@@ -168,6 +179,9 @@
       };
 
       darwinConfigurations = (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
+
+      nixosConfigurations =
+        (lib.my.mapNixosHosts "aarch64-linux" ./hosts/nixos/aarch64-linux);
 
       homeManagerConfigurations =
         (lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux)
