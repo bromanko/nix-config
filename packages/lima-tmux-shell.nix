@@ -85,7 +85,7 @@ pkgs.writeShellApplication {
         -o StreamLocalBindUnlink=yes \
         -t \
         "$ssh_host" \
-        "export TMUX=${q}''${vm_socket},0,0${q}; export TMUX_PANE=${q}''${TMUX_PANE}${q}; exec \$SHELL -l ''${extra_args[*]:+''${extra_args[*]}}"
+        "export TMUX=${q}''${vm_socket},0,0${q}; export TMUX_PANE=${q}''${TMUX_PANE}${q}; FISH=\$HOME/.nix-profile/bin/fish; exec \"\$(test -x \$FISH && echo \$FISH || echo \$SHELL)\" -l ''${extra_args[*]:+''${extra_args[*]}}"
     '';
   meta = with lib; {
     description = "Connect to a Lima VM with tmux socket forwarding";
