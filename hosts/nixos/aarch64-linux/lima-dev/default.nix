@@ -48,7 +48,7 @@
   };
 
   # Networking
-  networking.hostName = "lima-nixos-dev";
+  networking.hostName = "lima-dev";
 
   # SSH
   services.openssh = {
@@ -136,7 +136,7 @@
     };
 
     programs.fish.shellAliases = {
-      rebuild = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-nixos-dev";
+      rebuild = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-dev";
     };
   };
 
