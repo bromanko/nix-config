@@ -180,8 +180,7 @@
 
       darwinConfigurations = (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
-      nixosConfigurations =
-        (lib.my.mapNixosHosts "aarch64-linux" ./hosts/nixos/aarch64-linux);
+      nixosConfigurations = (lib.my.mapNixosHosts "aarch64-linux" ./hosts/nixos/aarch64-linux);
 
       homeManagerConfigurations =
         (lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux)
