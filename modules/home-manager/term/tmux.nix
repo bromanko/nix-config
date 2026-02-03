@@ -207,9 +207,9 @@ in
           set -g visual-activity off
           set -g window-status-activity-style "none"
 
-          # Claude Code tmux-titles plugin - preserve custom window names
+          # pi tmux-titles extension sets window names via escape sequences
           set -g automatic-rename off
-          set -g allow-rename off
+          set -g allow-rename on
         '';
       };
     };
