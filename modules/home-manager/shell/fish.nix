@@ -64,7 +64,6 @@ in
         shellAliases = {
           "reload!" = "exec fish";
           "less" = "less -R";
-          "dev" = "limactl shell --shell /home/bromanko.linux/.nix-profile/bin/fish lima-dev";
         };
 
         interactiveShellInit = ''
