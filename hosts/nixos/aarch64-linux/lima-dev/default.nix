@@ -149,6 +149,11 @@
         ncurses
         devenv
       ];
+      # Placeholder tokens — replaced by secret-proxy with real values from
+      # the host's 1Password Environment. See configs/secret-proxy/README.md.
+      sessionVariables = {
+        GH_TOKEN = "{{GITHUB_TOKEN}}";
+      };
     };
 
     programs.fish.shellAliases = {
