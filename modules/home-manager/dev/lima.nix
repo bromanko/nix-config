@@ -29,10 +29,6 @@ in
       home.file.".lima/_config/lima-dev.yaml" = {
         source = ../../../configs/lima/dev.yaml;
       };
-
-      home.file.".lima/_config/lima-nixos-dev.yaml" = {
-        source = ../../../configs/lima/dev-nixos.yaml;
-      };
     };
   };
 }
