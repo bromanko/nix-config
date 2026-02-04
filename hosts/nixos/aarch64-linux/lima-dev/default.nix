@@ -50,6 +50,22 @@
   # Networking
   networking.hostName = "lima-dev";
 
+  # Secret proxy client — route HTTP(S) through the host's secret-proxy
+  # which injects 1Password secrets via {{PLACEHOLDER}} patterns in headers.
+  # The proxy is accessible via SSH reverse tunnel (see configs/lima/dev.yaml).
+  networking.proxy = {
+    httpProxy = "http://127.0.0.1:17329";
+    httpsProxy = "http://127.0.0.1:17329";
+    noProxy = "localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16";
+  };
+
+  # Trust the mitmproxy CA certificate so HTTPS inspection works
+  security.pki.certificateFiles =
+    let
+      certPath = ../../../../configs/secret-proxy/mitmproxy-ca-cert.pem;
+    in
+    lib.optional (builtins.pathExists certPath) certPath;
+
   # SSH
   services.openssh = {
     enable = true;

@@ -121,6 +121,7 @@ with lib.my;
       pi.enable = true;
       lima.enable = true;
       toad.enable = true;
+      "secret-proxy".enable = true;
     };
     term = {
       ghostty.enable = true;
