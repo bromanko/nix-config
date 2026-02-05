@@ -153,7 +153,6 @@
       # the host's 1Password Environment. See configs/secret-proxy/README.md.
       sessionVariables = {
         GH_TOKEN = "{{GITHUB_TOKEN}}";
-        ANTHROPIC_API_KEY = "{{ANTHROPIC_API_KEY}}";
         OPENAI_API_KEY = "{{OPENAI_API_KEY}}";
         GEMINI_API_KEY = "{{GEMINI_API_KEY}}";
       };
