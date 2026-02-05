@@ -179,7 +179,6 @@ with lib.my;
         chatgpt
         devenv
         podman
-        beads
       ];
     };
   };
