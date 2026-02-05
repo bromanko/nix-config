@@ -2,3 +2,4 @@ private.nix
 result
 .idea
 .claude/*.local.json
+__pycache__/
