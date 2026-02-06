@@ -120,7 +120,6 @@ with lib.my;
       claude-code.enable = true;
       pi.enable = true;
       lima.enable = true;
-      toad.enable = true;
       "secret-proxy".enable = true;
     };
     term = {
@@ -174,7 +173,6 @@ with lib.my;
         my.tldx
         my.sprite
         my.ticket
-        nur.repos.charmbracelet.crush
         iina
         chatgpt
         devenv
