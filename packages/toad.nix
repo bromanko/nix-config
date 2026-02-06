@@ -8,13 +8,13 @@
 
 python314.pkgs.buildPythonApplication rec {
   pname = "batrachian-toad";
-  version = "0.5.35";
+  version = "0.5.38";
   pyproject = true;
 
   src = fetchPypi {
     pname = "batrachian_toad";
     inherit version;
-    hash = "sha256-cWqbJyTnXuyxLjHSJcDBSGJ/CPRxWJixWeBKY42X1nQ=";
+    hash = "sha256-5YbmXHEayT/atFje3pOHmzKUnYe4DjDzDmtWA+S2jAQ=";
   };
 
   nativeBuildInputs = [ makeWrapper ];

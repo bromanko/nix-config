@@ -7,14 +7,14 @@
 
 python3.pkgs.buildPythonPackage rec {
   pname = "llm-gemini";
-  version = "0.8";
+  version = "0.28.2";
   pyproject = true;
 
   src = fetchFromGitHub {
     owner = "simonw";
     repo = "llm-gemini";
     rev = version;
-    hash = "sha256-I6rjhQYfehOfZoEMbP1W8/Wu2Mzx43VHWV4BOeW3HFw=";
+    hash = "sha256-lPap9EWVue7VdqDQ5io5Al53gzfChuylJChDUIMBDow=";
   };
 
   nativeBuildInputs = with python3.pkgs; [
