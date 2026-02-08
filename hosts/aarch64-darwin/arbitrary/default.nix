@@ -144,7 +144,6 @@ with lib.my;
         "bartender"
         "betterdisplay"
         "figma"
-        "ghostty"
         "google-chrome"
         "istat-menus"
         "lunar"

@@ -67,7 +67,6 @@ in
       ];
       casks = [
         "betterdisplay"
-        "ghostty"
         "google-chrome"
         "istat-menus"
         "jordanbaird-ice"

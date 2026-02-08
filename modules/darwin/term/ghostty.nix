@@ -1,4 +1,8 @@
-{ lib, config, ... }:
+{
+  lib,
+  config,
+  ...
+}:
 
 with lib;
 with lib.my;
@@ -9,7 +13,7 @@ in
   config = mkIf cfg.enable {
     modules = mkIf config.modules.homebrew.enable {
       homebrew = {
-        casks = [ "ghostty" ];
+        casks = [ "ghostty@tip" ];
       };
     };
   };
