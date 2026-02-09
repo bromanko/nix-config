@@ -2,93 +2,32 @@
 
 pkgs.writeShellApplication {
   name = "limassh";
-  runtimeInputs = with pkgs; [ openssh ];
-  text =
-    let
-      q = "'";
-    in
-    ''
-      # Connect to a Lima VM with tmux socket forwarding
-      #
-      # Forwards the host tmux Unix socket into the VM so that Claude Code's
-      # tmux-titles plugin can set window names from inside the guest.
-      #
-      # Usage: limassh [instance-name] [-- extra-args...]
-      #   instance-name  Lima instance (default: "lima-dev")
-      #   extra-args     Additional arguments passed to the shell session
+  runtimeInputs = with pkgs; [ lima ];
+  text = ''
+    # Wrapper around limactl shell that inserts "lima-dev" as the instance name.
+    # Usage: limassh [flags...] [-- command...]
+    #
+    # Flags (e.g. --workdir) are passed before the instance name,
+    # and any command after "--" is passed after it.
 
-      # --- Parse arguments ---
-      instance="lima-dev"
-      extra_args=()
+    flags=()
+    cmd=()
+    seen_dashdash=false
 
-      while [[ $# -gt 0 ]]; do
-        case "$1" in
-          --)
-            shift
-            extra_args=("$@")
-            break
-            ;;
-          -*)
-            echo "Unknown option: $1" >&2
-            echo "Usage: limassh [instance-name] [-- extra-args...]" >&2
-            exit 1
-            ;;
-          *)
-            instance="$1"
-            shift
-            ;;
-        esac
-      done
-
-      # --- Validate tmux environment ---
-      if [[ -z "''${TMUX:-}" ]]; then
-        echo "Error: not running inside tmux (\$TMUX is not set)" >&2
-        exit 1
+    for arg in "$@"; do
+      if [[ "$seen_dashdash" == true ]]; then
+        cmd+=("$arg")
+      elif [[ "$arg" == "--" ]]; then
+        seen_dashdash=true
+      else
+        flags+=("$arg")
       fi
+    done
 
-      if [[ -z "''${TMUX_PANE:-}" ]]; then
-        echo "Error: \$TMUX_PANE is not set" >&2
-        exit 1
-      fi
-
-      # --- Extract host tmux socket path ---
-      # $TMUX format: /path/to/socket,pid,session
-      host_socket="''${TMUX%%,*}"
-
-      if [[ ! -S "$host_socket" ]]; then
-        echo "Error: tmux socket not found at $host_socket" >&2
-        exit 1
-      fi
-
-      # --- Forwarded socket path inside the VM ---
-      vm_socket_dir="/tmp/tmux-forwarded"
-      vm_socket="''${vm_socket_dir}/default"
-
-      # --- Locate SSH config file ---
-      ssh_config_file="$HOME/.lima/''${instance}/ssh.config"
-
-      if [[ ! -f "$ssh_config_file" ]]; then
-        echo "Error: SSH config not found at $ssh_config_file" >&2
-        echo "Is the instance running? Try: limactl list" >&2
-        exit 1
-      fi
-
-      # The SSH host alias is "lima-<instance>"
-      ssh_host="lima-''${instance}"
-
-      # --- Ensure the socket directory exists inside the VM ---
-      ssh -F "$ssh_config_file" "$ssh_host" "mkdir -p $vm_socket_dir" 2>/dev/null
-
-      # --- Connect with socket forwarding ---
-      exec ssh -F "$ssh_config_file" \
-        -R "''${vm_socket}:''${host_socket}" \
-        -o StreamLocalBindUnlink=yes \
-        -t \
-        "$ssh_host" \
-        "env TMUX=${q}''${vm_socket},0,0${q} TMUX_PANE=${q}''${TMUX_PANE}${q} \$SHELL -l ''${extra_args[*]:+''${extra_args[*]}}"
-    '';
+    exec limactl shell "''${flags[@]}" lima-dev "''${cmd[@]}"
+  '';
   meta = with lib; {
-    description = "Connect to a Lima VM with tmux socket forwarding";
+    description = "Shell into the Lima dev VM";
     license = licenses.mit;
     platforms = platforms.darwin;
     mainProgram = "limassh";

@@ -35,15 +35,15 @@ let
     windows = [
       {
         name = "shell";
-        commands = [ "limactl shell --workdir \${lima_root} lima-dev" ];
+        commands = [ "limassh --workdir \${lima_root}" ];
       }
       {
         name = "jjui";
-        commands = [ "limactl shell --workdir \${lima_root} lima-dev -- jjui" ];
+        commands = [ "limassh --workdir \${lima_root} -- jjui" ];
       }
       {
         name = "claude";
-        commands = [ "limactl shell --workdir \${lima_root} lima-dev -- claude --resume" ];
+        commands = [ "limassh --workdir \${lima_root} -- claude --resume" ];
       }
     ];
   };

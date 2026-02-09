@@ -135,6 +135,9 @@
       claude-code.enable = true;
       pi.enable = true;
     };
+    term = {
+      tmux.enable = true;
+    };
     editor = {
       default = "nvim";
       neovim.enable = true;
