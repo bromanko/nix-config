@@ -99,6 +99,7 @@
   environment.systemPackages = with pkgs; [
     vim
     git
+    ghostty # terminfo for host terminal
     ncurses
   ];
 
