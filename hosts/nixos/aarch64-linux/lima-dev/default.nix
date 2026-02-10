@@ -159,11 +159,15 @@
         GH_TOKEN = "{{GITHUB_TOKEN}}";
         OPENAI_API_KEY = "{{OPENAI_API_KEY}}";
         GEMINI_API_KEY = "{{GEMINI_API_KEY}}";
+        JJ_EDITOR = "nvim";
       };
     };
 
-    programs.fish.shellAliases = {
-      rebuild = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-dev";
+    programs = {
+      fish.shellAliases = {
+        rebuild = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-dev";
+      };
+      jujutsu.settings.ui.editor = "nvim";
     };
   };
 
