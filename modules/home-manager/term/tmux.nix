@@ -178,6 +178,11 @@ in
           # Override tmux-sensible's reattach-to-user-namespace default-command (unnecessary on modern macOS)
           set -g default-command ""
 
+          # Enable extended keys (Kitty keyboard protocol) so apps like pi
+          # can detect modifier keys (e.g. Shift+Enter for newline)
+          set -g extended-keys on
+          set -as terminal-features 'xterm*:extkeys'
+
           # Allow cursor shape changes to pass through (fixes fish vi-mode cursor)
           set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
 
