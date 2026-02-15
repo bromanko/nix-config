@@ -34,6 +34,7 @@ in
           ripgrep
           shellcheck
           shfmt
+          timg
           tldr
           tree
           yq

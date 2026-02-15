@@ -53,6 +53,14 @@ in
           vterm_prompt_end = "vterm_printf '51;A'(whoami)'@'(hostname)':'(pwd)";
           gi = "curl -sL https://www.toptal.com/developers/gitignore/api/$argv";
           multicd = "echo cd (string repeat -n (math (string length -- $argv[1]) - 1) ../)";
+          timg = ''
+            # Auto-select kitty protocol when in tmux for better compatibility
+            if test -n "$TMUX"
+              command timg -p kitty $argv
+            else
+              command timg $argv
+            end
+          '';
         };
 
         shellAbbrs = {

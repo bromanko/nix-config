@@ -183,6 +183,9 @@ in
           set -g extended-keys on
           set -as terminal-features 'xterm*:extkeys'
 
+          # Allow passthrough sequences for inline images and other terminal features
+          set -g allow-passthrough on
+
           # Allow cursor shape changes to pass through (fixes fish vi-mode cursor)
           set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
 
@@ -206,6 +209,9 @@ in
 
           # Enable true color support
           set -ga terminal-overrides ",*256col*:Tc"
+
+          # Advertise Kitty graphics protocol support for terminals that support it
+          set -ga terminal-features "*:hyperlinks:clipboard:strikethrough:sixel:graphics"
 
           # Set window notifications
           setw -g monitor-activity on
