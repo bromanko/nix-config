@@ -15,6 +15,10 @@ in
   options.modules.desktop.apps.aerospace = {
     enable = mkBoolOpt false;
 
+    jankyBorders = {
+      enable = mkBoolOpt true;
+    };
+
     windowRules = mkOption {
       type = types.listOf types.attrs;
       default = [ ];
@@ -60,7 +64,7 @@ in
   };
 
   config = mkIf cfg.enable {
-    environment.systemPackages = [ pkgs.jankyborders ];
+    environment.systemPackages = mkIf cfg.jankyBorders.enable [ pkgs.jankyborders ];
 
     services.aerospace = {
       enable = true;
@@ -129,7 +133,7 @@ in
           outer.top = cfg.gaps.outer.top;
           outer.right = cfg.gaps.outer.right;
         };
-        after-startup-command = [
+        after-startup-command = mkIf cfg.jankyBorders.enable [
           "exec-and-forget ${pkgs.jankyborders}/bin/borders active_color=0xfffab387 inactive_color=0x00000000 width=7.0 style=round hidpi=on"
         ];
         exec-on-workspace-change = mkIf sketchybarCfg.enable [

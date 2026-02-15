@@ -53,6 +53,7 @@ with lib.my;
         multitouch.enable = true;
         aerospace = {
           enable = true;
+          jankyBorders.enable = false;
           windowRules = [
             {
               "if".app-id = "app.zen-browser.zen";
@@ -145,6 +146,7 @@ with lib.my;
         "betterdisplay"
         "figma"
         "google-chrome"
+        "hazeover"
         "istat-menus"
         "lunar"
         "macwhisper"
