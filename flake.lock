@@ -70,12 +70,12 @@
         ]
       },
       "locked": {
-        "lastModified": 1768346328,
-        "narHash": "sha256-ms6v0JPPUr0FAoV9hm3Wm7/DOTb/mBp9G8l8KcDx00g=",
-        "rev": "e5363b52e8eda2f3e0379ffb5ca13ef47542be73",
-        "revCount": 249,
+        "lastModified": 1771182887,
+        "narHash": "sha256-M0ARd2XO/uTpbpp9cRyiUMGHDEOhrnOBURYUlOZx07o=",
+        "rev": "a786bb745f4dee4697af0c5c108f94abf093765f",
+        "revCount": 250,
         "type": "tarball",
-        "url": "https://api.flakehub.com/f/pinned/bromanko/dealmail/0.1.249%2Brev-e5363b52e8eda2f3e0379ffb5ca13ef47542be73/019bb9ac-c2b7-7d41-bdda-e8ab10188d3d/source.tar.gz"
+        "url": "https://api.flakehub.com/f/pinned/bromanko/dealmail/0.1.250%2Brev-a786bb745f4dee4697af0c5c108f94abf093765f/019c62bf-9d57-70c1-9239-161df89aa9e8/source.tar.gz"
       },
       "original": {
         "type": "tarball",
