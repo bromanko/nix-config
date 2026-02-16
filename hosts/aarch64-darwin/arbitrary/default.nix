@@ -51,6 +51,10 @@ with lib.my;
         vscode.enable = true;
         claude.enable = true;
         multitouch.enable = true;
+        screencast = {
+          enable = true;
+          keycastr.enable = true;
+        };
         aerospace = {
           enable = true;
           jankyBorders.enable = false;
