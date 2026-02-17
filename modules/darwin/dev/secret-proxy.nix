@@ -11,6 +11,7 @@ let
   cfg = config.modules.dev."secret-proxy";
   homeDir = "/Users/${config.user.name}";
   configDir = "${homeDir}/.config/secret-proxy";
+  namespaceDir = "${configDir}/namespaces";
   limaHome = "${homeDir}/.lima";
 
   # Script that maintains the SSH reverse tunnel to a Lima VM.
@@ -61,6 +62,16 @@ in
       default = "lima-dev";
       description = "Name of the Lima instance to tunnel into";
     };
+
+    namespaces = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = ''
+        List of namespace names. Each namespace has its own 1Password
+        Environment mounted at ~/.config/secret-proxy/namespaces/<name>/secrets.env.
+        Clients reference namespaced secrets with {{namespace:SECRET_NAME}}.
+      '';
+    };
   };
 
   config = mkIf cfg.enable {
@@ -85,6 +96,8 @@ in
           "${configDir}/secret_proxy.py"
           "--set"
           "secret_proxy_env_file=${configDir}/secrets.env"
+          "--set"
+          "secret_proxy_namespace_dir=${namespaceDir}"
           "--set"
           "block_global=false"
         ];

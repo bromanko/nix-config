@@ -121,7 +121,10 @@ with lib.my;
       claude-code.enable = true;
       pi.enable = true;
       lima.enable = true;
-      "secret-proxy".enable = true;
+      "secret-proxy" = {
+        enable = true;
+        namespaces = [ "michael" ];
+      };
     };
     term = {
       ghostty.enable = true;
