@@ -33,7 +33,7 @@ in
       defaultProvider = "anthropic";
       defaultModel = "claude-opus-4-6";
       packages = [
-        "~/Code/claude"
+        "~/Code/llm-agents"
         "~/Code/llm-agents-private"
         "${pkgs.my.pi-sub-bar}/lib/pi-sub-bar"
       ];
