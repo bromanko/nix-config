@@ -186,6 +186,10 @@ in
           # Allow passthrough sequences for inline images and other terminal features
           set -g allow-passthrough on
 
+          # Allow applications to read the clipboard via OSC 52
+          # (default "external" only allows writes; "on" allows reads too)
+          set -g set-clipboard on
+
           # Allow cursor shape changes to pass through (fixes fish vi-mode cursor)
           set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
 
