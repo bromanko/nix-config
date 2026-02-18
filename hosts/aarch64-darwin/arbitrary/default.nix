@@ -11,6 +11,11 @@ in
 with lib;
 with lib.my;
 {
+  # Only allow SSH via 1Password key
+  authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia 1Password"
+  ];
+
   modules = {
     nix = {
       system.enable = "determinate";
@@ -51,6 +56,10 @@ with lib.my;
         vscode.enable = true;
         claude.enable = true;
         multitouch.enable = true;
+        screencast = {
+          enable = true;
+          keycastr.enable = true;
+        };
         aerospace = {
           enable = true;
           jankyBorders.enable = false;
@@ -135,6 +144,11 @@ with lib.my;
       visual = "zed-preview -w";
       neovim.enable = true;
       zed.enable = true;
+    };
+
+    openssh = {
+      enable = true;
+      tailscaleOnly = true;
     };
 
     homebrew = {

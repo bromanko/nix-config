@@ -34,6 +34,7 @@ in
           vim-polyglot
           fzf-vim
           lightline-vim
+          pkgs.vimPlugins."catppuccin-nvim"
           {
             plugin = vim-gitgutter;
             config = ''
@@ -48,13 +49,6 @@ in
         ];
 
         extraConfig = ''
-          " plugins
-          call plug#begin(stdpath('data') . '/plugins')
-
-          Plug 'sainnhe/sonokai'
-
-          call plug#end()
-
           " keymaps
           let mapleader = " "
           let maplocalleader = ","
@@ -83,11 +77,12 @@ in
             set termguicolors
           endif
 
-          let g:sonokai_style = 'shusia'
-          let g:sonokai_enable_italic = 1
-          let g:sonokai_better_performance = 1
-          colorscheme sonokai
-          let g:lightline = {'colorscheme' : 'sonokai'}
+          lua << EOF
+          require("catppuccin").setup({
+            flavour = "mocha",
+          })
+          EOF
+          colorscheme catppuccin
 
           set colorcolumn=80,120  " highlight columns
 
@@ -100,18 +95,6 @@ in
         '';
       };
 
-      xdg.dataFile."nvim/site/autoload/plug.vim".source =
-        pkgs.fetchFromGitHub {
-          owner = "junegunn";
-          repo = "vim-plug";
-          rev = "68fef9c2fd9d4a21b500cc2249b6711a71c6fb9f";
-          sha256 = "0azmnxq82frs375k5b9yjdvsjfmzjv92ifqnmniar19d96yh6swa";
-        }
-        + "/plug.vim";
-
-      home.activation.neovim = lib.hm.dag.entryAfter [ "installPackages" ] ''
-        ${pkgs.neovim}/bin/nvim +'packal' +'PlugInstall --sync' +qa
-      '';
     };
   };
 }

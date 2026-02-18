@@ -220,7 +220,7 @@ items:
         command: new
       - name: Rename
         key: r
-        command: rename
+        command: command-prompt -I "#S" "rename-session -- \"%%\""
       - separator: true
       - name: Kill
         key: X
