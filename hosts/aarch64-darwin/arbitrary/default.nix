@@ -11,6 +11,11 @@ in
 with lib;
 with lib.my;
 {
+  # Only allow SSH via 1Password key
+  authorizedKeys = [
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia 1Password"
+  ];
+
   modules = {
     nix = {
       system.enable = "determinate";
@@ -125,7 +130,10 @@ with lib.my;
       claude-code.enable = true;
       pi.enable = true;
       lima.enable = true;
-      "secret-proxy".enable = true;
+      "secret-proxy" = {
+        enable = true;
+        namespaces = [ "michael" ];
+      };
     };
     term = {
       ghostty.enable = true;
@@ -136,6 +144,11 @@ with lib.my;
       visual = "zed-preview -w";
       neovim.enable = true;
       zed.enable = true;
+    };
+
+    openssh = {
+      enable = true;
+      tailscaleOnly = true;
     };
 
     homebrew = {
