@@ -11,13 +11,16 @@ let
   cfg = config.modules.dev.pi;
   homeDir = config.users.users.${config.user.name}.home;
 
-  # Resolve ~/ prefixes in package paths to the user's home directory
-  resolvePackagePath = p: if hasPrefix "~/" p then homeDir + removePrefix "~" p else p;
+  # Resolve ~/ prefixes to the user's home directory
+  resolveTildePath = p: if hasPrefix "~/" p then homeDir + removePrefix "~" p else p;
 
   resolvedSettings =
     cfg.settings
     // (optionalAttrs (cfg.settings ? packages) {
-      packages = map resolvePackagePath cfg.settings.packages;
+      packages = map resolveTildePath cfg.settings.packages;
+    })
+    // (optionalAttrs (cfg.settings ? extensions) {
+      extensions = map resolveTildePath cfg.settings.extensions;
     });
 
   settingsFile = pkgs.writeText "pi-settings.json" (builtins.toJSON resolvedSettings);
@@ -27,14 +30,16 @@ in
     enable = mkBoolOpt false;
 
     # Freeform settings written to ~/.pi/agent/settings.json.
-    # Package paths starting with ~/ are resolved to the user's home directory.
-    # The file is read-only; manage packages here instead of `pi install`.
+    # Paths in `packages` and `extensions` starting with ~/ are resolved to
+    # the user's home directory. The file is read-only; manage it here
+    # instead of editing settings.json or running `pi install`.
     settings = mkOpt attrs {
       defaultProvider = "anthropic";
       defaultModel = "claude-opus-4-6";
       packages = [
         "~/Code/llm-agents"
         "~/Code/llm-agents-private"
+        "~/Code/attractor"
         "${pkgs.my.pi-sub-bar}/lib/pi-sub-bar"
       ];
       theme = "catppuccin-mocha";
