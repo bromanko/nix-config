@@ -8,6 +8,7 @@ window-padding-x = 10
 ################################################
 # Behavior
 ################################################
+clipboard-read = allow
 clipboard-trim-trailing-spaces = true
 copy-on-select = true
 confirm-close-surface = false
