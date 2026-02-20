@@ -59,6 +59,7 @@ with lib.my;
         screencast = {
           enable = true;
           keycastr.enable = true;
+          loom.enable = true;
         };
         aerospace = {
           enable = true;
@@ -117,7 +118,6 @@ with lib.my;
             }
           ];
         };
-        autoraise.enable = true;
       };
     };
     dev = {
