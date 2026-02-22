@@ -112,6 +112,7 @@
         default = pkgs.${system}.mkShell {
           packages = with pkgs.${system}; [
             nixfmt
+            hcloud
           ];
         };
       });
@@ -150,6 +151,7 @@
           let
             nixosConfigsBySystem = {
               "aarch64-linux" = lib.my.mapNixosHosts "aarch64-linux" ./hosts/nixos/aarch64-linux;
+              "x86_64-linux" = lib.my.mapNixosHosts "x86_64-linux" ./hosts/nixos/x86_64-linux;
             };
           in
           lib.mapAttrs' (
@@ -179,7 +181,9 @@
 
       darwinConfigurations = (lib.my.mapDarwinHosts "aarch64-darwin" ./hosts/aarch64-darwin);
 
-      nixosConfigurations = (lib.my.mapNixosHosts "aarch64-linux" ./hosts/nixos/aarch64-linux);
+      nixosConfigurations =
+        (lib.my.mapNixosHosts "aarch64-linux" ./hosts/nixos/aarch64-linux)
+        // (lib.my.mapNixosHosts "x86_64-linux" ./hosts/nixos/x86_64-linux);
 
       homeManagerConfigurations = (lib.my.mapHomeManagerHosts "x86_64-linux" ./hosts/x86_64-linux);
     };
