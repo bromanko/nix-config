@@ -30,6 +30,32 @@ For `nixos`:
 nixos-rebuild switch --flake .#nixosConfigurations.dev-vm
 ```
 
+### Hetzner host for Michael (always-on)
+
+A dedicated host config exists at:
+
+- `hosts/nixos/x86_64-linux/sleeper-service/default.nix`
+
+Provisioning automation and runbook are in this repo:
+
+- `scripts/hetzner/create-server.sh`
+- `scripts/hetzner/bootstrap-nixos.sh`
+- `scripts/hetzner/apply-host-config.sh`
+- `docs/runbooks/sleeper-service-provisioning.md`
+
+Quick flow:
+
+```sh
+scripts/hetzner/create-server.sh
+scripts/hetzner/bootstrap-nixos.sh <server-ip>
+INSTALL_BOOTLOADER=1 scripts/hetzner/apply-host-config.sh <server-ip> sleeper-service
+# later applies: scripts/hetzner/apply-host-config.sh <server-ip> sleeper-service
+```
+
+This host is designed for one always-on Michael process (API + static frontend + in-process calendar sync), with a separate systemd timer for SQLite backups.
+
+Backups are written locally to `/var/lib/michael/backups` and can be uploaded offsite to S3-compatible object storage by creating `/var/lib/michael/backup-upload.env` (see `docs/runbooks/sleeper-service-provisioning.md`).
+
 For `home-manager`:
 
 ```sh
