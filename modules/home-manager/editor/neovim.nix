@@ -32,6 +32,7 @@ in
           vim-easymotion
           vim-highlightedyank
           vim-polyglot
+          kdl-vim
           fzf-vim
           lightline-vim
           pkgs.vimPlugins."catppuccin-nvim"
@@ -85,6 +86,10 @@ in
           colorscheme catppuccin
 
           set colorcolumn=80,120  " highlight columns
+
+          " clipboard — use OSC 52 escape sequences so yanks reach the
+          " system clipboard even over SSH / in tmux.
+          set clipboard=unnamedplus
 
           " general
           au FocusLost * :wa      " save when losing focus
