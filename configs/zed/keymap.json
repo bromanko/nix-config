@@ -28,7 +28,7 @@
       "space c r": "editor::Rename",
       "space h h": "editor::Hover",
       "space t e": "workspace::ToggleLeftDock",
-      "space t t": "terminal::ToggleFocus",
+      "space t t": "terminal_panel::ToggleFocus",
       "space t a": "agent::ToggleFocus"
     }
   }
