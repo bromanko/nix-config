@@ -15,11 +15,11 @@ in
   options.modules.homebrew = with types; {
     enable = mkBoolOpt false;
 
-    brewPrefix = mkOption {
+    prefix = mkOption {
       type = str;
-      default = "/usr/local/bin";
+      default = "/usr/local";
       description = ''
-        Customize path prefix where executable of <command>brew</command> is searched for.
+        The Homebrew prefix directory, matching the output of `brew --prefix`.
       '';
     };
 
@@ -83,7 +83,7 @@ in
         brewfile = true;
       };
 
-      brewPrefix = cfg.brewPrefix;
+      prefix = cfg.prefix;
       taps = cfg.taps;
       brews = cfg.brews;
       casks = cfg.casks;

@@ -108,7 +108,7 @@ with lib.my;
 
     homebrew = {
       enable = true;
-      brewPrefix = "/Users/bromanko/homebrew/bin";
+      prefix = "/Users/bromanko/homebrew";
       casks = [
         "badgeify"
         "bartender"

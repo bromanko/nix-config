@@ -6,7 +6,8 @@
 }:
 
 let
-  brewPath = "/opt/homebrew/bin";
+  brewPrefix = "/opt/homebrew";
+  brewPath = "${brewPrefix}/bin";
 in
 with lib;
 with lib.my;
@@ -153,7 +154,7 @@ with lib.my;
 
     homebrew = {
       enable = true;
-      brewPrefix = brewPath;
+      prefix = brewPrefix;
       taps = [
         "homebrew/services"
       ];

@@ -1,7 +1,8 @@
 { pkgs, ... }:
 
 let
-  brewPath = "/opt/homebrew/bin";
+  brewPrefix = "/opt/homebrew";
+  brewPath = "${brewPrefix}/bin";
 in
 {
   authorizedKeys = [
@@ -61,7 +62,7 @@ in
 
     homebrew = {
       enable = true;
-      brewPrefix = brewPath;
+      prefix = brewPrefix;
       taps = [
         "homebrew/services"
       ];
