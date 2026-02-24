@@ -58,6 +58,34 @@ in
           ".pi/agent/settings.json".source = settingsFile;
         };
       };
+
+      programs.fish.functions.piws = ''
+        if test (count $argv) -ne 1
+            echo "Usage: piws <workspace-name>"
+            return 1
+        end
+
+        set -l ws_name $argv[1]
+        set -l repo_root (jj root 2>/dev/null)
+
+        if test $status -ne 0
+            echo "Error: not in a jj repository"
+            return 1
+        end
+
+        set -l parent_dir (dirname $repo_root)
+        set -l repo_name (basename $repo_root)
+        set -l ws_dir "$parent_dir/$repo_name-ws-$ws_name"
+
+        if test -d "$ws_dir"
+            cd "$ws_dir"
+            pi
+        else
+            jj workspace add --name "$ws_name" "$ws_dir"
+            and cd "$ws_dir"
+            and pi
+        end
+      '';
     };
   };
 }
