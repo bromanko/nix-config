@@ -42,6 +42,21 @@ in
       nix = {
         optimise.automatic = cfg.system.optimise;
 
+        gc = {
+          automatic = true;
+          options = "--delete-older-than 7d";
+        }
+        // optionalAttrs pkgs.stdenv.hostPlatform.isLinux {
+          dates = "weekly";
+        }
+        // optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+          interval = {
+            Weekday = 0;
+            Hour = 2;
+            Minute = 0;
+          };
+        };
+
         extraOptions = ''
           experimental-features = nix-command flakes
           keep-derivations = true
