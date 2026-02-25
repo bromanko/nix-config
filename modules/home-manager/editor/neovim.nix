@@ -25,7 +25,7 @@ in
         vimdiffAlias = true;
 
         plugins = with pkgs.vimPlugins; [
-          sensible
+          vim-sensible
           vim-surround
           vim-repeat
           vim-commentary
