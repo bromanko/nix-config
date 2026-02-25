@@ -35,6 +35,9 @@ in
           kdl-vim
           fzf-vim
           lightline-vim
+          nvim-web-devicons
+          nvim-tree-lua
+          which-key-nvim
           pkgs.vimPlugins."catppuccin-nvim"
           {
             plugin = vim-gitgutter;
@@ -81,6 +84,41 @@ in
           lua << EOF
           require("catppuccin").setup({
             flavour = "mocha",
+          })
+
+          -- File tree
+          -- Disable netrw so nvim-tree owns the file drawer
+          vim.g.loaded_netrw = 1
+          vim.g.loaded_netrwPlugin = 1
+
+          require("nvim-tree").setup({
+            view = { width = 35 },
+            renderer = {
+              group_empty = true,  -- collapse single-child dirs like src/main
+              icons = { show = { git = true, file = true, folder = true } },
+            },
+            filters = { dotfiles = false },
+          })
+
+          -- Which-key
+          local wk = require("which-key")
+          wk.setup({
+            icons = { mappings = false },
+          })
+
+          wk.add({
+            { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "File tree" },
+            { "<leader>f", group = "find" },
+            { "<leader>ff", "<cmd>Files<cr>", desc = "Files" },
+            { "<leader>fg", "<cmd>Rg<cr>", desc = "Grep" },
+            { "<leader>fb", "<cmd>Buffers<cr>", desc = "Buffers" },
+            { "<leader>fh", "<cmd>History<cr>", desc = "Recent files" },
+            { "<leader>b", group = "buffer" },
+            { "<leader>bd", "<cmd>bd<cr>", desc = "Delete buffer" },
+            { "<leader>bn", "<cmd>bn<cr>", desc = "Next buffer" },
+            { "<leader>bp", "<cmd>bp<cr>", desc = "Previous buffer" },
+            { "<leader>w", "<cmd>w<cr>", desc = "Save" },
+            { "<leader>q", "<cmd>q<cr>", desc = "Quit" },
           })
           EOF
           colorscheme catppuccin

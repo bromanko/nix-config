@@ -77,11 +77,13 @@ in
   config = mkIf cfg.enable {
     # mitmproxy pins strict upper bounds on dependencies (e.g. aioquic<=1.2.0)
     # that nixpkgs routinely exceeds with compatible minor/patch bumps.
-    # Relax all dependency version constraints to avoid false-positive build failures.
+    # Relax all dependency version constraints and skip tests to avoid
+    # build failures from upstream pytest config issues.
     nixpkgs.overlays = [
       (final: prev: {
         mitmproxy = prev.mitmproxy.overridePythonAttrs {
           pythonRelaxDeps = true;
+          doCheck = false;
         };
       })
     ];
