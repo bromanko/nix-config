@@ -77,11 +77,11 @@ in
   config = mkIf cfg.enable {
     # mitmproxy pins strict upper bounds on dependencies (e.g. aioquic<=1.2.0)
     # that nixpkgs routinely exceeds with compatible minor/patch bumps.
-    # Disable the runtime deps check to avoid false-positive build failures.
+    # Relax all dependency version constraints to avoid false-positive build failures.
     nixpkgs.overlays = [
       (final: prev: {
         mitmproxy = prev.mitmproxy.overridePythonAttrs {
-          pythonRuntimeDepsCheck = "ignore";
+          pythonRelaxDeps = true;
         };
       })
     ];
