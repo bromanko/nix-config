@@ -17,6 +17,8 @@ The proxy:
 3. Validates the destination host is allowed for that secret
 4. Replaces placeholders with values from 1Password Environment .env file
 5. Logs all secret-injected requests for audit purposes
+6. (Optional) Redirects LLM API traffic through Context Lens for
+   context window visualization
 
 Security features:
 - Destination allowlisting via _HOSTS companion variables
@@ -28,16 +30,38 @@ Usage:
     mitmdump -s secret_proxy.py \
       --set secret_proxy_env_file=~/.config/secret-proxy/secrets.env \
       --set secret_proxy_namespace_dir=~/.config/secret-proxy/namespaces
+
+    # With Context Lens integration:
+    mitmdump -s secret_proxy.py \
+      --set secret_proxy_env_file=~/.config/secret-proxy/secrets.env \
+      --set secret_proxy_namespace_dir=~/.config/secret-proxy/namespaces \
+      --set context_lens_enabled=true \
+      --set context_lens_port=4040
 """
 
+import http.client
 import json
 import re
+import time
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Optional
 
-from mitmproxy import ctx, http
+from mitmproxy import ctx, http as mhttp
 from mitmproxy.addonmanager import Loader
+
+
+# LLM API hosts and their Context Lens path prefixes.
+# Context Lens uses these prefixes to identify the provider and route
+# to the correct upstream.
+CONTEXT_LENS_HOSTS: dict[str, str] = {
+    "api.anthropic.com": "claude",
+    "api.openai.com": "openai",
+    "chatgpt.com": "codex",
+    "generativelanguage.googleapis.com": "gemini",
+    "cloudcode-pa.googleapis.com": "gemini",
+    "us-central1-aiplatform.googleapis.com": "vertex",
+}
 
 
 # Pattern matches {{VARIABLE_NAME}} or {{namespace:VARIABLE_NAME}}
@@ -168,6 +192,14 @@ class SecretProxy:
         self.env_file_path: Optional[Path] = None
         self.namespace_dir: Optional[Path] = None
 
+        # Context Lens integration
+        self.context_lens_enabled: bool = False
+        self.context_lens_port: int = 4040
+        self._context_lens_alive: bool = False
+        self._context_lens_last_check: float = 0
+        # Re-check liveness every 30 seconds
+        self._context_lens_check_interval: float = 30.0
+
     def load(self, loader: Loader):
         loader.add_option(
             name="secret_proxy_env_file",
@@ -181,6 +213,18 @@ class SecretProxy:
             default="",
             help="Directory containing per-namespace env files (each in <name>/secrets.env)",
         )
+        loader.add_option(
+            name="context_lens_enabled",
+            typespec=bool,
+            default=False,
+            help="Redirect LLM API traffic through Context Lens for visualization",
+        )
+        loader.add_option(
+            name="context_lens_port",
+            typespec=int,
+            default=4040,
+            help="Port where Context Lens proxy is listening",
+        )
 
     def configure(self, updated: set[str]):
         if "secret_proxy_env_file" in updated and ctx.options.secret_proxy_env_file:
@@ -190,6 +234,81 @@ class SecretProxy:
         if "secret_proxy_namespace_dir" in updated and ctx.options.secret_proxy_namespace_dir:
             self.namespace_dir = Path(ctx.options.secret_proxy_namespace_dir).expanduser()
             ctx.log.info(f"secret-proxy: Namespace directory: {self.namespace_dir}")
+
+        if "context_lens_enabled" in updated:
+            self.context_lens_enabled = ctx.options.context_lens_enabled
+            if self.context_lens_enabled:
+                ctx.log.info("secret-proxy: Context Lens integration enabled")
+            else:
+                ctx.log.info("secret-proxy: Context Lens integration disabled")
+
+        if "context_lens_port" in updated:
+            self.context_lens_port = ctx.options.context_lens_port
+
+    def _is_context_lens_alive(self) -> bool:
+        """
+        Check if Context Lens is running, with caching to avoid per-request overhead.
+
+        Returns True if Context Lens responded to a TCP connection within the
+        last check interval, False otherwise.
+        """
+        now = time.monotonic()
+        if now - self._context_lens_last_check < self._context_lens_check_interval:
+            return self._context_lens_alive
+
+        self._context_lens_last_check = now
+        try:
+            conn = http.client.HTTPConnection(
+                "127.0.0.1", self.context_lens_port, timeout=1
+            )
+            conn.request("HEAD", "/")
+            conn.getresponse()
+            conn.close()
+            if not self._context_lens_alive:
+                ctx.log.info(
+                    f"secret-proxy: Context Lens is available on port {self.context_lens_port}"
+                )
+            self._context_lens_alive = True
+        except Exception:
+            if self._context_lens_alive:
+                ctx.log.warn(
+                    f"secret-proxy: Context Lens not responding on port {self.context_lens_port}, "
+                    "forwarding directly to APIs"
+                )
+            self._context_lens_alive = False
+
+        return self._context_lens_alive
+
+    def _redirect_through_context_lens(self, flow: mhttp.HTTPFlow) -> None:
+        """
+        Redirect an LLM API request through Context Lens.
+
+        Modifies the flow's destination to point at the local Context Lens
+        proxy, preserving the original URL in an x-target-url header so
+        Context Lens knows where to forward.
+        """
+        original_host = flow.request.host.lower()
+        prefix = CONTEXT_LENS_HOSTS.get(original_host)
+        if prefix is None:
+            return
+
+        if not self._is_context_lens_alive():
+            return
+
+        # Save the original URL so Context Lens can forward to the real API
+        original_url = flow.request.url
+        flow.request.headers["x-target-url"] = original_url
+
+        # Redirect to Context Lens
+        flow.request.scheme = "http"
+        flow.request.host = "127.0.0.1"
+        flow.request.port = self.context_lens_port
+        flow.request.path = f"/{prefix}{flow.request.path}"
+
+        ctx.log.debug(
+            f"secret-proxy: Redirecting {original_host} through Context Lens: "
+            f"{original_url} → http://127.0.0.1:{self.context_lens_port}/{prefix}/..."
+        )
 
     def _env_file_for_namespace(self, namespace: Optional[str]) -> Optional[Path]:
         """
@@ -226,7 +345,7 @@ class SecretProxy:
 
     def _log_audit(
         self,
-        flow: http.HTTPFlow,
+        flow: mhttp.HTTPFlow,
         secrets_used: list[str],
         blocked: bool,
         block_reason: Optional[str] = None,
@@ -249,7 +368,7 @@ class SecretProxy:
 
         ctx.log.info(f"secret-proxy-audit: {json.dumps(entry)}")
 
-    def _block_request(self, flow: http.HTTPFlow, secrets_involved: list[str], reason: str):
+    def _block_request(self, flow: mhttp.HTTPFlow, secrets_involved: list[str], reason: str):
         """
         Block a request with a generic error message.
 
@@ -257,13 +376,13 @@ class SecretProxy:
         """
         self._log_audit(flow, secrets_involved, blocked=True, block_reason=reason)
 
-        flow.response = http.Response.make(
+        flow.response = mhttp.Response.make(
             403,
             GENERIC_ERROR_MESSAGE.encode(),
             {"Content-Type": "text/plain; charset=utf-8"},
         )
 
-    def request(self, flow: http.HTTPFlow):
+    def request(self, flow: mhttp.HTTPFlow):
         """Process each request, validating hosts and replacing placeholders in headers."""
 
         # First pass: find all placeholders in all headers
@@ -364,6 +483,12 @@ class SecretProxy:
         # Log successful injection
         if all_replaced:
             self._log_audit(flow, list(set(all_replaced)), blocked=False)
+
+        # After secrets are injected, optionally redirect through Context Lens
+        # for context window visualization. This must happen after replacement
+        # so the real API key reaches the upstream via Context Lens.
+        if self.context_lens_enabled:
+            self._redirect_through_context_lens(flow)
 
 
 addons = [SecretProxy()]
