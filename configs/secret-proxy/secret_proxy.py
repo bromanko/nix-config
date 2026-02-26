@@ -383,7 +383,7 @@ class SecretProxy:
         )
 
     def request(self, flow: mhttp.HTTPFlow):
-        """Process each request, validating hosts and replacing placeholders in headers."""
+        """Process each request, replacing placeholders and optionally redirecting to Context Lens."""
 
         # First pass: find all placeholders in all headers
         all_placeholders = []
@@ -392,9 +392,21 @@ class SecretProxy:
             placeholders = self._find_placeholders(header_value)
             all_placeholders.extend(placeholders)
 
-        # If no placeholders, let request through unchanged
-        if not all_placeholders:
-            return
+        # If placeholders are present, validate and replace them
+        if all_placeholders:
+            self._inject_secrets(flow, all_placeholders)
+            # If the request was blocked, don't redirect
+            if flow.response:
+                return
+
+        # Redirect LLM API traffic through Context Lens for visualization.
+        # This applies to ALL LLM API requests — both placeholder-injected
+        # and OAuth/token-authenticated — so every tool is captured.
+        if self.context_lens_enabled:
+            self._redirect_through_context_lens(flow)
+
+    def _inject_secrets(self, flow: mhttp.HTTPFlow, all_placeholders: list[str]) -> None:
+        """Validate and replace {{PLACEHOLDER}} patterns in request headers."""
 
         unique_placeholders = list(set(all_placeholders))
         request_host = flow.request.host.lower()
@@ -483,12 +495,6 @@ class SecretProxy:
         # Log successful injection
         if all_replaced:
             self._log_audit(flow, list(set(all_replaced)), blocked=False)
-
-        # After secrets are injected, optionally redirect through Context Lens
-        # for context window visualization. This must happen after replacement
-        # so the real API key reaches the upstream via Context Lens.
-        if self.context_lens_enabled:
-            self._redirect_through_context_lens(flow)
 
 
 addons = [SecretProxy()]
