@@ -102,10 +102,6 @@ with lib.my;
               run = "move-node-to-workspace 5";
             }
             {
-              "if".app-id = "com.1password.1password";
-              run = "move-node-to-workspace 6";
-            }
-            {
               "if".app-id = "com.apple.finder";
               run = "move-node-to-workspace 6";
             }
