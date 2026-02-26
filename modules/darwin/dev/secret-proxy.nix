@@ -72,6 +72,16 @@ in
         Clients reference namespaced secrets with {{namespace:SECRET_NAME}}.
       '';
     };
+
+    contextLens = {
+      enable = mkBoolOpt false;
+
+      port = mkOption {
+        type = types.port;
+        default = 4040;
+        description = "Port where Context Lens proxy is listening";
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -113,6 +123,12 @@ in
           "secret_proxy_namespace_dir=${namespaceDir}"
           "--set"
           "block_global=false"
+        ]
+        ++ optionals cfg.contextLens.enable [
+          "--set"
+          "context_lens_enabled=true"
+          "--set"
+          "context_lens_port=${toString cfg.contextLens.port}"
         ];
         RunAtLoad = true;
         KeepAlive = true;
