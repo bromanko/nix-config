@@ -134,7 +134,9 @@ with lib.my;
       "secret-proxy" = {
         enable = true;
         namespaces = [ "michael" ];
+        contextLens.enable = true;
       };
+      context-lens.enable = true;
     };
     term = {
       ghostty.enable = true;
