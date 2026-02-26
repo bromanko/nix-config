@@ -44,6 +44,11 @@ in
       ];
       theme = "catppuccin-mocha";
       defaultThinkingLevel = "high";
+      enabledModels = [
+        "anthropic/claude-sonnet-4-6:high"
+        "anthropic/claude-opus-4-6:high"
+        "openai-codex/gpt-5.3-codex:high"
+      ];
     };
   };
 
