@@ -100,6 +100,15 @@ in
 
     environment.systemPackages = [ pkgs.mitmproxy ];
 
+    # Rotate launchd log files: keep 3 archives, rotate at 1 MB, compress.
+    environment.etc."newsyslog.d/secret-proxy.conf".text = ''
+      # logfile                                mode count size when flags
+      ${configDir}/proxy.log                   644  3     1024 *    J
+      ${configDir}/proxy.err                   644  3     1024 *    J
+      ${configDir}/tunnel.log                  644  3     1024 *    J
+      ${configDir}/tunnel.err                  644  3     1024 *    J
+    '';
+
     hm = {
       xdg.configFile = {
         "secret-proxy/secret_proxy.py".source =
