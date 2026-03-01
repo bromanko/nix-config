@@ -161,6 +161,9 @@
         OPENAI_API_KEY = "{{OPENAI_API_KEY}}";
         BRAVE_API_KEY = "{{BRAVE_API_KEY}}";
         JJ_EDITOR = "nvim";
+        # Node.js ignores the system CA store; point it at the NixOS bundle
+        # which includes the mitmproxy CA from security.pki.certificateFiles.
+        NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
       };
     };
 

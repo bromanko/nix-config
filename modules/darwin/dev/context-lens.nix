@@ -48,6 +48,15 @@ in
 
     environment.systemPackages = [ pkgs.my.context-lens ];
 
+    # Rotate launchd log files: keep 3 archives, rotate at 1 MB, compress.
+    environment.etc."newsyslog.d/context-lens.conf".text = ''
+      # logfile                          mode count size when flags
+      ${dataDir}/proxy.log               644  3     1024 *    J
+      ${dataDir}/proxy.err               644  3     1024 *    J
+      ${dataDir}/analysis.log            644  3     1024 *    J
+      ${dataDir}/analysis.err            644  3     1024 *    J
+    '';
+
     launchd.user.agents.context-lens-proxy = {
       serviceConfig = {
         ProgramArguments = [
