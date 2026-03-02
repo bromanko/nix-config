@@ -67,8 +67,11 @@ in
 
   config = mkIf cfg.enable {
     hm = {
-      # Add smug package
-      home.packages = [ pkgs.smug ];
+      # Add smug and tmux-dashboard packages
+      home.packages = [
+        pkgs.smug
+        pkgs.my.tmux-dashboard
+      ];
 
       programs.fish.shellAliases = {
         # Smug aliases
@@ -192,6 +195,10 @@ in
 
           # Allow cursor shape changes to pass through (fixes fish vi-mode cursor)
           set -ga terminal-overrides '*:Ss=\E[%p1%d q:Se=\E[ q'
+
+          # Session dashboard (Prefix + s) / plain tree picker (Prefix + S)
+          bind s display-popup -E -w 80% -h 70% -T " Sessions " "tmux-dashboard"
+          bind S choose-tree -Zs
 
           # Show keybindings help (Prefix + ?)
           bind ? list-keys
