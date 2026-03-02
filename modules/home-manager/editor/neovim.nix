@@ -77,6 +77,9 @@ in
           set grepprg=rg\ --vimgrep\ --smart-case\ --follow
 
           " ui
+          set number              " show current line number
+          set relativenumber      " relative line numbers above/below
+
           if has('termguicolors')
             set termguicolors
           endif
