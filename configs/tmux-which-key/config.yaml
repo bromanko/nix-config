@@ -212,8 +212,11 @@ items:
   - name: +Sessions
     key: s
     menu:
-      - name: Choose
+      - name: Dashboard
         key: s
+        command: display-popup -E -w 80% -h 70% -T " Sessions " "tmux-dashboard"
+      - name: Tree
+        key: S
         command: choose-tree -Zs
       - name: New
         key: N
