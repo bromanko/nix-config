@@ -8,20 +8,25 @@ so secrets never enter the VM.
 
 ## How It Works
 
-A client sends a request with placeholders instead of real credentials:
+A client sends a request with placeholders instead of real credentials,
+either in headers or query parameters:
 
 ```bash
-# Using a default (shared) secret
+# Using a default (shared) secret in a header
 curl -x localhost:17329 https://api.anthropic.com/v1/messages \
   -H "x-api-key: {{ANTHROPIC_API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{"model": "claude-sonnet-4-20250514", "max_tokens": 1024, "messages": [...]}'
 
-# Using a namespaced (per-project) secret
+# Using a namespaced (per-project) secret in a header
 curl -x localhost:17329 https://api.anthropic.com/v1/messages \
   -H "x-api-key: {{michael:ANTHROPIC_API_KEY}}" \
   -H "Content-Type: application/json" \
   -d '{"model": "claude-sonnet-4-20250514", "max_tokens": 1024, "messages": [...]}'
+
+# Using a secret in a query parameter
+curl -x localhost:17329 \
+  "https://maps.googleapis.com/maps/api/geocode/json?address=1+Main+St&key={{GOOGLE_MAPS_KEY}}"
 ```
 
 The proxy validates the destination is allowed for that secret, replaces
@@ -211,7 +216,7 @@ Blocked requests include the reason:
 | Attacker probes for secret names | Generic error messages prevent enumeration |
 | Cross-namespace access | Each namespace is isolated with its own env file |
 | 1Password locked | Secrets unavailable, requests fail (fail-closed) |
-| Placeholder in response | Not scanned — only request headers |
+| Placeholder in response | Not scanned — only request headers and query params |
 | Unknown namespace referenced | Request blocked (fail-closed) |
 
 ## Setup
@@ -314,7 +319,7 @@ Pattern: `{{VARIABLE_NAME}}`
 - Must start with letter or underscore
 - Can contain letters, numbers, underscores
 - Case-sensitive
-- Only scanned in request headers (not bodies)
+- Scanned in request headers and query parameters (not bodies)
 
 Examples:
 ```
@@ -444,7 +449,7 @@ Consider setting up rotation via macOS `newsyslog`. Create
 
 ## Limitations
 
-- **Headers only**: Body placeholders are not scanned (by design)
+- **Headers and query parameters only**: Body placeholders are not scanned (by design)
 - **HTTPS requires CA**: The VM must trust the mitmproxy CA certificate
 - **1Password must be unlocked**: Secrets require an unlocked vault
   (consider Service Accounts for unattended use)

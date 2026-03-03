@@ -1,9 +1,10 @@
 """
 secret-proxy: HTTP proxy that injects secrets into requests.
 
-The client signals which secrets it needs via placeholders in headers:
+The client signals which secrets it needs via placeholders in headers
+or query parameters:
 
-    # Default namespace (shared secrets)
+    # Default namespace (shared secrets) — header
     curl https://api.anthropic.com/v1/messages \
       -H "x-api-key: {{ANTHROPIC_API_KEY}}"
 
@@ -11,8 +12,11 @@ The client signals which secrets it needs via placeholders in headers:
     curl https://api.anthropic.com/v1/messages \
       -H "x-api-key: {{michael:ANTHROPIC_API_KEY}}"
 
+    # Query parameter credential
+    curl "https://maps.googleapis.com/maps/api/geocode/json?key={{GOOGLE_MAPS_KEY}}"
+
 The proxy:
-1. Scans headers for {{PLACEHOLDER}} or {{namespace:PLACEHOLDER}} patterns
+1. Scans headers and query parameters for {{PLACEHOLDER}} or {{namespace:PLACEHOLDER}} patterns
 2. Loads the appropriate env file (default or namespaced)
 3. Validates the destination host is allowed for that secret
 4. Replaces placeholders with values from 1Password Environment .env file
@@ -173,8 +177,9 @@ def parse_secrets_and_hosts(
 
 class SecretProxy:
     """
-    Scans HTTP request headers for {{PLACEHOLDER}} or {{namespace:PLACEHOLDER}}
-    patterns and replaces them with secrets from 1Password Environment .env files.
+    Scans HTTP request headers and query parameters for {{PLACEHOLDER}} or
+    {{namespace:PLACEHOLDER}} patterns and replaces them with secrets from
+    1Password Environment .env files.
 
     Namespacing allows separate 1Password Environments per project. Each
     namespace has its own env file under the namespace directory. Placeholders
@@ -385,11 +390,15 @@ class SecretProxy:
     def request(self, flow: mhttp.HTTPFlow):
         """Process each request, replacing placeholders and optionally redirecting to Context Lens."""
 
-        # First pass: find all placeholders in all headers
+        # First pass: find all placeholders in headers and query parameters
         all_placeholders = []
         for header_name in flow.request.headers.keys():
             header_value = flow.request.headers[header_name]
             placeholders = self._find_placeholders(header_value)
+            all_placeholders.extend(placeholders)
+
+        for _, query_value in flow.request.query.fields:
+            placeholders = self._find_placeholders(query_value)
             all_placeholders.extend(placeholders)
 
         # If placeholders are present, validate and replace them
@@ -406,7 +415,7 @@ class SecretProxy:
             self._redirect_through_context_lens(flow)
 
     def _inject_secrets(self, flow: mhttp.HTTPFlow, all_placeholders: list[str]) -> None:
-        """Validate and replace {{PLACEHOLDER}} patterns in request headers."""
+        """Validate and replace {{PLACEHOLDER}} patterns in request headers and query parameters."""
 
         unique_placeholders = list(set(all_placeholders))
         request_host = flow.request.host.lower()
@@ -472,6 +481,16 @@ class SecretProxy:
         # All validations passed — replace placeholders
         all_replaced = []
 
+        def replacer(match: re.Match) -> str:
+            full = match.group(1)
+            namespace, key = parse_placeholder(full)
+            secrets, _ = namespace_data[namespace]
+            if key in secrets:
+                all_replaced.append(full)
+                return secrets[key]
+            return match.group(0)
+
+        # Replace in headers
         for header_name in list(flow.request.headers.keys()):
             header_value = flow.request.headers[header_name]
 
@@ -479,18 +498,25 @@ class SecretProxy:
             if not placeholders:
                 continue
 
-            def replacer(match: re.Match) -> str:
-                full = match.group(1)
-                namespace, key = parse_placeholder(full)
-                secrets, _ = namespace_data[namespace]
-                if key in secrets:
-                    all_replaced.append(full)
-                    return secrets[key]
-                return match.group(0)
-
             new_value = PLACEHOLDER_PATTERN.sub(replacer, header_value)
             if new_value != header_value:
                 flow.request.headers[header_name] = new_value
+
+        # Replace in query parameters
+        new_query_fields = []
+        query_changed = False
+        for qname, qvalue in flow.request.query.fields:
+            placeholders = self._find_placeholders(qvalue)
+            if placeholders:
+                new_value = PLACEHOLDER_PATTERN.sub(replacer, qvalue)
+                if new_value != qvalue:
+                    query_changed = True
+                new_query_fields.append((qname, new_value))
+            else:
+                new_query_fields.append((qname, qvalue))
+
+        if query_changed:
+            flow.request.query = new_query_fields
 
         # Log successful injection
         if all_replaced:
