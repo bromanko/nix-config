@@ -22,7 +22,6 @@ in
           ast-grep
           bottom
           curl
-          delta
           difftastic
           duf
           dust
