@@ -9,6 +9,7 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.dev."secret-proxy";
+  secretProxyPkg = pkgs.my.secret-proxy;
   homeDir = "/Users/${config.user.name}";
   configDir = "${homeDir}/.config/secret-proxy";
   namespaceDir = "${configDir}/namespaces";
@@ -109,13 +110,6 @@ in
       ${configDir}/tunnel.err                  644  3     1024 *    J
     '';
 
-    hm = {
-      xdg.configFile = {
-        "secret-proxy/secret_proxy.py".source =
-          config.hm.lib.file.mkNixConfigSymlink "/configs/secret-proxy/secret_proxy.py";
-      };
-    };
-
     launchd.user.agents.secret-proxy = {
       serviceConfig = {
         ProgramArguments = [
@@ -125,7 +119,7 @@ in
           "--listen-port"
           (toString cfg.port)
           "-s"
-          "${configDir}/secret_proxy.py"
+          "${secretProxyPkg}/lib/secret-proxy/secret_proxy.py"
           "--set"
           "secret_proxy_env_file=${configDir}/secrets.env"
           "--set"

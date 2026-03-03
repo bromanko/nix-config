@@ -15,17 +15,24 @@ or query parameters:
     # Query parameter credential
     curl "https://maps.googleapis.com/maps/api/geocode/json?key={{GOOGLE_MAPS_KEY}}"
 
+    # Derived secret (generated on the fly from component secrets)
+    curl https://api.music.apple.com/v1/catalog/us/songs/203709340 \
+      -H "Authorization: Bearer {{APPLE_MUSIC_TOKEN}}"
+
 The proxy:
 1. Scans headers and query parameters for {{PLACEHOLDER}} or {{namespace:PLACEHOLDER}} patterns
 2. Loads the appropriate env file (default or namespaced)
 3. Validates the destination host is allowed for that secret
-4. Replaces placeholders with values from 1Password Environment .env file
-5. Logs all secret-injected requests for audit purposes
-6. (Optional) Redirects LLM API traffic through Context Lens for
+4. Resolves the secret value — either directly from the env file or by
+   calling a registered generator for derived secrets
+5. Replaces placeholders with resolved values
+6. Logs all secret-injected requests for audit purposes
+7. (Optional) Redirects LLM API traffic through Context Lens for
    context window visualization
 
 Security features:
 - Destination allowlisting via _HOSTS companion variables
+- Derived secret generators (e.g., ES256 JWTs) with TTL-based caching
 - Generic error messages to clients (details only in host logs)
 - Structured audit logging
 - Per-namespace secret isolation
@@ -49,11 +56,117 @@ import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 from mitmproxy import ctx, http as mhttp
 from mitmproxy.addonmanager import Loader
 
+# PyJWT is optional — only required when using JWT-based generators.
+# The import is deferred so the proxy starts even if PyJWT isn't installed;
+# generators that need it will fail with a clear message at call time.
+try:
+    import jwt as pyjwt
+except ImportError:
+    pyjwt = None
+
+
+# ── Derived Secret Generators ──────────────────────────────────────────
+
+def _derive_prefix(secret_name: str) -> str:
+    """Derive the component secret prefix from a derived secret name.
+
+    Strips a known "output" suffix so component secrets follow a natural
+    naming convention:
+
+        APPLE_MUSIC_TOKEN -> APPLE_MUSIC
+        MY_API_JWT        -> MY_API
+        SOME_CREDENTIAL   -> SOME_CREDENTIAL  (no known suffix, use as-is)
+    """
+    for suffix in ("_TOKEN", "_JWT"):
+        if secret_name.endswith(suffix):
+            return secret_name[:-len(suffix)]
+    return secret_name
+
+
+def generate_es256_jwt(secret_name: str, secrets: dict[str, str]) -> str:
+    """Generate an ES256-signed JWT from component secrets.
+
+    This is a general-purpose generator for APIs that authenticate via
+    ES256 JWTs (e.g., Apple Music, Apple MapKit, some custom services).
+
+    Component secrets are resolved from the same namespace using a prefix
+    derived from the secret name (e.g., APPLE_MUSIC_TOKEN → prefix APPLE_MUSIC):
+
+        {PREFIX}_PRIVATE_KEY  — EC P-256 private key in PEM format
+        {PREFIX}_KEY_ID       — JWT ``kid`` header value
+        {PREFIX}_ISSUER       — JWT ``iss`` claim value
+        {PREFIX}_JWT_TTL      — Token lifetime in seconds (optional, default 43200 = 12h)
+    """
+    if pyjwt is None:
+        raise RuntimeError(
+            "PyJWT is not installed. Add pyjwt and cryptography to the "
+            "mitmproxy Python environment (see secret-proxy README)."
+        )
+
+    prefix = _derive_prefix(secret_name)
+    private_key = secrets[f"{prefix}_PRIVATE_KEY"]
+    key_id = secrets[f"{prefix}_KEY_ID"]
+    issuer = secrets[f"{prefix}_ISSUER"]
+    ttl = int(secrets.get(f"{prefix}_JWT_TTL", "43200"))
+
+    now = int(time.time())
+    payload = {
+        "iss": issuer,
+        "iat": now,
+        "exp": now + ttl,
+    }
+    return pyjwt.encode(
+        payload, private_key, algorithm="ES256", headers={"kid": key_id}
+    )
+
+
+# Registry of available generators.
+#
+# Each entry maps a generator name (referenced by _GENERATOR env vars)
+# to its configuration:
+#
+#   func:              (secret_name, secrets_dict) -> derived_value_string
+#   cache_ttl:         How long to cache the derived value (seconds)
+#   required_suffixes: Appended to the derived prefix to get required
+#                      component secret names for pre-flight validation
+GENERATORS: dict[str, dict] = {
+    "es256_jwt": {
+        "func": generate_es256_jwt,
+        "cache_ttl": 39600,  # 11 hours (default 12h token minus 1h safety margin)
+        "required_suffixes": ["_PRIVATE_KEY", "_KEY_ID", "_ISSUER"],
+    },
+}
+
+
+class DerivedSecretCache:
+    """In-memory TTL cache for derived (generated) secret values.
+
+    Cache keys include the namespace so the same generator in different
+    namespaces produces independent entries.
+    """
+
+    def __init__(self):
+        self._cache: dict[str, tuple[str, float]] = {}  # key -> (value, expires_at)
+
+    def get(self, key: str) -> Optional[str]:
+        entry = self._cache.get(key)
+        if entry is not None:
+            value, expires_at = entry
+            if time.monotonic() < expires_at:
+                return value
+            del self._cache[key]
+        return None
+
+    def set(self, key: str, value: str, ttl: float) -> None:
+        self._cache[key] = (value, time.monotonic() + ttl)
+
+
+# ── LLM API / Context Lens ────────────────────────────────────────────
 
 # LLM API hosts and their Context Lens path prefixes.
 # Context Lens uses these prefixes to identify the provider and route
@@ -67,6 +180,8 @@ CONTEXT_LENS_HOSTS: dict[str, str] = {
     "us-central1-aiplatform.googleapis.com": "vertex",
 }
 
+
+# ── Placeholder parsing ───────────────────────────────────────────────
 
 # Pattern matches {{VARIABLE_NAME}} or {{namespace:VARIABLE_NAME}}
 # Group 1: full match content (e.g. "michael:API_KEY" or "API_KEY")
@@ -96,6 +211,8 @@ def parse_placeholder(placeholder: str) -> tuple[Optional[str], str]:
         return namespace, key
     return None, placeholder
 
+
+# ── Env file loading ──────────────────────────────────────────────────
 
 def load_env_from_path(path: Path) -> dict[str, str]:
     """
@@ -149,37 +266,52 @@ def load_env_from_path(path: Path) -> dict[str, str]:
 
 def parse_secrets_and_hosts(
     env_vars: dict[str, str],
-) -> tuple[dict[str, str], dict[str, set[str]]]:
+) -> tuple[dict[str, str], dict[str, set[str]], dict[str, str]]:
     """
-    Separate env vars into secrets and their allowed hosts.
+    Separate env vars into secrets, allowed hosts, and generator declarations.
 
-    Variables ending in _HOSTS are parsed as comma-separated host lists.
-    All other variables are treated as secrets.
+    Variables ending in ``_HOSTS`` are parsed as comma-separated host lists.
+    Variables ending in ``_GENERATOR`` declare derived secrets.
+    All other variables are treated as secrets (including component secrets
+    used by generators).
 
-    Returns (secrets, allowed_hosts) where:
-    - secrets: {"ANTHROPIC_API_KEY": "sk-ant-..."}
+    Returns (secrets, allowed_hosts, generators) where:
+    - secrets: {"ANTHROPIC_API_KEY": "sk-ant-...", "APPLE_MUSIC_PRIVATE_KEY": "-----BEGIN..."}
     - allowed_hosts: {"ANTHROPIC_API_KEY": {"api.anthropic.com"}}
+    - generators: {"APPLE_MUSIC_TOKEN": "es256_jwt"}
     """
     secrets = {}
     allowed_hosts = {}
+    generators = {}
 
     for key, value in env_vars.items():
         if key.endswith("_HOSTS"):
-            # This is a host allowlist
+            # Host allowlist: ANTHROPIC_API_KEY_HOSTS -> ANTHROPIC_API_KEY
             secret_name = key[:-6]  # Remove _HOSTS suffix
             hosts = {h.strip().lower() for h in value.split(",") if h.strip()}
             allowed_hosts[secret_name] = hosts
+        elif key.endswith("_GENERATOR"):
+            # Generator declaration: APPLE_MUSIC_TOKEN_GENERATOR -> APPLE_MUSIC_TOKEN
+            derived_name = key[:-10]  # Remove _GENERATOR suffix
+            generators[derived_name] = value
         else:
             secrets[key] = value
 
-    return secrets, allowed_hosts
+    return secrets, allowed_hosts, generators
 
+
+# ── Main addon ────────────────────────────────────────────────────────
 
 class SecretProxy:
     """
     Scans HTTP request headers and query parameters for {{PLACEHOLDER}} or
     {{namespace:PLACEHOLDER}} patterns and replaces them with secrets from
     1Password Environment .env files.
+
+    Secrets can be either:
+    - **Direct**: The value is read straight from the env file
+    - **Derived**: A registered generator computes the value from component
+      secrets (e.g., signing a JWT from a private key + key ID + issuer)
 
     Namespacing allows separate 1Password Environments per project. Each
     namespace has its own env file under the namespace directory. Placeholders
@@ -191,11 +323,15 @@ class SecretProxy:
     - Error messages are generic to prevent information leakage
     - All secret usage is logged for audit purposes
     - Namespaces are fully isolated from each other
+    - Generator component secrets have no _HOSTS and cannot be injected
     """
 
     def __init__(self):
         self.env_file_path: Optional[Path] = None
         self.namespace_dir: Optional[Path] = None
+
+        # Cache for derived (generated) secrets
+        self._derived_cache = DerivedSecretCache()
 
         # Context Lens integration
         self.context_lens_enabled: bool = False
@@ -330,16 +466,18 @@ class SecretProxy:
 
         return self.namespace_dir / namespace / "secrets.env"
 
-    def _load_namespace(self, namespace: Optional[str]) -> tuple[dict[str, str], dict[str, set[str]]]:
+    def _load_namespace(
+        self, namespace: Optional[str]
+    ) -> tuple[dict[str, str], dict[str, set[str]], dict[str, str]]:
         """
-        Load and parse secrets + hosts for a given namespace.
+        Load and parse secrets, hosts, and generators for a given namespace.
 
-        Returns (secrets, allowed_hosts) or empty dicts if the env file
-        doesn't exist.
+        Returns (secrets, allowed_hosts, generators) or empty dicts if the
+        env file doesn't exist.
         """
         path = self._env_file_for_namespace(namespace)
         if path is None:
-            return {}, {}
+            return {}, {}, {}
 
         env_vars = load_env_from_path(path)
         return parse_secrets_and_hosts(env_vars)
@@ -414,6 +552,71 @@ class SecretProxy:
         if self.context_lens_enabled:
             self._redirect_through_context_lens(flow)
 
+    def _resolve_generator(
+        self,
+        flow: mhttp.HTTPFlow,
+        key: str,
+        namespace: Optional[str],
+        ns_label: str,
+        gen_name: str,
+        secrets: dict[str, str],
+        all_placeholder_labels: list[str],
+    ) -> Optional[str]:
+        """Resolve a derived secret via its registered generator.
+
+        Validates the generator exists, checks required component secrets,
+        consults the cache, and calls the generator function if needed.
+
+        Returns the derived value on success.  Returns None and blocks the
+        request (setting flow.response) on any failure.
+        """
+        # Look up generator in the registry
+        gen_config = GENERATORS.get(gen_name)
+        if gen_config is None:
+            self._block_request(
+                flow,
+                all_placeholder_labels,
+                f"Unknown generator '{gen_name}' for {ns_label}{key}",
+            )
+            return None
+
+        # Validate required component secrets exist
+        prefix = _derive_prefix(key)
+        for suffix in gen_config["required_suffixes"]:
+            component = f"{prefix}{suffix}"
+            if component not in secrets:
+                self._block_request(
+                    flow,
+                    all_placeholder_labels,
+                    f"Generator '{gen_name}' for {ns_label}{key} requires "
+                    f"{ns_label}{component} but it is not defined",
+                )
+                return None
+
+        # Check cache
+        cache_key = f"{namespace}:{key}" if namespace else f":{key}"
+        cached = self._derived_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
+        # Generate
+        try:
+            value = gen_config["func"](key, secrets)
+        except Exception as e:
+            self._block_request(
+                flow,
+                all_placeholder_labels,
+                f"Generator '{gen_name}' failed for {ns_label}{key}: {e}",
+            )
+            return None
+
+        self._derived_cache.set(cache_key, value, gen_config["cache_ttl"])
+        ctx.log.info(
+            f"secret-proxy: Generated {ns_label}{key} via {gen_name} "
+            f"(cached for {gen_config['cache_ttl']}s)"
+        )
+        return value
+
     def _inject_secrets(self, flow: mhttp.HTTPFlow, all_placeholders: list[str]) -> None:
         """Validate and replace {{PLACEHOLDER}} patterns in request headers and query parameters."""
 
@@ -427,8 +630,10 @@ class SecretProxy:
             namespace, key = parse_placeholder(placeholder)
             by_namespace.setdefault(namespace, []).append(key)
 
-        # Load and cache secrets per namespace
-        namespace_data: dict[Optional[str], tuple[dict[str, str], dict[str, set[str]]]] = {}
+        # Load and cache secrets per namespace (now includes generators)
+        namespace_data: dict[
+            Optional[str], tuple[dict[str, str], dict[str, set[str]], dict[str, str]]
+        ] = {}
         for namespace in by_namespace:
             namespace_data[namespace] = self._load_namespace(namespace)
 
@@ -436,7 +641,7 @@ class SecretProxy:
         for placeholder in unique_placeholders:
             namespace, key = parse_placeholder(placeholder)
             ns_label = f"{namespace}:" if namespace else ""
-            secrets, allowed_hosts = namespace_data[namespace]
+            secrets, allowed_hosts, generators = namespace_data[namespace]
 
             # Check if the namespace env file was loadable
             env_path = self._env_file_for_namespace(namespace)
@@ -450,14 +655,26 @@ class SecretProxy:
                 )
                 return
 
-            # Check if secret exists
+            # Resolve: direct secret or derived via generator
             if key not in secrets:
-                self._block_request(
-                    flow,
-                    unique_placeholders,
-                    f"Secret not found: {ns_label}{key}",
-                )
-                return
+                if key in generators:
+                    value = self._resolve_generator(
+                        flow, key, namespace, ns_label,
+                        generators[key], secrets, unique_placeholders,
+                    )
+                    if value is None:
+                        # Request was blocked inside _resolve_generator
+                        return
+                    # Inject the generated value into the secrets dict so the
+                    # replacement phase can find it.
+                    secrets[key] = value
+                else:
+                    self._block_request(
+                        flow,
+                        unique_placeholders,
+                        f"Secret not found: {ns_label}{key}",
+                    )
+                    return
 
             # Check if _HOSTS is defined for this secret
             if key not in allowed_hosts:
@@ -484,7 +701,7 @@ class SecretProxy:
         def replacer(match: re.Match) -> str:
             full = match.group(1)
             namespace, key = parse_placeholder(full)
-            secrets, _ = namespace_data[namespace]
+            secrets, _, _ = namespace_data[namespace]
             if key in secrets:
                 all_replaced.append(full)
                 return secrets[key]

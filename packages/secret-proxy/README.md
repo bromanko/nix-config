@@ -180,12 +180,12 @@ a `_GENERATOR` variable that names the generator to use:
 # 1Password resolves op:// refs at mount time; the proxy sees plain values.
 APPLE_MUSIC_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIGT...
 APPLE_MUSIC_KEY_ID=ABC123DEFG
-APPLE_MUSIC_TEAM_ID=9876543210
+APPLE_MUSIC_ISSUER=9876543210
 
 # Derived secret — the generator name tells the proxy how to compute it.
 # There is no APPLE_MUSIC_TOKEN value — the _GENERATOR tells the proxy
 # to produce it on the fly from the component secrets above.
-APPLE_MUSIC_TOKEN_GENERATOR=apple_music_jwt
+APPLE_MUSIC_TOKEN_GENERATOR=es256_jwt
 APPLE_MUSIC_TOKEN_HOSTS=api.music.apple.com
 ```
 
@@ -196,34 +196,80 @@ Component secrets (`APPLE_MUSIC_PRIVATE_KEY`, etc.) have no `_HOSTS`
 variable, so they can never be injected into any request. They exist
 only as inputs to the generator.
 
+### Prefix Convention
+
+Generators derive component secret names from the placeholder name using
+a prefix convention. The prefix is the placeholder name with a trailing
+`_TOKEN` or `_JWT` suffix stripped:
+
+| Placeholder | Prefix | Component secrets |
+|-------------|--------|-------------------|
+| `APPLE_MUSIC_TOKEN` | `APPLE_MUSIC` | `APPLE_MUSIC_PRIVATE_KEY`, `APPLE_MUSIC_KEY_ID`, ... |
+| `MAPKIT_JWT` | `MAPKIT` | `MAPKIT_PRIVATE_KEY`, `MAPKIT_KEY_ID`, ... |
+| `MY_API_CREDENTIAL` | `MY_API_CREDENTIAL` | `MY_API_CREDENTIAL_PRIVATE_KEY`, ... |
+
+This means the same generator (e.g., `es256_jwt`) can be reused across
+multiple services — each just needs its own set of prefixed component
+secrets.
+
 ### Built-in Generators
 
-#### `apple_music_jwt`
+#### `es256_jwt`
 
-Generates an Apple Music API developer token (ES256-signed JWT).
+General-purpose ES256-signed JWT generator. Works with any API that
+authenticates via ES256 JWTs (Apple Music, Apple MapKit, custom services).
 
-**Required component secrets** (same namespace):
+**Required component secrets** (same namespace, using derived prefix):
 
-| Secret | Description |
+| Suffix | Description |
 |--------|-------------|
-| `APPLE_MUSIC_PRIVATE_KEY` | MusicKit private key (PEM format, from Apple Developer portal) |
-| `APPLE_MUSIC_KEY_ID` | Key ID shown in Apple Developer → Keys |
-| `APPLE_MUSIC_TEAM_ID` | Your Apple Developer Team ID |
+| `{PREFIX}_PRIVATE_KEY` | EC P-256 private key in PEM format |
+| `{PREFIX}_KEY_ID` | JWT `kid` header value |
+| `{PREFIX}_ISSUER` | JWT `iss` claim value |
+
+**Optional:**
+
+| Suffix | Description |
+|--------|-------------|
+| `{PREFIX}_JWT_TTL` | Token lifetime in seconds (default: 43200 = 12h) |
 
 **Behavior:**
-- Signs a JWT with `alg: ES256`, `kid: <key_id>`
-- Payload: `iss: <team_id>`, `iat: now`, `exp: now + 12h`
-- Caches the token for 11 hours (regenerates 1 hour before expiry)
+- Signs a JWT with `alg: ES256`, `kid: {PREFIX}_KEY_ID`
+- Payload: `iss: {PREFIX}_ISSUER`, `iat: now`, `exp: now + TTL`
+- Caches the token for 11 hours by default (regenerates 1 hour before
+  the default 12h expiry)
 
-**Usage from the VM:**
+**Example — Apple Music:**
+
+```
+# In secrets.env
+APPLE_MUSIC_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIGT...
+APPLE_MUSIC_KEY_ID=ABC123DEFG
+APPLE_MUSIC_ISSUER=9876543210
+APPLE_MUSIC_TOKEN_GENERATOR=es256_jwt
+APPLE_MUSIC_TOKEN_HOSTS=api.music.apple.com
+```
 
 ```bash
+# From the VM
 curl https://api.music.apple.com/v1/catalog/us/songs/203709340 \
   -H "Authorization: Bearer {{APPLE_MUSIC_TOKEN}}"
+```
 
-# Or namespaced
-curl https://api.music.apple.com/v1/catalog/us/songs/203709340 \
-  -H "Authorization: Bearer {{michael:APPLE_MUSIC_TOKEN}}"
+**Example — Apple MapKit (same generator, different prefix):**
+
+```
+# In secrets.env
+MAPKIT_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIGT...
+MAPKIT_KEY_ID=XYZ789
+MAPKIT_ISSUER=9876543210
+MAPKIT_TOKEN_GENERATOR=es256_jwt
+MAPKIT_TOKEN_HOSTS=maps-api.apple.com
+```
+
+```bash
+curl "https://maps-api.apple.com/v1/geocode?q=1+Main+St" \
+  -H "Authorization: Bearer {{MAPKIT_TOKEN}}"
 ```
 
 ### Adding New Generators
@@ -233,21 +279,13 @@ To add a new generator, register it in the `GENERATORS` dict in
 
 ```python
 GENERATORS = {
-    "apple_music_jwt": {
-        "func": generate_apple_music_jwt,
-        "ttl": 11 * 3600,  # Cache for 11h, regenerate before 12h expiry
-        "requires": [
-            "APPLE_MUSIC_PRIVATE_KEY",
-            "APPLE_MUSIC_KEY_ID",
-            "APPLE_MUSIC_TEAM_ID",
-        ],
+    "es256_jwt": { ... },  # existing
+
+    "my_custom_token": {
+        "func": generate_my_custom_token,
+        "cache_ttl": 3600,
+        "required_suffixes": ["_API_SECRET", "_ACCOUNT_ID"],
     },
-    # Add new generators here:
-    # "my_custom_jwt": {
-    #     "func": generate_my_custom_jwt,
-    #     "ttl": 3600,
-    #     "requires": ["MY_PRIVATE_KEY", "MY_KEY_ID"],
-    # },
 }
 ```
 
@@ -255,16 +293,23 @@ Each generator entry has:
 
 | Field | Description |
 |-------|-------------|
-| `func` | Callable that receives the namespace's secrets dict and returns the derived value |
-| `ttl` | How long (in seconds) to cache the result before regenerating |
-| `requires` | List of component secret names that must exist in the same namespace |
+| `func` | `(secret_name, secrets_dict) -> str` — receives the placeholder name and all secrets from the namespace, returns the derived value |
+| `cache_ttl` | How long (in seconds) to cache the result before regenerating |
+| `required_suffixes` | Appended to the derived prefix to get required component secret names for pre-flight validation |
 
 The generator function signature:
 
 ```python
-def generate_my_token(secrets: dict[str, str]) -> str:
-    """Receives all secrets from the namespace, returns the derived value."""
-    ...
+def generate_my_custom_token(secret_name: str, secrets: dict[str, str]) -> str:
+    """Generate a derived secret from component secrets.
+
+    secret_name: the placeholder name (e.g., "MY_SERVICE_TOKEN")
+    secrets: all secrets from the same namespace
+    """
+    prefix = _derive_prefix(secret_name)  # "MY_SERVICE"
+    api_secret = secrets[f"{prefix}_API_SECRET"]
+    account_id = secrets[f"{prefix}_ACCOUNT_ID"]
+    return compute_token(api_secret, account_id)
 ```
 
 ### Nix Dependency
@@ -277,7 +322,7 @@ automatically when the module is enabled:
 mitmproxy = prev.mitmproxy.overridePythonAttrs (old: {
   pythonRelaxDeps = true;
   doCheck = false;
-  propagatedBuildInputs = (old.propagatedBuildInputs or []) ++ [
+  dependencies = (old.dependencies or [ ]) ++ [
     prev.python3Packages.pyjwt
     prev.python3Packages.cryptography
   ];
@@ -447,11 +492,11 @@ sleep 2
 kill %1
 
 # Copy the public CA cert into the nix-config repo
-cp ~/.mitmproxy/mitmproxy-ca-cert.pem ~/Code/nix-config/configs/secret-proxy/
+cp ~/.mitmproxy/mitmproxy-ca-cert.pem ~/Code/nix-config/packages/secret-proxy/
 
 # Commit it (this is the public cert, safe to commit)
 cd ~/Code/nix-config
-jj add configs/secret-proxy/mitmproxy-ca-cert.pem
+jj add packages/secret-proxy/mitmproxy-ca-cert.pem
 ```
 
 ### 4. Configure the VM (Lima NixOS)
@@ -596,7 +641,7 @@ curl -v https://api.anthropic.com 2>&1 | grep -i "SSL\|certificate"
 ```
 
 If you see certificate errors, ensure:
-1. `mitmproxy-ca-cert.pem` exists in `configs/secret-proxy/`
+1. `mitmproxy-ca-cert.pem` exists in `packages/secret-proxy/`
 2. It's referenced in `security.pki.certificateFiles` in the VM config
 3. You've rebuilt the VM's NixOS config
 

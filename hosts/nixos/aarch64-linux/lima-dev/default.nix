@@ -63,7 +63,7 @@
   # Trust the mitmproxy CA certificate so HTTPS inspection works
   security.pki.certificateFiles =
     let
-      certPath = ../../../../configs/secret-proxy/mitmproxy-ca-cert.pem;
+      certPath = "${pkgs.my.secret-proxy}/share/secret-proxy/mitmproxy-ca-cert.pem";
     in
     lib.optional (builtins.pathExists certPath) certPath;
 
@@ -155,7 +155,7 @@
         devenv
       ];
       # Placeholder tokens — replaced by secret-proxy with real values from
-      # the host's 1Password Environment. See configs/secret-proxy/README.md.
+      # the host's 1Password Environment. See packages/secret-proxy/README.md.
       sessionVariables = {
         GH_TOKEN = "{{GITHUB_TOKEN}}";
         OPENAI_API_KEY = "{{OPENAI_API_KEY}}";
