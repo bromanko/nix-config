@@ -111,6 +111,7 @@ in
 
           wk.add({
             { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "File tree" },
+            { "<leader>o", "<cmd>NvimTreeFocus<cr>", desc = "Focus file tree" },
             { "<leader>f", group = "find" },
             { "<leader>ff", "<cmd>Files<cr>", desc = "Files" },
             { "<leader>fg", "<cmd>Rg<cr>", desc = "Grep" },
