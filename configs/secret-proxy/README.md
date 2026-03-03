@@ -2,6 +2,9 @@
 
 An HTTP proxy that injects 1Password secrets into requests based on
 placeholders, with destination allowlisting to prevent secret exfiltration.
+For APIs that require short-lived credentials (e.g., Apple Music JWTs),
+the proxy can also derive secrets on the fly from component parts stored
+in 1Password — no manual token rotation needed.
 
 Designed to run on a macOS host and serve a Lima NixOS VM over an SSH tunnel,
 so secrets never enter the VM.
@@ -33,6 +36,11 @@ The proxy validates the destination is allowed for that secret, replaces
 the placeholder with the actual value from 1Password, and forwards
 the request. The upstream API receives a normal authenticated request.
 
+For derived secrets (like Apple Music JWTs), the proxy reads component
+secrets (private key, key ID, team ID) from 1Password, generates the
+credential on the fly, caches it until near-expiry, and injects it —
+the client uses the same `{{PLACEHOLDER}}` syntax for both.
+
 ## Architecture
 
 ```
@@ -47,11 +55,11 @@ the request. The upstream API receives a normal authenticated request.
 │  │                  │      │  2. Resolves ns  │                        │
 │  │  Default env:    │      │  3. Checks HOSTS │                        │
 │  │  secrets.env     │      │  4. Validates dst│                        │
-│  │                  │      │  5. Replaces     │                        │
-│  │  Namespace envs: │      │  6. Logs audit   │                        │
-│  │  namespaces/     │      │                  │                        │
+│  │                  │      │  5. Generates*   │                        │
+│  │  Namespace envs: │      │  6. Replaces     │                        │
+│  │  namespaces/     │      │  7. Logs audit   │                        │
 │  │    michael/      │      │                  │                        │
-│  │      secrets.env │      │                  │                        │
+│  │      secrets.env │      │  *If _GENERATOR  │                        │
 │  └──────────────────┘      └────────┬─────────┘                        │
 │                               127.0.0.1:17329                          │
 │                                     │                                   │
@@ -134,6 +142,157 @@ modules.dev.secret-proxy = {
 };
 ```
 
+## Derived Secrets (Generators)
+
+Some APIs require short-lived credentials that are computed from
+long-lived component secrets. For example, the Apple Music API requires
+a JWT signed with a private key, but the JWT expires every 12 hours.
+Rather than manually generating and rotating tokens, the proxy can
+derive them on the fly.
+
+### How It Works
+
+A **generator** is a named function registered in the proxy that
+produces a secret value from component secrets in the same namespace.
+The component secrets (private key, key ID, etc.) live in 1Password
+and are never directly injectable — only the derived result is injected
+into requests.
+
+When the proxy encounters a placeholder like `{{APPLE_MUSIC_TOKEN}}`,
+it checks whether the secret has a corresponding `_GENERATOR` variable.
+If so, it:
+
+1. Reads the component secrets from the same namespace's env file
+2. Calls the generator function to compute the derived value
+3. Caches the result with a TTL (to avoid regenerating on every request)
+4. Injects the cached value in place of the placeholder
+
+The client uses the exact same `{{PLACEHOLDER}}` syntax — it doesn't
+know or care whether a secret is stored directly or derived.
+
+### Configuration
+
+In your 1Password Environment `.env`, define the component secrets and
+a `_GENERATOR` variable that names the generator to use:
+
+```
+# Component secrets — these are inputs, never directly injected.
+# 1Password resolves op:// refs at mount time; the proxy sees plain values.
+APPLE_MUSIC_PRIVATE_KEY=-----BEGIN PRIVATE KEY-----\nMIGT...
+APPLE_MUSIC_KEY_ID=ABC123DEFG
+APPLE_MUSIC_TEAM_ID=9876543210
+
+# Derived secret — the generator name tells the proxy how to compute it.
+# There is no APPLE_MUSIC_TOKEN value — the _GENERATOR tells the proxy
+# to produce it on the fly from the component secrets above.
+APPLE_MUSIC_TOKEN_GENERATOR=apple_music_jwt
+APPLE_MUSIC_TOKEN_HOSTS=api.music.apple.com
+```
+
+The `_HOSTS` allowlist still applies — derived secrets get the same
+destination validation as regular secrets.
+
+Component secrets (`APPLE_MUSIC_PRIVATE_KEY`, etc.) have no `_HOSTS`
+variable, so they can never be injected into any request. They exist
+only as inputs to the generator.
+
+### Built-in Generators
+
+#### `apple_music_jwt`
+
+Generates an Apple Music API developer token (ES256-signed JWT).
+
+**Required component secrets** (same namespace):
+
+| Secret | Description |
+|--------|-------------|
+| `APPLE_MUSIC_PRIVATE_KEY` | MusicKit private key (PEM format, from Apple Developer portal) |
+| `APPLE_MUSIC_KEY_ID` | Key ID shown in Apple Developer → Keys |
+| `APPLE_MUSIC_TEAM_ID` | Your Apple Developer Team ID |
+
+**Behavior:**
+- Signs a JWT with `alg: ES256`, `kid: <key_id>`
+- Payload: `iss: <team_id>`, `iat: now`, `exp: now + 12h`
+- Caches the token for 11 hours (regenerates 1 hour before expiry)
+
+**Usage from the VM:**
+
+```bash
+curl https://api.music.apple.com/v1/catalog/us/songs/203709340 \
+  -H "Authorization: Bearer {{APPLE_MUSIC_TOKEN}}"
+
+# Or namespaced
+curl https://api.music.apple.com/v1/catalog/us/songs/203709340 \
+  -H "Authorization: Bearer {{michael:APPLE_MUSIC_TOKEN}}"
+```
+
+### Adding New Generators
+
+To add a new generator, register it in the `GENERATORS` dict in
+`secret_proxy.py`:
+
+```python
+GENERATORS = {
+    "apple_music_jwt": {
+        "func": generate_apple_music_jwt,
+        "ttl": 11 * 3600,  # Cache for 11h, regenerate before 12h expiry
+        "requires": [
+            "APPLE_MUSIC_PRIVATE_KEY",
+            "APPLE_MUSIC_KEY_ID",
+            "APPLE_MUSIC_TEAM_ID",
+        ],
+    },
+    # Add new generators here:
+    # "my_custom_jwt": {
+    #     "func": generate_my_custom_jwt,
+    #     "ttl": 3600,
+    #     "requires": ["MY_PRIVATE_KEY", "MY_KEY_ID"],
+    # },
+}
+```
+
+Each generator entry has:
+
+| Field | Description |
+|-------|-------------|
+| `func` | Callable that receives the namespace's secrets dict and returns the derived value |
+| `ttl` | How long (in seconds) to cache the result before regenerating |
+| `requires` | List of component secret names that must exist in the same namespace |
+
+The generator function signature:
+
+```python
+def generate_my_token(secrets: dict[str, str]) -> str:
+    """Receives all secrets from the namespace, returns the derived value."""
+    ...
+```
+
+### Nix Dependency
+
+Generators that sign JWTs require `PyJWT` and `cryptography` in the
+mitmproxy Python environment. The `secret-proxy` Nix module adds these
+automatically when the module is enabled:
+
+```nix
+mitmproxy = prev.mitmproxy.overridePythonAttrs (old: {
+  pythonRelaxDeps = true;
+  doCheck = false;
+  propagatedBuildInputs = (old.propagatedBuildInputs or []) ++ [
+    prev.python3Packages.pyjwt
+    prev.python3Packages.cryptography
+  ];
+});
+```
+
+### Generator Caching
+
+Derived secrets are cached in memory with a TTL. The cache key includes
+the namespace, so the same generator in different namespaces produces
+independent cached values. When the TTL expires, the next request
+triggers regeneration — the component secrets are re-read from
+1Password at that point, so key rotations in 1Password take effect
+automatically on the next cache miss.
+
 ## Security Model
 
 ### SSH Tunnel (No Network Exposure)
@@ -170,6 +329,9 @@ what's in the michael namespace's `ANTHROPIC_API_KEY_HOSTS`, it is blocked.
 - Host not in allowlist → blocked
 - Namespace not configured → blocked
 - Namespace env file missing → blocked
+- Generator named but not registered → blocked
+- Generator's required component secrets missing → blocked
+- Generator function throws an error → blocked
 
 ### Generic Error Messages
 
@@ -218,6 +380,9 @@ Blocked requests include the reason:
 | 1Password locked | Secrets unavailable, requests fail (fail-closed) |
 | Placeholder in response | Not scanned — only request headers and query params |
 | Unknown namespace referenced | Request blocked (fail-closed) |
+| Generator component secrets exfiltrated | Component secrets have no `_HOSTS`, cannot be injected into any request |
+| Derived token intercepted | Tokens are short-lived (e.g., 12h JWTs); private keys stay on host |
+| Generator misconfigured (missing inputs) | Missing component secrets cause fail-closed error, logged on host |
 
 ## Setup
 
@@ -454,3 +619,8 @@ Consider setting up rotation via macOS `newsyslog`. Create
 - **1Password must be unlocked**: Secrets require an unlocked vault
   (consider Service Accounts for unattended use)
 - **No rate limiting**: Relies on upstream API rate limits
+- **Generator cache is in-memory**: Restarting the proxy clears cached
+  derived secrets (they regenerate on next request, so this only adds
+  a one-time latency cost)
+- **Generators run on the proxy hot path**: A slow generator (e.g., HSM
+  signing) would add latency to the first request after cache expiry
