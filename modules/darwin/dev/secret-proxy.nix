@@ -90,12 +90,17 @@ in
     # that nixpkgs routinely exceeds with compatible minor/patch bumps.
     # Relax all dependency version constraints and skip tests to avoid
     # build failures from upstream pytest config issues.
+    # Also add PyJWT + cryptography for derived secret generators (ES256 JWTs).
     nixpkgs.overlays = [
       (final: prev: {
-        mitmproxy = prev.mitmproxy.overridePythonAttrs {
+        mitmproxy = prev.mitmproxy.overridePythonAttrs (old: {
           pythonRelaxDeps = true;
           doCheck = false;
-        };
+          dependencies = (old.dependencies or [ ]) ++ [
+            prev.python3Packages.pyjwt
+            prev.python3Packages.cryptography
+          ];
+        });
       })
     ];
 
