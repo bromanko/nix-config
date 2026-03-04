@@ -24,10 +24,20 @@ in
     };
 
     taps = mkOption {
-      type = listOf str;
+      type = listOf (oneOf [
+        str
+        attrs
+      ]);
       default = [ ];
-      example = [ "homebrew/cask-versions" ];
-      description = "Homebrew formula repositories to tap.";
+      example = [
+        "homebrew/cask-versions"
+        {
+          name = "user/tap-repo";
+          clone_target = "https://user@bitbucket.org/user/homebrew-tap-repo.git";
+          force_auto_update = true;
+        }
+      ];
+      description = "Homebrew formula repositories to tap (string or tap attrset).";
     };
 
     brews = mkOption {

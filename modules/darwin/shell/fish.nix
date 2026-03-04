@@ -26,7 +26,11 @@ in
 
     hm.programs.fish.functions = {
       "rebuild!" = ''
-        set -l host (hostname -s)
+        set -l host "${if cfg.rebuildTarget != null then cfg.rebuildTarget else ""}"
+        if test -z "$host"
+          set host (hostname -s)
+        end
+
         if test -d ${nixConfigDir}
           echo "Rebuilding from local config..."
           sudo darwin-rebuild switch --flake ${nixConfigDir}#$host
