@@ -22,6 +22,12 @@ in
       default = [ ];
       description = "Additional paths to add to <envar>PATH</envar.";
     };
+
+    rebuildTarget = mkOption {
+      type = nullOr str;
+      default = null;
+      description = "Darwin flake host name to use for rebuild! when it differs from hostname.";
+    };
   };
 
   config = mkIf cfg.enable {

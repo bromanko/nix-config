@@ -69,7 +69,7 @@ in
     services.aerospace = {
       enable = true;
       settings = {
-        automatically-unhide-macos-hidden-apps = true;
+        automatically-unhide-macos-hidden-apps = false;
         key-mapping = {
           key-notation-to-key-code = {
             # colemak is not supported yet in nix-darwin
