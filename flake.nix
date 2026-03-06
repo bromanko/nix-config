@@ -41,9 +41,6 @@
       url = "https://flakehub.com/f/bromanko/dealmail/*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-    # Temporary pin for the aarch64-darwin devenv crash fix.
-    # Intentionally do NOT follow this repo's nixpkgs; let devenv use its own pinned inputs.
-    devenv-fixed.url = "github:cachix/devenv/v2.0.3";
   };
 
   outputs =
@@ -171,10 +168,6 @@
       );
 
       overlays = mapModules ./overlays import // {
-        devenv = final: prev: {
-          devenv = inputs.devenv-fixed.packages.${prev.stdenv.hostPlatform.system}.default;
-        };
-
         default = final: prev: {
           my = self.packages.${prev.stdenv.hostPlatform.system} // {
             age-plugin-op = age-plugin-op.defaultPackage.${prev.stdenv.hostPlatform.system};
