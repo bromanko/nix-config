@@ -48,13 +48,25 @@ in
 
     environment.systemPackages = [ pkgs.my.context-lens ];
 
-    # Rotate launchd log files: keep 3 archives, rotate at 1 MB, compress.
+    # Rotate launchd log files: keep 3 archives, rotate at 1 MB.
+    #
+    # Two launchd-specific concerns (same as secret-proxy):
+    #
+    # 1. Ownership: newsyslog runs as root and creates replacement files
+    #    as root:admin by default.  The services run as the primary user,
+    #    so we set owner:group explicitly.  Without this the service cannot
+    #    write to the new log file after rotation and exits immediately.
+    #
+    # 2. Stale file descriptors: launchd holds stdout/stderr fds open for
+    #    the process lifetime.  After newsyslog renames the file, the
+    #    process keeps writing to the old (renamed) inode.  We use N (no
+    #    signal, no compression) so the rotated file remains readable.
     environment.etc."newsyslog.d/context-lens.conf".text = ''
-      # logfile                          mode count size when flags
-      ${dataDir}/proxy.log               644  3     1024 *    J
-      ${dataDir}/proxy.err               644  3     1024 *    J
-      ${dataDir}/analysis.log            644  3     1024 *    J
-      ${dataDir}/analysis.err            644  3     1024 *    J
+      # logfile                                owner:group        mode count size when flags
+      ${dataDir}/proxy.log                     ${config.user.name}:staff 644  3     1024 *    N
+      ${dataDir}/proxy.err                     ${config.user.name}:staff 644  3     1024 *    N
+      ${dataDir}/analysis.log                  ${config.user.name}:staff 644  3     1024 *    N
+      ${dataDir}/analysis.err                  ${config.user.name}:staff 644  3     1024 *    N
     '';
 
     launchd.user.agents.context-lens-proxy = {
