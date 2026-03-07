@@ -10,8 +10,9 @@ with lib.my;
 let
   cfg = config.modules.dev.coder;
 
-  defaultCoderBinary =
-    if pkgs.stdenv.hostPlatform.isDarwin then "/opt/homebrew/bin/coder" else "coder";
+  defaultCoderPackage = pkgs.my.coder;
+  defaultCoderBinary = "${defaultCoderPackage}/bin/coder";
+  defaultFishCompletionFile = "${defaultCoderPackage}/share/fish/vendor_completions.d/coder.fish";
 
   defaultGlobalConfigPath =
     if pkgs.stdenv.hostPlatform.isDarwin then "$HOME/Library/Application Support/coderv2" else null;
@@ -26,16 +27,20 @@ in
   options.modules.dev.coder = with types; {
     enable = mkBoolOpt false;
 
+    installPackage = mkBoolOpt true;
+
+    package = mkOption {
+      type = package;
+      default = defaultCoderPackage;
+      description = "Coder package used for the CLI and SSH ProxyCommand.";
+    };
+
     fishCompletions = {
       enable = mkBoolOpt true;
 
       file = mkOption {
         type = nullOr str;
-        default =
-          if pkgs.stdenv.hostPlatform.isDarwin then
-            "/opt/homebrew/share/fish/vendor_completions.d/coder.fish"
-          else
-            null;
+        default = defaultFishCompletionFile;
         description = "Path to coder fish completions file to source in interactive shells.";
       };
     };
@@ -71,21 +76,30 @@ in
 
   config = mkIf cfg.enable {
     hm = {
-      programs.fish.interactiveShellInit =
-        mkIf (config.modules.shell.fish.enable && cfg.fishCompletions.enable) (mkAfter ''
-          if type -q coder
-            ${optionalString (cfg.fishCompletions.file != null) ''
-            if test -r "${cfg.fishCompletions.file}"
-              source "${cfg.fishCompletions.file}"
-            else
-            ''}
-            # Homebrew coder doesn't always ship a fish completion file.
-            coder completion --shell fish --print | source
-            ${optionalString (cfg.fishCompletions.file != null) ''
-            end
-            ''}
-          end
-        '');
+      home.packages = optional cfg.installPackage cfg.package;
+
+      programs.fish = {
+        shellAliases = mkIf config.modules.shell.fish.enable {
+          coder = cfg.ssh.coderBinary;
+        };
+
+        interactiveShellInit =
+          mkIf (config.modules.shell.fish.enable && cfg.fishCompletions.enable)
+            (mkAfter ''
+              if test -x "${cfg.ssh.coderBinary}"; or type -q coder
+                ${optionalString (cfg.fishCompletions.file != null) ''
+                  if test -r "${cfg.fishCompletions.file}"
+                    source "${cfg.fishCompletions.file}"
+                  else
+                ''}
+                # Some coder distributions don't ship a fish completion file.
+                ${cfg.ssh.coderBinary} completion --shell fish --print | source
+                ${optionalString (cfg.fishCompletions.file != null) ''
+                  end
+                ''}
+              end
+            '');
+      };
 
       programs.ssh = mkIf (config.modules.shell.ssh.enable && cfg.ssh.enable) {
         extraConfig = mkAfter ''

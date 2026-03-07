@@ -9,7 +9,11 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.dev.pi;
-  homeDir = config.users.users.${config.user.name}.home;
+  homeDir =
+    if config ? home && config.home ? homeDirectory then
+      config.home.homeDirectory
+    else
+      config.users.users.${config.user.name}.home;
 
   # Resolve ~/ prefixes to the user's home directory
   resolveTildePath = p: if hasPrefix "~/" p then homeDir + removePrefix "~" p else p;
