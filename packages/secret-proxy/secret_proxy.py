@@ -552,6 +552,17 @@ class SecretProxy:
         if self.context_lens_enabled:
             self._redirect_through_context_lens(flow)
 
+    def responseheaders(self, flow: mhttp.HTTPFlow):
+        """Enable streaming for Server-Sent Events (SSE) responses.
+
+        Without this, mitmproxy buffers the entire response body before
+        relaying it to the client.  LLM APIs stream tokens via SSE, so
+        buffering causes the client to hang for the full generation time.
+        """
+        content_type = flow.response.headers.get("content-type", "")
+        if "text/event-stream" in content_type:
+            flow.response.stream = True
+
     def _resolve_generator(
         self,
         flow: mhttp.HTTPFlow,
