@@ -184,6 +184,7 @@ in
           # Enable extended keys (Kitty keyboard protocol) so apps like pi
           # can detect modifier keys (e.g. Shift+Enter for newline)
           set -g extended-keys on
+          set -g extended-keys-format csi-u
           set -as terminal-features 'xterm*:extkeys'
 
           # Allow passthrough sequences for inline images and other terminal features
