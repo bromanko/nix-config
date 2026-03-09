@@ -106,13 +106,32 @@ in
 
     environment.systemPackages = [ pkgs.mitmproxy ];
 
-    # Rotate launchd log files: keep 3 archives, rotate at 1 MB, compress.
+    # Rotate launchd log files: keep 3 archives, rotate at 1 MB.
+    #
+    # Two launchd-specific concerns:
+    #
+    # 1. Ownership: newsyslog runs as root and creates replacement files
+    #    as root:admin by default.  The proxy runs as the primary user,
+    #    so we set owner:group explicitly.  Without this the proxy cannot
+    #    write to the new log file after rotation and exits immediately.
+    #
+    # 2. Stale file descriptors: launchd holds stdout/stderr fds open for
+    #    the process lifetime.  After newsyslog renames the file, the
+    #    process keeps writing to the old (renamed) inode.  There is no
+    #    signal we can send to make mitmproxy reopen stdout — only a
+    #    service restart fixes it.  We accept that between rotation and
+    #    the next restart (rebuild / reboot / manual kickstart) new log
+    #    output lands in the rotated file.
+    #
+    # We use N (no signal) since there's no PID file and no useful
+    # signal to send.  We skip J/Z compression so the rotated file
+    # (still being written to) remains readable.
     environment.etc."newsyslog.d/secret-proxy.conf".text = ''
-      # logfile                                mode count size when flags
-      ${configDir}/proxy.log                   644  3     1024 *    J
-      ${configDir}/proxy.err                   644  3     1024 *    J
-      ${configDir}/tunnel.log                  644  3     1024 *    J
-      ${configDir}/tunnel.err                  644  3     1024 *    J
+      # logfile                                owner:group        mode count size when flags
+      ${configDir}/proxy.log                   ${config.user.name}:staff 644  3     1024 *    N
+      ${configDir}/proxy.err                   ${config.user.name}:staff 644  3     1024 *    N
+      ${configDir}/tunnel.log                  ${config.user.name}:staff 644  3     1024 *    N
+      ${configDir}/tunnel.err                  ${config.user.name}:staff 644  3     1024 *    N
     '';
 
     launchd.user.agents.secret-proxy = {

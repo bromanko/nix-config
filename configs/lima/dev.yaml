@@ -52,6 +52,12 @@ provision:
       echo "Rebuild with: sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-dev"
 
 portForwards:
+  # Exclude the secret-proxy port — the SSH reverse tunnel in the guest
+  # listens on this port and Lima's automatic forwarding would steal the
+  # host-side port from mitmdump. The reverse tunnel already handles the
+  # guest→host forwarding for this port.
+  - guestPort: 17329
+    ignore: true
   - guestPortRange: [1024, 65535]
     hostPortRange: [1024, 65535]
 

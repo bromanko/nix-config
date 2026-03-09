@@ -206,6 +206,9 @@ in
           # Reload config
           bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded"
 
+          # Rename current window to active pane's process name (Prefix + M)
+          bind M rename-window "#{pane_current_command}"
+
           # Split panes using | and -
           bind | split-window -h
           bind - split-window -v

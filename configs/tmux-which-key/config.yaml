@@ -17,7 +17,7 @@ macros:
   - name: reload-config
     commands:
       - display "#{log_info} Loading config... "
-      - source-file $HOME/.tmux.conf
+      - source-file $HOME/.config/tmux/tmux.conf
       - display -p "\n\n... Press ENTER to continue"
   - name: restart-pane
     commands:
@@ -99,8 +99,11 @@ items:
         command: rotatew -D
         transient: true
       - separator: true
+      - name: Rename to process
+        key: m
+        command: 'rename-window "#{pane_current_command}"'
       - name: Rename
-        key: R
+        key: r
         command: command-prompt -I "#W" "renamew -- \"%%\""
       - name: Kill
         key: X
@@ -219,7 +222,7 @@ items:
         key: S
         command: choose-tree -Zs
       - name: New
-        key: N
+        key: c
         command: new
       - name: Rename
         key: r
@@ -276,6 +279,9 @@ items:
         key: ","
         command: customize-mode -Z
   - separator: true
+  - name: Reload config
+    key: r
+    macro: reload-config
   - name: Time
     key: T
     command: clock-mode
