@@ -41,6 +41,10 @@
       url = "https://flakehub.com/f/bromanko/dealmail/*";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    sst-gateway = {
+      url = "github:bromanko/sst-gateway";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
