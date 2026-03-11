@@ -33,15 +33,9 @@ items:
   - name: Last pane
     key: "`"
     command: last-pane
-  - name: Copy
+  - name: Copy mode
     key: c
-    menu:
-      - name: Copy
-        key: c
-        command: copy-mode
-      - name: List buffers
-        key: "#"
-        command: list-buffers
+    command: copy-mode
   - separator: true
   - name: +Windows
     key: w
