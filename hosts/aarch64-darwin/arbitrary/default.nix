@@ -56,6 +56,7 @@ with lib.my;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
+        macwhisper.enable = true;
         multitouch.enable = true;
         screencast = {
           enable = true;
@@ -165,7 +166,6 @@ with lib.my;
         "hazeover"
         "istat-menus"
         "lunar"
-        "macwhisper"
         "signal"
         "utm"
         "crystalfetch"
