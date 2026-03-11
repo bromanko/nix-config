@@ -653,26 +653,26 @@
         "nixos-lima": "nixos-lima",
         "nixpkgs": "nixpkgs_5",
         "nur": "nur",
-        "sst-gateway": "sst-gateway"
+        "stt-gateway": "stt-gateway"
       }
     },
-    "sst-gateway": {
+    "stt-gateway": {
       "inputs": {
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1773257656,
-        "narHash": "sha256-Wkn1ZyeyqdzxF70i6ioZfDhx/0apOaYETw+CgR0bNjU=",
+        "lastModified": 1773268304,
+        "narHash": "sha256-8dKefDzCGj2hIFBE49JjC7h/5KNYU6TB5cjdXW2/iok=",
         "owner": "bromanko",
-        "repo": "sst-gateway",
-        "rev": "1910c5f5a477566d5831c04b0a7d737ec60d30bf",
+        "repo": "stt-gateway",
+        "rev": "c444d148ed5c31515529c9a1f9d94376a969ade6",
         "type": "github"
       },
       "original": {
         "owner": "bromanko",
-        "repo": "sst-gateway",
+        "repo": "stt-gateway",
         "type": "github"
       }
     },

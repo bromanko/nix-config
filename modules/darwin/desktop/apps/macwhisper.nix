@@ -12,11 +12,11 @@ let
   cfg = config.modules.desktop.apps.macwhisper;
   homeDir = "/Users/${config.user.name}";
   logsDir = "${homeDir}/Library/Logs";
-  stdoutLog = "${logsDir}/sst-gateway.stdout.log";
-  stderrLog = "${logsDir}/sst-gateway.stderr.log";
+  stdoutLog = "${logsDir}/stt-gateway.stdout.log";
+  stderrLog = "${logsDir}/stt-gateway.stderr.log";
   gatewayPort = toString cfg.gateway.port;
   gatewayBaseUrl = "http://${cfg.gateway.host}:${gatewayPort}/v1";
-  gatewayPkg = inputs.sst-gateway.packages.${pkgs.stdenv.hostPlatform.system}.default;
+  gatewayPkg = inputs.stt-gateway.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
   options.modules.desktop.apps.macwhisper = with types; {
@@ -26,13 +26,13 @@ in
       host = mkOption {
         type = str;
         default = "127.0.0.1";
-        description = "Host address for the local sst-gateway service.";
+        description = "Host address for the local stt-gateway service.";
       };
 
       port = mkOption {
         type = port;
         default = 19476;
-        description = "Port for the local sst-gateway service.";
+        description = "Port for the local stt-gateway service.";
       };
 
       model = mkOption {
@@ -48,18 +48,18 @@ in
 
     environment.systemPackages = [ gatewayPkg ];
 
-    environment.etc."newsyslog.d/sst-gateway.conf".text = ''
+    environment.etc."newsyslog.d/stt-gateway.conf".text = ''
       # logfile                                owner:group            mode count size when flags
       ${stdoutLog}                             ${config.user.name}:staff 644  3     1024 *    N
       ${stderrLog}                             ${config.user.name}:staff 644  3     1024 *    N
     '';
 
-    launchd.user.agents.sst-gateway = {
+    launchd.user.agents.stt-gateway = {
       serviceConfig = {
-        ProgramArguments = [ "${gatewayPkg}/bin/sst-gateway" ];
+        ProgramArguments = [ "${gatewayPkg}/bin/stt-gateway" ];
         EnvironmentVariables = {
-          SST_GATEWAY_HOST = cfg.gateway.host;
-          SST_GATEWAY_PORT = gatewayPort;
+          STT_GATEWAY_HOST = cfg.gateway.host;
+          STT_GATEWAY_PORT = gatewayPort;
         };
         RunAtLoad = true;
         KeepAlive = true;
@@ -69,11 +69,11 @@ in
       };
     };
 
-    # MacWhisper does not currently document declarative cloud-transcription
-    # settings for a custom local provider, so we write the observed defaults
-    # keys directly. We only point Dictation at the custom provider and leave
-    # regular transcription selection untouched.
-    system.activationScripts.postActivation.text = mkAfter ''
+    hm.home.activation.configureMacWhisperDictation = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+      # MacWhisper does not currently document declarative cloud-transcription
+      # settings for a custom local provider, so we write the observed defaults
+      # keys directly in the user's preferences domain. We only point Dictation
+      # at the custom provider and leave regular transcription selection alone.
       defaults write com.goodsnooze.MacWhisper configuredCloudTranscriptionProviders -array '"custom"'
       defaults write com.goodsnooze.MacWhisper customOpenAIWhisperProviderBaseURL -string '${gatewayBaseUrl}'
       defaults write com.goodsnooze.MacWhisper customOpenAIWhisperProviderModel -string '${cfg.gateway.model}'
