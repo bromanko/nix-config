@@ -233,6 +233,11 @@ in
           set -g visual-activity off
           set -g window-status-activity-style "none"
 
+          # Pane focus styling - dim inactive panes, highlight active border
+          set -g window-style 'fg=colour245,bg=colour235'
+          set -g window-active-style 'fg=terminal,bg=terminal'
+          set -g pane-active-border-style 'fg=colour39'
+
           # pi tmux-titles extension sets window names via escape sequences
           set -g automatic-rename off
           set -g allow-rename on
