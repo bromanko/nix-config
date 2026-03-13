@@ -58,29 +58,21 @@ get_agent_summary() {
   local summary=""
 
   while IFS= read -r wname; do
-    # Only look at pi/claude windows
-    case "$wname" in
-      pi*|claude*|*π*)
-        if [[ "$wname" == *"✻"* ]]; then
-          summary+="${MAGENTA}✻${RESET} "
-        elif [[ "$wname" == *'$'* ]]; then
-          summary+="${CYAN}\$${RESET} "
-        elif [[ "$wname" == *"✎"* ]]; then
-          summary+="${YELLOW}✎${RESET} "
-        elif [[ "$wname" == *"…"* ]]; then
-          summary+="${DIM}…${RESET} "
-        elif [[ "$wname" == *"⌫"* ]]; then
-          summary+="${DIM}⌫${RESET} "
-        elif [[ "$wname" == *"○"* ]]; then
-          summary+="${DIM}○${RESET} "
-        elif [[ "$wname" == *"✓"* ]]; then
-          summary+="${GREEN}✓${RESET} "
-        else
-          # Agent window with no recognized icon
-          summary+="${DIM}?${RESET} "
-        fi
-        ;;
-    esac
+    if [[ "$wname" == *"✻"* ]]; then
+      summary+="${MAGENTA}✻${RESET} "
+    elif [[ "$wname" == *'$'* ]]; then
+      summary+="${CYAN}\$${RESET} "
+    elif [[ "$wname" == *"✎"* ]]; then
+      summary+="${YELLOW}✎${RESET} "
+    elif [[ "$wname" == *"…"* ]]; then
+      summary+="${DIM}…${RESET} "
+    elif [[ "$wname" == *"⌫"* ]]; then
+      summary+="${DIM}⌫${RESET} "
+    elif [[ "$wname" == *"○"* ]]; then
+      summary+="${DIM}○${RESET} "
+    elif [[ "$wname" == *"✓"* ]]; then
+      summary+="${GREEN}✓${RESET} "
+    fi
   done < <(tmux list-windows -t "$session" -F '#{window_name}' 2>/dev/null)
 
   echo -e "$summary"
