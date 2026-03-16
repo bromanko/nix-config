@@ -190,6 +190,7 @@ with lib.my;
         my.tldx
         my.sprite
         my.ticket
+        my.chrome-devtools-mcp
         iina
         chatgpt
         devenv
