@@ -15,7 +15,7 @@ let
   stdoutLog = "${logsDir}/stt-gateway.stdout.log";
   stderrLog = "${logsDir}/stt-gateway.stderr.log";
   gatewayPort = toString cfg.gateway.port;
-  gatewayBaseUrl = "http://${cfg.gateway.host}:${gatewayPort}/v1";
+  gatewayBaseUrl = "http://${cfg.gateway.host}:${gatewayPort}";
   gatewayPkg = inputs.stt-gateway.packages.${pkgs.stdenv.hostPlatform.system}.default;
 in
 {
