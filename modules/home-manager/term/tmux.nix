@@ -184,6 +184,7 @@ in
           # Enable extended keys (Kitty keyboard protocol) so apps like pi
           # can detect modifier keys (e.g. Shift+Enter for newline)
           set -g extended-keys on
+          set -g extended-keys-format csi-u
           set -as terminal-features 'xterm*:extkeys'
 
           # Allow passthrough sequences for inline images and other terminal features
@@ -205,6 +206,9 @@ in
 
           # Reload config
           bind r source-file ~/.config/tmux/tmux.conf \; display "Config reloaded"
+
+          # Rename current window to active pane's process name (Prefix + M)
+          bind M rename-window "#{pane_current_command}"
 
           # Split panes using | and -
           bind | split-window -h
@@ -228,6 +232,11 @@ in
           setw -g monitor-activity on
           set -g visual-activity off
           set -g window-status-activity-style "none"
+
+          # Pane focus styling - dim inactive panes, highlight active border
+          set -g window-style 'fg=colour245,bg=colour235'
+          set -g window-active-style 'fg=terminal,bg=terminal'
+          set -g pane-active-border-style 'fg=colour39'
 
           # pi tmux-titles extension sets window names via escape sequences
           set -g automatic-rename off

@@ -56,6 +56,7 @@ with lib.my;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
+        macwhisper.enable = true;
         multitouch.enable = true;
         screencast = {
           enable = true;
@@ -153,9 +154,7 @@ with lib.my;
     homebrew = {
       enable = true;
       prefix = brewPrefix;
-      taps = [
-        "homebrew/services"
-      ];
+      taps = [ ];
       casks = [
         "anki"
         "bartender"
@@ -165,7 +164,6 @@ with lib.my;
         "hazeover"
         "istat-menus"
         "lunar"
-        "macwhisper"
         "signal"
         "utm"
         "crystalfetch"
@@ -175,7 +173,6 @@ with lib.my;
       ];
       masApps = {
         Keynote = 409183694;
-        Kindle = 405399194;
         Numbers = 409203825;
         Pages = 409201541;
         Xcode = 497799835;
@@ -190,6 +187,7 @@ with lib.my;
         my.tldx
         my.sprite
         my.ticket
+        my.chrome-devtools-mcp
         iina
         chatgpt
         devenv
