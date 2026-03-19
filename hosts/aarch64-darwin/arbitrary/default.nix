@@ -154,9 +154,7 @@ with lib.my;
     homebrew = {
       enable = true;
       prefix = brewPrefix;
-      taps = [
-        "homebrew/services"
-      ];
+      taps = [ ];
       casks = [
         "anki"
         "bartender"
