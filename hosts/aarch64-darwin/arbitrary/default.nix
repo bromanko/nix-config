@@ -175,7 +175,6 @@ with lib.my;
       ];
       masApps = {
         Keynote = 409183694;
-        Kindle = 405399194;
         Numbers = 409203825;
         Pages = 409201541;
         Xcode = 497799835;
