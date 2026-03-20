@@ -80,7 +80,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   # Nix configuration
-  modules.nix.system.enable = "default";
+  modules.nix.system.enable = "determinate";
 
   nix.settings = {
     experimental-features = [
