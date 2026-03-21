@@ -57,7 +57,7 @@
   networking.proxy = {
     httpProxy = "http://127.0.0.1:17329";
     httpsProxy = "http://127.0.0.1:17329";
-    noProxy = "localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,cache.nixos.org,install.determinate.systems,devenv.cachix.org,cache.numtide.com,flakehub.com,api.flakehub.com,cache.flakehub.com,github.com,*.githubusercontent.com";
+    noProxy = "localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,cache.nixos.org,install.determinate.systems,devenv.cachix.org,cache.numtide.com,flakehub.com,api.flakehub.com,cache.flakehub.com,*.githubusercontent.com";
   };
 
   # Trust the mitmproxy CA certificate so HTTPS inspection works.
@@ -181,6 +181,12 @@
         "rebuild!" = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-dev";
       };
       jujutsu.settings.ui.editor = "nvim";
+
+      # Bypass the MITM proxy for git operations to github.com so that
+      # git/jj can fetch without needing to trust the proxy CA.
+      # API calls (api.github.com) still go through the proxy for
+      # {{GITHUB_TOKEN}} injection.
+      git.extraConfig.http."https://github.com".proxy = "";
     };
   };
 
