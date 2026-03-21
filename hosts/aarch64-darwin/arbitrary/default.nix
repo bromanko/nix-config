@@ -169,6 +169,7 @@ with lib.my;
         "crystalfetch"
         "calibre"
         "sony-ps-remote-play"
+        "tailscale"
         "copilot-money"
         "zen"
       ];
