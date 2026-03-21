@@ -169,6 +169,7 @@ with lib.my;
         "crystalfetch"
         "calibre"
         "sony-ps-remote-play"
+        "copilot-money"
         "zen"
       ];
       masApps = {
