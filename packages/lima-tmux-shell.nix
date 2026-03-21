@@ -9,6 +9,10 @@ pkgs.writeShellApplication {
     #
     # Flags (e.g. --workdir) are passed before the instance name,
     # and any command after "--" is passed after it.
+    #
+    # When no command is provided, bootstrap into fish if available after the
+    # NixOS config has been applied, but fall back to fish/bash/sh during early
+    # provisioning so the shell still works before /run/current-system exists.
 
     flags=()
     cmd=()
@@ -24,7 +28,21 @@ pkgs.writeShellApplication {
       fi
     done
 
-    exec limactl shell "''${flags[@]}" lima-dev "''${cmd[@]}"
+    if (( ''${#cmd[@]} > 0 )); then
+      exec limactl shell "''${flags[@]}" lima-dev "''${cmd[@]}"
+    else
+      exec limactl shell "''${flags[@]}" lima-dev /bin/sh -lc '
+        if [ -x /run/current-system/sw/bin/fish ]; then
+          exec /run/current-system/sw/bin/fish -l
+        elif command -v fish >/dev/null 2>&1; then
+          exec fish -l
+        elif command -v bash >/dev/null 2>&1; then
+          exec bash -l
+        else
+          exec sh -l
+        fi
+      '
+    fi
   '';
   meta = with lib; {
     description = "Shell into the Lima dev VM";
