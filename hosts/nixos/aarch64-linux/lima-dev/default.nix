@@ -57,7 +57,7 @@
   networking.proxy = {
     httpProxy = "http://127.0.0.1:17329";
     httpsProxy = "http://127.0.0.1:17329";
-    noProxy = "localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16";
+    noProxy = "localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,cache.nixos.org,install.determinate.systems,devenv.cachix.org,cache.numtide.com,flakehub.com,api.flakehub.com,cache.flakehub.com";
   };
 
   # Trust the mitmproxy CA certificate so HTTPS inspection works
@@ -133,7 +133,7 @@
       idea.enable = true;
       psql.enable = true;
       nodejs.enable = true;
-      codex.enable = true;
+      codex.enable = false;
       claude-code.enable = true;
       pi.enable = true;
     };
