@@ -60,7 +60,10 @@
     noProxy = "localhost,127.0.0.1,::1,10.0.0.0/8,172.16.0.0/12,192.168.0.0/16,cache.nixos.org,install.determinate.systems,devenv.cachix.org,cache.numtide.com,flakehub.com,api.flakehub.com,cache.flakehub.com,github.com,*.githubusercontent.com";
   };
 
-  # Trust the mitmproxy CA certificate so HTTPS inspection works
+  # Trust the mitmproxy CA certificate so HTTPS inspection works.
+  # Use the compatible bundle format (plain PEM, no p11-kit trust rules)
+  # so that all OpenSSL consumers can verify the MITM CA.
+  security.pki.useCompatibleBundle = true;
   security.pki.certificateFiles =
     let
       certPath = "${pkgs.my.secret-proxy}/share/secret-proxy/mitmproxy-ca-cert.pem";
