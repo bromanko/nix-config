@@ -90,8 +90,14 @@
     trusted-users = [ "@wheel" ];
   };
 
-  # Override user home directory to match Lima's convention (appends .linux)
-  users.users.${config.user.name}.home = lib.mkForce "/home/${config.user.name}.linux";
+  # Override user home directory to match Lima's convention (appends .linux).
+  # Enable linger so the user systemd session (and dbus socket) stays alive
+  # even without an active login — needed for `nixos-rebuild switch` to reload
+  # user units without errors.
+  users.users.${config.user.name} = {
+    home = lib.mkForce "/home/${config.user.name}.linux";
+    linger = true;
+  };
 
   # Enable fish system-wide (needed for user shell)
   programs.fish.enable = true;
