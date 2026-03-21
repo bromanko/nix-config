@@ -22,7 +22,7 @@ with lib.my;
   ++ (mapModulesRec' (toString ../modules/linux) import);
 
   modules.nix = {
-    system.enable = "default";
+    system.enable = mkDefault "default";
   };
 
   users.users.${config.user.name} = mkAliasDefinitions config.user;
