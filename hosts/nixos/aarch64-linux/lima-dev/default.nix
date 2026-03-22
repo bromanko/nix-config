@@ -167,7 +167,6 @@
       # the host's 1Password Environment. See packages/secret-proxy/README.md.
       sessionVariables = {
         GH_TOKEN = "{{GITHUB_TOKEN}}";
-        OPENAI_API_KEY = "{{OPENAI_API_KEY}}";
         BRAVE_API_KEY = "{{BRAVE_API_KEY}}";
         JJ_EDITOR = "nvim";
         # Node.js ignores the system CA store; point it at the NixOS bundle
