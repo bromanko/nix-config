@@ -162,6 +162,7 @@ with lib.my;
         "figma"
         "google-chrome"
         "hazeover"
+        "homerow"
         "istat-menus"
         "lunar"
         "signal"
