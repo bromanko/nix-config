@@ -53,6 +53,10 @@ in
         "anthropic/claude-opus-4-6:high"
         "openai-codex/gpt-5.3-codex:high"
       ];
+      hideThinkingBlock = true;
+      branchSummary = {
+        skipPrompt = true;
+      };
     };
   };
 
