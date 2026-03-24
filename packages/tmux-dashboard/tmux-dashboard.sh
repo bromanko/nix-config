@@ -8,8 +8,16 @@
 #
 # Preview pane shows detailed info for the selected session.
 # Selecting a session switches the tmux client to it.
+#
+# VCS checks run asynchronously — the picker appears instantly and VCS
+# status is filled in via fzf reload once the (parallel) checks finish.
 
 set -euo pipefail
+
+# ── Tunables ─────────────────────────────────────────────────────────────────
+# Per-repo timeout (seconds) for VCS commands.  Keeps the picker responsive
+# even when a repo is enormous (e.g. a large monorepo).
+VCS_TIMEOUT=3
 
 # ── Colors ───────────────────────────────────────────────────────────────────
 GREEN='\033[32m'
@@ -20,26 +28,83 @@ DIM='\033[2m'
 BOLD='\033[1m'
 RESET='\033[0m'
 
+# ── Batch tmux data ─────────────────────────────────────────────────────────
+# Fetch all session and window metadata in exactly two tmux calls, then build
+# associative arrays so the list generators never fork per-session.
+
+declare -A SESSION_WINCOUNT SESSION_PATH SESSION_AGENTS
+
+load_tmux_data() {
+  # 1. Sessions: name, window count, working directory
+  while IFS='|' read -r name count path; do
+    SESSION_WINCOUNT["$name"]="$count"
+    SESSION_PATH["$name"]="$path"
+  done < <(tmux list-sessions -F '#{session_name}|#{session_windows}|#{session_path}' 2>/dev/null)
+
+  # 2. Windows: build per-session agent summary from window names
+  local cur_session="" cur_summary=""
+  while IFS='|' read -r sname wname; do
+    if [[ "$sname" != "$cur_session" ]]; then
+      [[ -n "$cur_session" ]] && SESSION_AGENTS["$cur_session"]="$cur_summary"
+      cur_session="$sname"
+      cur_summary=""
+    fi
+    if [[ "$wname" == *"✻"* ]]; then
+      cur_summary+="${MAGENTA}✻${RESET} "
+    elif [[ "$wname" == *'$'* ]]; then
+      cur_summary+="${CYAN}\$${RESET} "
+    elif [[ "$wname" == *"✎"* ]]; then
+      cur_summary+="${YELLOW}✎${RESET} "
+    elif [[ "$wname" == *"…"* ]]; then
+      cur_summary+="${DIM}…${RESET} "
+    elif [[ "$wname" == *"⌫"* ]]; then
+      cur_summary+="${DIM}⌫${RESET} "
+    elif [[ "$wname" == *"○"* ]]; then
+      cur_summary+="${DIM}○${RESET} "
+    elif [[ "$wname" == *"✓"* ]]; then
+      cur_summary+="${GREEN}✓${RESET} "
+    fi
+  done < <(tmux list-windows -a -F '#{session_name}|#{window_name}' 2>/dev/null)
+  [[ -n "$cur_session" ]] && SESSION_AGENTS["$cur_session"]="$cur_summary"
+}
+
+# ── Format a session line ───────────────────────────────────────────────────
+
+format_session_line() {
+  local session="$1" vcs="$2"
+  local padded_name
+  padded_name=$(printf '%-15s' "$session")
+
+  echo -e "${session}\t${BOLD}${padded_name}${RESET}  ${vcs}  ${DIM}󰖯 ${SESSION_WINCOUNT[$session]:-0}${RESET}  ${SESSION_AGENTS[$session]:-}"
+}
+
 # ── VCS status detection ────────────────────────────────────────────────────
 
 get_vcs_status() {
   local path="$1"
 
   if [[ -d "$path/.jj" ]]; then
-    local full_status
-    full_status=$(cd "$path" && jj status --no-pager 2>/dev/null) || true
-    local status_line
-    status_line=$(head -1 <<< "$full_status")
+    local full_status rc=0
+    full_status=$(cd "$path" && timeout "$VCS_TIMEOUT" jj status --no-pager 2>/dev/null) || rc=$?
 
-    if [[ "$status_line" == *"no changes"* ]]; then
-      echo -e "${GREEN}jj ✓${RESET}"
+    if [[ "$rc" -eq 124 ]]; then
+      echo -e "${DIM}jj ⏳${RESET}"
     else
-      echo -e "${YELLOW}jj ●${RESET}"
+      local status_line
+      status_line=$(head -1 <<< "$full_status")
+      if [[ "$status_line" == *"no changes"* ]]; then
+        echo -e "${GREEN}jj ✓${RESET}"
+      else
+        echo -e "${YELLOW}jj ●${RESET}"
+      fi
     fi
   elif [[ -d "$path/.git" ]]; then
-    local porcelain
-    porcelain=$(cd "$path" && git status --porcelain 2>/dev/null) || true
-    if [[ -z "$porcelain" ]]; then
+    local porcelain rc=0
+    porcelain=$(cd "$path" && timeout "$VCS_TIMEOUT" git status --porcelain 2>/dev/null) || rc=$?
+
+    if [[ "$rc" -eq 124 ]]; then
+      echo -e "${DIM}git ⏳${RESET}"
+    elif [[ -z "$porcelain" ]]; then
       echo -e "${GREEN}git ✓${RESET}"
     else
       echo -e "${YELLOW}git ●${RESET}"
@@ -49,57 +114,43 @@ get_vcs_status() {
   fi
 }
 
-# ── Agent status from window names ──────────────────────────────────────────
-# pi's tmux-titles extension appends status icons to window names:
-#   ○ idle  ✻ thinking  $ bash  ✎ editing  … reading  ⌫ compacting  ✓ done
+# ── Session list: quick (no VCS) ────────────────────────────────────────────
 
-get_agent_summary() {
-  local session="$1"
-  local summary=""
+generate_list_quick() {
+  load_tmux_data
 
-  while IFS= read -r wname; do
-    if [[ "$wname" == *"✻"* ]]; then
-      summary+="${MAGENTA}✻${RESET} "
-    elif [[ "$wname" == *'$'* ]]; then
-      summary+="${CYAN}\$${RESET} "
-    elif [[ "$wname" == *"✎"* ]]; then
-      summary+="${YELLOW}✎${RESET} "
-    elif [[ "$wname" == *"…"* ]]; then
-      summary+="${DIM}…${RESET} "
-    elif [[ "$wname" == *"⌫"* ]]; then
-      summary+="${DIM}⌫${RESET} "
-    elif [[ "$wname" == *"○"* ]]; then
-      summary+="${DIM}○${RESET} "
-    elif [[ "$wname" == *"✓"* ]]; then
-      summary+="${GREEN}✓${RESET} "
-    fi
-  done < <(tmux list-windows -t "$session" -F '#{window_name}' 2>/dev/null)
-
-  echo -e "$summary"
+  local session
+  for session in $(echo "${!SESSION_WINCOUNT[@]}" | tr ' ' '\n' | sort); do
+    format_session_line "$session" "${DIM}…${RESET}"
+  done
 }
 
-# ── Session list generation ─────────────────────────────────────────────────
+# ── Session list: full (parallel VCS with timeouts) ─────────────────────────
 
-generate_list() {
-  for session in $(tmux list-sessions -F '#{session_name}' | sort); do
-    local path
-    path=$(tmux display-message -t "$session" -p '#{session_path}' 2>/dev/null)
+generate_list_full() {
+  load_tmux_data
 
+  local tmpdir
+  tmpdir=$(mktemp -d)
+  # shellcheck disable=SC2064
+  trap "rm -rf '$tmpdir'" RETURN
+
+  # Launch VCS checks in parallel — each writes its result to a temp file
+  local -a sessions=()
+  local session
+  for session in $(echo "${!SESSION_WINCOUNT[@]}" | tr ' ' '\n' | sort); do
+    sessions+=("$session")
+    ( get_vcs_status "${SESSION_PATH[$session]}" > "$tmpdir/$session" ) &
+  done
+
+  # Wait for all parallel VCS checks to finish
+  wait
+
+  # Emit lines in the same order (fzf preserves cursor position on reload)
+  for session in "${sessions[@]}"; do
     local vcs
-    vcs=$(get_vcs_status "$path")
-
-    local agents
-    agents=$(get_agent_summary "$session")
-
-    local win_count
-    win_count=$(tmux list-windows -t "$session" 2>/dev/null | wc -l | tr -d ' ')
-
-    # Format: session_name<TAB>display_line
-    # First field (before tab) is the clean session name for extraction.
-    # Use printf with %s (not format vars) and pre-composed colored strings.
-    local padded_name
-    padded_name=$(printf '%-15s' "$session")
-    echo -e "${session}\t${BOLD}${padded_name}${RESET}  ${vcs}  ${DIM}󰖯 ${win_count}${RESET}  ${agents}"
+    vcs=$(cat "$tmpdir/$session" 2>/dev/null) || vcs=$(echo -e "${DIM}—${RESET}")
+    format_session_line "$session" "$vcs"
   done
 }
 
@@ -117,39 +168,43 @@ generate_preview() {
   if [[ -d "$path/.jj" ]]; then
     echo -e "${BOLD}VCS:${RESET} jujutsu"
 
-    local full_status
-    full_status=$(cd "$path" && jj status --no-pager 2>/dev/null) || true
-    local status_line
-    status_line=$(head -1 <<< "$full_status")
+    local full_status rc=0
+    full_status=$(cd "$path" && timeout "$VCS_TIMEOUT" jj status --no-pager 2>/dev/null) || rc=$?
 
-    if [[ "$status_line" == *"no changes"* ]]; then
-      echo -e "  ${GREEN}✓ Working copy clean${RESET}"
+    if [[ "$rc" -eq 124 ]]; then
+      echo -e "  ${DIM}⏳ Status timed out (large repo?)${RESET}"
     else
-      echo -e "  ${YELLOW}● Working copy has changes:${RESET}"
-      # Show only file change lines (A/M/D/R prefix)
-      local changes
-      changes=$(grep -E '^[AMDR] ' <<< "$full_status") || true
-      if [[ -n "$changes" ]]; then
-        head -8 <<< "$changes" | while IFS= read -r line; do
-          echo -e "    ${DIM}${line}${RESET}"
-        done
-        # Show count if there are more
-        local change_count
-        change_count=$(wc -l <<< "$changes" | tr -d ' ')
-        if [[ "$change_count" -gt 8 ]]; then
-          echo -e "    ${DIM}… and $((change_count - 8)) more${RESET}"
+      local status_line
+      status_line=$(head -1 <<< "$full_status")
+
+      if [[ "$status_line" == *"no changes"* ]]; then
+        echo -e "  ${GREEN}✓ Working copy clean${RESET}"
+      else
+        echo -e "  ${YELLOW}● Working copy has changes:${RESET}"
+        local changes
+        changes=$(grep -E '^[AMDR] ' <<< "$full_status") || true
+        if [[ -n "$changes" ]]; then
+          head -8 <<< "$changes" | while IFS= read -r line; do
+            echo -e "    ${DIM}${line}${RESET}"
+          done
+          local change_count
+          change_count=$(wc -l <<< "$changes" | tr -d ' ')
+          if [[ "$change_count" -gt 8 ]]; then
+            echo -e "    ${DIM}… and $((change_count - 8)) more${RESET}"
+          fi
         fi
       fi
-    fi
 
-    # Show current change description and bookmarks
-    local log_info
-    log_info=$(cd "$path" && jj log --no-pager -r '@' --no-graph \
-      -T 'separate(" ", bookmarks, if(description, description.first_line()))' \
-      2>/dev/null) || true
-    log_info=$(head -1 <<< "$log_info")
-    if [[ -n "$log_info" ]]; then
-      echo -e "  ${MAGENTA}⎇ ${log_info}${RESET}"
+      # Show current change description and bookmarks (skip if status
+      # already timed out — log will be equally slow).
+      local log_info
+      log_info=$(cd "$path" && timeout "$VCS_TIMEOUT" jj log --no-pager -r '@' --no-graph \
+        -T 'separate(" ", bookmarks, if(description, description.first_line()))' \
+        2>/dev/null) || true
+      log_info=$(head -1 <<< "$log_info")
+      if [[ -n "$log_info" ]]; then
+        echo -e "  ${MAGENTA}⎇ ${log_info}${RESET}"
+      fi
     fi
     echo ""
 
@@ -157,14 +212,17 @@ generate_preview() {
     echo -e "${BOLD}VCS:${RESET} git"
 
     local branch
-    branch=$(cd "$path" && git branch --show-current 2>/dev/null) || true
+    branch=$(cd "$path" && timeout "$VCS_TIMEOUT" git branch --show-current 2>/dev/null) || true
     if [[ -n "$branch" ]]; then
       echo -e "  ${MAGENTA}⎇ ${branch}${RESET}"
     fi
 
-    local porcelain
-    porcelain=$(cd "$path" && git status --porcelain 2>/dev/null) || true
-    if [[ -z "$porcelain" ]]; then
+    local porcelain rc=0
+    porcelain=$(cd "$path" && timeout "$VCS_TIMEOUT" git status --porcelain 2>/dev/null) || rc=$?
+
+    if [[ "$rc" -eq 124 ]]; then
+      echo -e "  ${DIM}⏳ Status timed out (large repo?)${RESET}"
+    elif [[ -z "$porcelain" ]]; then
       echo -e "  ${GREEN}✓ Working tree clean${RESET}"
     else
       local change_count
@@ -213,18 +271,24 @@ generate_preview() {
 # ── Main ────────────────────────────────────────────────────────────────────
 
 main() {
-  # If called with --preview, generate preview for the given session
-  if [[ "${1:-}" == "--preview" ]]; then
-    generate_preview "${2:-}"
-    exit 0
-  fi
+  # Sub-commands used by fzf callbacks
+  case "${1:-}" in
+    --preview)
+      generate_preview "${2:-}"
+      exit 0
+      ;;
+    --full-list)
+      generate_list_full
+      exit 0
+      ;;
+  esac
 
   local self
   self=$(realpath "$0")
 
   local selected
   selected=$(
-    generate_list | fzf --ansi \
+    generate_list_quick | fzf --ansi \
       --delimiter='\t' \
       --with-nth=2.. \
       --preview="$self --preview {1}" \
@@ -239,6 +303,7 @@ main() {
       --margin=0 \
       --padding=0 \
       --color='header:italic:dim' \
+      --bind "start:reload:$self --full-list" \
     || true
   )
 
