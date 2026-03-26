@@ -48,6 +48,14 @@ let
     ];
   };
 
+  tmux-rename-session-repo = pkgs.writeShellScriptBin "tmux-rename-session-repo" ''
+    pane_path=$(tmux display-message -p '#{pane_current_path}')
+    repo_root=$(git -C "$pane_path" rev-parse --show-toplevel 2>/dev/null \
+      || jj -R "$pane_path" root 2>/dev/null \
+      || echo "$pane_path")
+    tmux rename-session "$(basename "$repo_root")"
+  '';
+
   whichKeyXdgEnable = pkgs.writeTextFile {
     name = "tmux-which-key-xdg-enable";
     destination = "/enable.tmux";
@@ -71,6 +79,7 @@ in
       home.packages = [
         pkgs.smug
         pkgs.my.tmux-dashboard
+        tmux-rename-session-repo
       ];
 
       programs.fish.shellAliases = {

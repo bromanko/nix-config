@@ -169,6 +169,7 @@ with lib.my;
         "utm"
         "crystalfetch"
         "calibre"
+        "obsidian"
         "sony-ps-remote-play"
         "tailscale"
         "copilot-money"
