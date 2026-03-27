@@ -48,6 +48,7 @@ in
       ];
       theme = "catppuccin-mocha";
       defaultThinkingLevel = "high";
+      hideThinkingBlock = true;
       enabledModels = [
         "anthropic/claude-sonnet-4-6:high"
         "anthropic/claude-opus-4-6:high"
