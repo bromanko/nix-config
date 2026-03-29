@@ -28,6 +28,7 @@ let
     });
 
   settingsFile = pkgs.writeText "pi-settings.json" (builtins.toJSON resolvedSettings);
+  designStudioFile = pkgs.writeText "pi-design-studio.json" (builtins.toJSON cfg.designStudio);
 in
 {
   options.modules.dev.pi = with types; {
@@ -54,6 +55,10 @@ in
         "openai-codex/gpt-5.3-codex:high"
       ];
     };
+
+    # Design Studio settings written to ~/.pi/agent/design-studio.json.
+    # See llm-agents/pi/design-studio/README.md for schema.
+    designStudio = mkOpt attrs { };
   };
 
   config = mkIf cfg.enable {
@@ -63,9 +68,14 @@ in
           pkgs.llm-agents.pi
         ];
 
-        file = mkIf (cfg.settings != { }) {
-          ".pi/agent/settings.json".source = settingsFile;
-        };
+        file = mkMerge [
+          (mkIf (cfg.settings != { }) {
+            ".pi/agent/settings.json".source = settingsFile;
+          })
+          (mkIf (cfg.designStudio != { }) {
+            ".pi/agent/design-studio.json".source = designStudioFile;
+          })
+        ];
       };
 
       programs.fish.functions.piws = ''
