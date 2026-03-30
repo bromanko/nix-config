@@ -27,6 +27,9 @@ items:
   - name: Run
     key: space
     command: command-prompt
+  - name: Rename session
+    key: ","
+    command: command-prompt -I "#S" "rename-session -- \"%%\""
   - name: Last window
     key: tab
     command: last-window
