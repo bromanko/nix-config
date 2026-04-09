@@ -69,6 +69,9 @@
   # iCloud - Save to disk by default.
   system.defaults.NSGlobalDomain.NSDocumentSaveNewDocumentsToCloud = false;
 
+  # Finder - Show hidden files.
+  system.defaults.finder.AppleShowAllFiles = true;
+
   # Finder - Show filename extensions.
   system.defaults.NSGlobalDomain.AppleShowAllExtensions = true;
 
@@ -102,8 +105,6 @@
     defaults write com.apple.finder NewWindowTargetPath -string "file://$HOME"
     # Finder - Show the $HOME/Library folder.
     chflags nohidden "$HOME/Library"
-    # Finder - Show hidden files.
-    defaults write com.apple.finder AppleShowAllFiles -bool true
     # Finder - Show path bar.
     defaults write com.apple.finder ShowPathbar -bool true
     # Finder - Show status bar.

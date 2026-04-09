@@ -224,6 +224,9 @@ items:
       - name: Rename
         key: r
         command: command-prompt -I "#S" "rename-session -- \"%%\""
+      - name: Rename to repo
+        key: m
+        command: run-shell tmux-rename-session-repo
       - separator: true
       - name: Kill
         key: X
