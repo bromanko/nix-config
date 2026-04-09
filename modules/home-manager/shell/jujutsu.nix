@@ -23,6 +23,16 @@ in
       type = types.str;
       default = "Brian Romanko";
     };
+
+    fsmonitor = mkOption {
+      type = types.enum [
+        "watchman"
+        "inotify"
+        "none"
+      ];
+      default = "none";
+      description = "Filesystem monitor backend for jj. \"watchman\" works on macOS and Linux, \"inotify\" is Linux-only, \"none\" disables fsmonitor.";
+    };
   };
 
   config = mkIf cfg.enable {
@@ -37,9 +47,13 @@ in
             name = cfg.userName;
             email = cfg.userEmail;
           };
+        }
+        // optionalAttrs (cfg.fsmonitor != "none") {
           fsmonitor = {
-            backend = "watchman";
+            backend = cfg.fsmonitor;
           };
+        }
+        // {
           ui = {
             # Use delta for beautiful side-by-side diffs with syntax highlighting
             # Mimics vim-fugitive's :Gdiff with background highlights and preserved syntax
@@ -137,10 +151,12 @@ in
         ignores = [ ".jj" ];
       };
 
-      home.packages = with pkgs; [
-        jjui
-        watchman
-      ];
+      home.packages =
+        with pkgs;
+        [
+          jjui
+        ]
+        ++ optional (cfg.fsmonitor == "watchman") watchman;
 
       # jjui theme configuration
       xdg.configFile."jjui/themes/base24-catppuccin-mocha.toml".text = ''
@@ -227,6 +243,11 @@ in
 
       xdg.configFile."jjui/config.toml".text = ''
         theme = "base24-catppuccin-mocha"
+
+        # Show more history by default
+        # Change interactively with Shift+L in the revisions view
+        [revisions]
+        revset = "ancestors(reachable(@, mutable()), 10)"
 
         # Use non-split delta in preview to avoid width detection issues
         # Side-by-side still works in full terminal via jj diff

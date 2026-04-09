@@ -127,7 +127,12 @@ in
 
         plugins = with pkgs.tmuxPlugins; [
           sensible
-          yank
+          {
+            plugin = yank;
+            extraConfig = ''
+              set -g @yank_action 'copy-pipe-no-clear'
+            '';
+          }
           {
             plugin = resurrect;
             extraConfig = ''
@@ -186,6 +191,9 @@ in
           set -g extended-keys on
           set -g extended-keys-format csi-u
           set -as terminal-features 'xterm*:extkeys'
+
+          # Stay in copy mode after mouse drag selection
+          bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-selection-no-clear
 
           # Allow passthrough sequences for inline images and other terminal features
           set -g allow-passthrough on

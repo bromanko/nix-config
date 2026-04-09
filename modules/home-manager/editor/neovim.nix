@@ -100,7 +100,21 @@ in
               group_empty = true,  -- collapse single-child dirs like src/main
               icons = { show = { git = true, file = true, folder = true } },
             },
-            filters = { dotfiles = false },
+            filters = {
+              dotfiles = false,
+              git_clean = false,   -- when true, hides unmodified git files
+              no_buffer = false,
+            },
+            on_attach = function(bufnr)
+              local api = require("nvim-tree.api")
+              -- Apply default mappings first
+              api.config.mappings.default_on_attach(bufnr)
+              -- gm = toggle showing only git-modified files
+              vim.keymap.set("n", "gm", api.tree.toggle_git_clean_filter, {
+                buffer = bufnr, noremap = true, silent = true,
+                desc = "Toggle git-modified filter",
+              })
+            end,
           })
 
           -- Which-key
@@ -111,6 +125,7 @@ in
 
           wk.add({
             { "<leader>e", "<cmd>NvimTreeToggle<cr>", desc = "File tree" },
+            { "<leader>E", function() require("nvim-tree.api").tree.toggle_git_clean_filter() end, desc = "Toggle git-modified filter" },
             { "<leader>o", "<cmd>NvimTreeFocus<cr>", desc = "Focus file tree" },
             { "<leader>f", group = "find" },
             { "<leader>ff", "<cmd>Files<cr>", desc = "Files" },
