@@ -52,8 +52,12 @@ in
       enabledModels = [
         "anthropic/claude-sonnet-4-6:high"
         "anthropic/claude-opus-4-6:high"
-        "openai-codex/gpt-5.3-codex:high"
+        "openai-codex/gpt-5.4:high"
       ];
+      hideThinkingBlock = true;
+      branchSummary = {
+        skipPrompt = true;
+      };
     };
 
     # Design Studio settings written to ~/.pi/agent/design-studio.json.
