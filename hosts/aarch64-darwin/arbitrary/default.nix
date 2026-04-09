@@ -163,6 +163,7 @@ with lib.my;
         "google-chrome"
         "hazeover"
         "homerow"
+        "iina"
         "istat-menus"
         "lunar"
         "signal"
@@ -191,7 +192,6 @@ with lib.my;
         my.sprite
         my.ticket
         my.chrome-devtools-mcp
-        iina
         chatgpt
         devenv
         podman
