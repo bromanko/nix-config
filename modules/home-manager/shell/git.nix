@@ -178,6 +178,10 @@ in
         };
       };
 
+      programs.gh-dash = {
+        enable = true;
+      };
+
       programs.zsh.shellAliases = mkIf config.modules.shell.zsh.enable shellAliases;
       programs.fish.shellAliases = mkIf config.modules.shell.fish.enable shellAliases;
     };
