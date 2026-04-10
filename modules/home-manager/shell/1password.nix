@@ -78,13 +78,11 @@ in
           (config.modules.shell.git.enable && cfg.sshSigningProgramPath != null && cfg.gitSigningKey != null)
           {
             signing = {
+              format = "ssh";
               signByDefault = true;
               key = cfg.gitSigningKey;
             };
-            settings.gpg = {
-              format = "ssh";
-              ssh.program = cfg.sshSigningProgramPath;
-            };
+            settings.gpg.ssh.program = cfg.sshSigningProgramPath;
           };
     };
   };
