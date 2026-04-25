@@ -30,6 +30,23 @@ base="#1e1e2e"
 mantle="#181825"
 crust="#11111b"
 
+tmuxHost="$(hostname -s 2>/dev/null || hostname)"
+
+case "$tmuxHost" in
+	arbitrary)
+		hostColor="$mauve"
+		;;
+	gray-area)
+		hostColor="$teal"
+		;;
+	lima-dev)
+		hostColor="$peach"
+		;;
+	*)
+		hostColor="$lavender"
+		;;
+esac
+
 TMUX_POWERLINE_SEPARATOR_LEFT_BOLD=""
 TMUX_POWERLINE_SEPARATOR_LEFT_THIN=""
 TMUX_POWERLINE_SEPARATOR_RIGHT_BOLD=""
@@ -122,7 +139,7 @@ fi
 if [ -z "$TMUX_POWERLINE_LEFT_STATUS_SEGMENTS" ]; then
 	TMUX_POWERLINE_LEFT_STATUS_SEGMENTS=(
 		"tmux_session_info $blue $base"
-		"hostname_not_sprite $lavender $base"
+		"hostname_not_sprite $hostColor $base"
 		"sprite $green $base"
 		"lima $peach $base"
 		#"ifstat 30 255"

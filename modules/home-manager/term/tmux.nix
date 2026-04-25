@@ -56,6 +56,107 @@ let
     tmux rename-session "$(basename "$repo_root")"
   '';
 
+  # Remote entrypoint for `et -c 'et-attach [session]' host`.
+  # Loads the remote secret-proxy env file without baking secrets into Nix or
+  # the local et command, then attaches to or creates a tmux session.
+  et-attach = pkgs.writeShellScriptBin "et-attach" ''
+    set -euo pipefail
+
+    usage() {
+      cat <<'USAGE'
+    usage: et-attach [SESSION]
+
+    Attach to or create a tmux session after loading KEY=VALUE entries from
+    ET_ENV_FILE, defaulting to ~/.config/secret-proxy/secrets.env.
+    USAGE
+    }
+
+    trim() {
+      local value="$1"
+      value="''${value#"''${value%%[![:space:]]*}"}"
+      value="''${value%"''${value##*[![:space:]]}"}"
+      printf '%s' "$value"
+    }
+
+    merge_word() {
+      local words="$1"
+      local word="$2"
+
+      case " $words " in
+        *" $word "*) printf '%s' "$words" ;;
+        *) printf '%s %s' "$words" "$word" ;;
+      esac
+    }
+
+    session="''${ET_TMUX_SESSION:-main}"
+    case "''${1:-}" in
+      -h | --help)
+        usage
+        exit 0
+        ;;
+    esac
+
+    if (( $# > 0 )); then
+      session="$1"
+      shift
+    fi
+
+    if (( $# > 0 )); then
+      echo "et-attach: unexpected arguments: $*" >&2
+      usage >&2
+      exit 2
+    fi
+
+    env_file="''${ET_ENV_FILE:-$HOME/.config/secret-proxy/secrets.env}"
+    secret_names=""
+
+    if [[ -r "$env_file" ]]; then
+      while IFS= read -r line || [[ -n "$line" ]]; do
+        line="$(trim "$line")"
+
+        [[ -z "$line" || "''${line:0:1}" == "#" ]] && continue
+        [[ "$line" != *"="* ]] && continue
+
+        key="$(trim "''${line%%=*}")"
+        value="$(trim "''${line#*=}")"
+
+        if [[ ! "$key" =~ ^[A-Za-z_][A-Za-z0-9_]*$ ]]; then
+          continue
+        fi
+
+        if [[ ''${#value} -ge 2 ]]; then
+          first="''${value:0:1}"
+          last="''${value: -1}"
+          if { [[ "$first" == '"' ]] && [[ "$last" == '"' ]]; } || { [[ "$first" == "'" ]] && [[ "$last" == "'" ]]; }; then
+            value="''${value:1}"
+            value="''${value%?}"
+          fi
+        fi
+
+        export "$key=$value"
+        secret_names="$(merge_word "$secret_names" "$key")"
+      done < "$env_file"
+    elif [[ -n "''${ET_ENV_FILE:-}" ]]; then
+      echo "et-attach: ET_ENV_FILE is not readable: $env_file" >&2
+      exit 1
+    fi
+
+    tmux_bin="${pkgs.tmux}/bin/tmux"
+    default_update_environment="DISPLAY KRB5CCNAME MSYSTEM SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITY"
+    current_update_environment="$("$tmux_bin" show-options -gqv update-environment 2>/dev/null || true)"
+
+    if [[ -z "$current_update_environment" ]]; then
+      current_update_environment="$default_update_environment"
+    fi
+
+    update_environment="$current_update_environment"
+    for name in $secret_names; do
+      update_environment="$(merge_word "$update_environment" "$name")"
+    done
+
+    exec "$tmux_bin" set-option -g update-environment "$update_environment" \; new-session -A -s "$session"
+  '';
+
   whichKeyXdgEnable = pkgs.writeTextFile {
     name = "tmux-which-key-xdg-enable";
     destination = "/enable.tmux";
@@ -80,6 +181,7 @@ in
         pkgs.smug
         pkgs.my.tmux-dashboard
         tmux-rename-session-repo
+        et-attach
       ];
 
       programs.fish.shellAliases = {

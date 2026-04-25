@@ -77,10 +77,18 @@ in
     launchd.daemons.eternal-terminal = {
       serviceConfig = {
         Label = "org.nix-darwin.eternal-terminal";
+        # launchd may start system daemons before Determinate Nix has made
+        # /nix/store paths available. Start via /bin/sh so launchd can create
+        # the job, then wait for the Nix store paths before execing etserver.
         ProgramArguments = [
-          "${cfg.package}/bin/etserver"
-          "--cfgfile"
-          "${etConfig}"
+          "/bin/sh"
+          "-c"
+          ''
+            while [ ! -x ${escapeShellArg "${cfg.package}/bin/etserver"} ] || [ ! -r ${escapeShellArg etConfig} ]; do
+              sleep 2
+            done
+            exec ${escapeShellArg "${cfg.package}/bin/etserver"} --cfgfile ${escapeShellArg etConfig}
+          ''
         ];
         RunAtLoad = true;
         KeepAlive = true;
