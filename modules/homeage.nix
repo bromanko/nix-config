@@ -73,6 +73,14 @@ in
 
       home = {
         packages = with pkgs; [ my.age-with-plugins ];
+      }
+      // optionalAttrs pkgs.stdenv.hostPlatform.isDarwin {
+        activation.fix1PasswordOpSessionPermissions = lib.hm.dag.entryBefore [ "homeageDecryptCheck" ] ''
+          opSessionDir="/tmp/com.agilebits.op.$UID"
+          if [ -d "$opSessionDir" ]; then
+            find "$opSessionDir" -type f -name '.*.session' -exec chmod 600 {} +
+          fi
+        '';
       };
 
       xdg.configFile = {

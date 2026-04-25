@@ -34,6 +34,13 @@ in
           extra-substituters = cfg.caches.extraSubstituters;
           extra-trusted-public-keys = cfg.caches.extraTrustedPublicKeys;
         };
+
+        system.activationScripts.postActivation.text = optionalString pkgs.stdenv.hostPlatform.isDarwin ''
+          echo "ensuring Determinate Nix is the only Nix daemon..." >&2
+          /bin/launchctl bootout system /Library/LaunchDaemons/org.nixos.nix-daemon.plist >/dev/null 2>&1 || true
+          /bin/rm -f /Library/LaunchDaemons/org.nixos.nix-daemon.plist
+          /bin/launchctl kickstart -k system/systems.determinate.nix-daemon >/dev/null 2>&1 || true
+        '';
       }
     ))
 

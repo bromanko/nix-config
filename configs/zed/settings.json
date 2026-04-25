@@ -7,6 +7,18 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "project_panel": {
+    "dock": "right"
+  },
+  "outline_panel": {
+    "dock": "right"
+  },
+  "collaboration_panel": {
+    "dock": "right"
+  },
+  "git_panel": {
+    "dock": "right"
+  },
   "which_key": {
     "enabled": true,
     "delay_ms": 0,
@@ -15,6 +27,7 @@
     "edit_prediction_provider": "zed",
   },
   "agent": {
+    "dock": "left",
     "default_profile": "write",
     "always_allow_tool_actions": true,
     "default_model": {
