@@ -10,6 +10,9 @@ in
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDhMuyTBj/2cYLaBjtdi5nZHwm281C51LogGRhG8A7mt Gray Area"
   ];
 
+  # Keep this machine reachable over Tailscale for SSH and Eternal Terminal.
+  power.sleep.computer = "never";
+
   modules = {
     nix = {
       system.enable = "determinate";
