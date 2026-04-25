@@ -83,6 +83,7 @@ in
     home = {
       packages = with pkgs; [
         tailscale
+        devenv
       ];
     };
   };
