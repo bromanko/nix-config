@@ -39,8 +39,8 @@ in
     # the user's home directory. The file is read-only; manage it here
     # instead of editing settings.json or running `pi install`.
     settings = mkOpt attrs {
-      defaultProvider = "anthropic";
-      defaultModel = "claude-opus-4-6";
+      defaultProvider = "openai-codex";
+      defaultModel = "gpt-5.5";
       packages = [
         "~/Code/llm-agents"
         "~/Code/llm-agents-private"
@@ -48,9 +48,10 @@ in
         "${pkgs.my.pi-sub-bar}/lib/pi-sub-bar"
       ];
       theme = "catppuccin-mocha";
-      defaultThinkingLevel = "high";
+      defaultThinkingLevel = "xhigh";
       hideThinkingBlock = true;
       enabledModels = [
+        "openai-codex/gpt-5.5:xhigh"
         "anthropic/claude-sonnet-4-6:high"
         "anthropic/claude-opus-4-6:high"
         "openai-codex/gpt-5.4:high"

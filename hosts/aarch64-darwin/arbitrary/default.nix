@@ -88,7 +88,7 @@ with lib.my;
               run = "move-node-to-workspace 4";
             }
             {
-              "if".app-id = "com.openai.chat";
+              "if".app-id = "com.openai.codex";
               run = "move-node-to-workspace 5";
             }
             {
@@ -193,7 +193,7 @@ with lib.my;
         my.sprite
         my.ticket
         my.chrome-devtools-mcp
-        chatgpt
+        my.codex-app
         devenv
         podman
       ];
