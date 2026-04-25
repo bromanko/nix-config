@@ -52,6 +52,7 @@ in
     term = {
       ghostty.enable = true;
       tmux.enable = true;
+      eternal-terminal.server.enable = true;
     };
     editor = {
       default = "nvim";
