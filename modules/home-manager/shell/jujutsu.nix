@@ -244,11 +244,6 @@ in
       xdg.configFile."jjui/config.toml".text = ''
         theme = "base24-catppuccin-mocha"
 
-        # Show more history by default
-        # Change interactively with Shift+L in the revisions view
-        [revisions]
-        revset = "ancestors(reachable(@, mutable()), 10)"
-
         # Use non-split delta in preview to avoid width detection issues
         # Side-by-side still works in full terminal via jj diff
         [preview]
