@@ -47,6 +47,7 @@ in
     dev = {
       docker.enable = true;
       claude-code.enable = true;
+      pi.enable = true;
     };
     term = {
       ghostty.enable = true;
