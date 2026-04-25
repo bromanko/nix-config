@@ -5,9 +5,11 @@ let
   brewPath = "${brewPrefix}/bin";
 in
 {
+  # Only allow SSH via the Gray Area key in the 1Password SSH agent.
   authorizedKeys = [
-    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID2vkvKlul2zm/Qx7V0NmmwGDJcFY46tf9asOVONkcCK 1Password"
+    "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDhMuyTBj/2cYLaBjtdi5nZHwm281C51LogGRhG8A7mt Gray Area"
   ];
+
   modules = {
     nix = {
       system.enable = "determinate";
