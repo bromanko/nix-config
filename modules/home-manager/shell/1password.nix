@@ -9,6 +9,18 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.shell."1password";
+  homeDir =
+    if config ? home && config.home ? homeDirectory then
+      config.home.homeDirectory
+    else if config ? hm && config.hm ? home && config.hm.home ? homeDirectory then
+      config.hm.home.homeDirectory
+    else
+      config.users.users.${config.user.name}.home;
+  sshSocketPath =
+    if lib.hasPrefix "~/" cfg.sshSocketPath then
+      homeDir + lib.removePrefix "~" cfg.sshSocketPath
+    else
+      cfg.sshSocketPath;
 in
 {
   options.modules.shell."1password" = {
@@ -48,30 +60,34 @@ in
         [ _1password-cli ]
         ++ optionals config.modules.editor.emacs.enable [ emacsPackages.auth-source-1password ];
 
-      home.sessionVariables = mkMerge [
-        { OP_BIOMETRIC_UNLOCK_ENABLED = "true"; }
-        # Only set SSH_AUTH_SOCK on macOS. On Linux, use forwarded agent from host.
-        (mkIf pkgs.stdenv.hostPlatform.isDarwin {
-          # Use 1Password SSH agent for all SSH operations (including agent forwarding)
-          # Replace ~ with $HOME since environment variables don't expand tildes
-          SSH_AUTH_SOCK =
-            if lib.hasPrefix "~/" cfg.sshSocketPath then
-              "\${HOME}" + lib.removePrefix "~" cfg.sshSocketPath
-            else
-              cfg.sshSocketPath;
-        })
-      ];
-
-      programs.ssh = mkIf (config.modules.shell.ssh.enable && pkgs.stdenv.hostPlatform.isDarwin) {
-        matchBlocks = {
-          "1password" = {
-            host = "*";
-            extraOptions = {
-              IdentityAgent = ''"${cfg.sshSocketPath}"'';
-            };
-          };
-        };
+      home.sessionVariables = {
+        OP_BIOMETRIC_UNLOCK_ENABLED = "true";
       };
+
+      # Preserve forwarded SSH agents when logging into a macOS host over SSH/ET.
+      # In local macOS shells, prefer 1Password over the default launchd agent.
+      # In SSH/ET sessions, keep a valid SSH_AUTH_SOCK from agent forwarding so
+      # commands like `jj git fetch` on a headless Mac can use the client Mac's
+      # 1Password prompt instead of trying to unlock the remote GUI app.
+      programs.zsh.initExtra =
+        mkIf (config.modules.shell.zsh.enable && pkgs.stdenv.hostPlatform.isDarwin)
+          ''
+            if [[ -S "${sshSocketPath}" ]]; then
+              if [[ -z "$SSH_CONNECTION" || ! -S "$SSH_AUTH_SOCK" ]]; then
+                export SSH_AUTH_SOCK="${sshSocketPath}"
+              fi
+            fi
+          '';
+
+      programs.fish.interactiveShellInit =
+        mkIf (config.modules.shell.fish.enable && pkgs.stdenv.hostPlatform.isDarwin)
+          ''
+            if test -S "${sshSocketPath}"
+              if test -z "$SSH_CONNECTION"; or not test -S "$SSH_AUTH_SOCK"
+                set -gx SSH_AUTH_SOCK "${sshSocketPath}"
+              end
+            end
+          '';
 
       programs.git =
         mkIf
