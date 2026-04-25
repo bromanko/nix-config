@@ -8,8 +8,7 @@ with lib.my;
     authorizedKeys = mkOption {
       type = types.listOf types.str;
       default = [
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAID2vkvKlul2zm/Qx7V0NmmwGDJcFY46tf9asOVONkcCK Meta MacBook Pro 16"
-        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia Personal MacBook Air"
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia Github"
       ];
       description = ''
         A list of verbatim OpenSSH public keys that should be added to the
