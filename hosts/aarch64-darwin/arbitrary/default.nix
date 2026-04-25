@@ -138,6 +138,7 @@ with lib.my;
     term = {
       ghostty.enable = true;
       tmux.enable = true;
+      eternal-terminal.client.enable = true;
     };
     editor = {
       default = "nvim";
