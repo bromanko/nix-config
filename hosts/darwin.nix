@@ -2,6 +2,7 @@
   config,
   lib,
   inputs,
+  options,
   ...
 }:
 
@@ -21,7 +22,7 @@ with lib.my;
   ++ (mapModulesRec' (toString ../modules/darwin) import);
 
   config = {
-    users.users.${config.user.name} = mkAliasDefinitions config.user;
+    users.users.${config.user.name} = mkAliasDefinitions options.user;
     system.primaryUser = config.user.name;
 
     hm = {

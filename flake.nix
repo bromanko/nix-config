@@ -78,6 +78,16 @@
             nur.overlays.default
             emacs-overlay.overlay
             inputs.llm-agents.overlays.default
+            (
+              _final: prev:
+              nixpkgs.lib.optionalAttrs prev.stdenv.isDarwin {
+                direnv = prev.direnv.overrideAttrs (_: {
+                  # direnv's shell integration tests hang on macOS runners under
+                  # nixpkgs 26.05; skip them for Darwin system builds.
+                  doCheck = false;
+                });
+              }
+            )
           ]
           ++ (lib.attrValues self.overlays);
         }
