@@ -3,6 +3,7 @@
   lib,
   pkgs,
   inputs,
+  options,
   ...
 }:
 
@@ -25,7 +26,7 @@ with lib.my;
     system.enable = mkDefault "default";
   };
 
-  users.users.${config.user.name} = mkAliasDefinitions config.user;
+  users.users.${config.user.name} = mkAliasDefinitions options.user;
 
   hm = {
     home = {
