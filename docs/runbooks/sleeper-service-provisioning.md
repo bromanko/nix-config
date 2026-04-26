@@ -1,4 +1,4 @@
-# Runbook: Provision sleeper-service (Hetzner host for Michael)
+# Runbook: Provision sleeper-service (Hetzner host for Michael and Withings MCP)
 
 This runbook captures the repeatable flow to provision a new Hetzner machine and apply the `sleeper-service` NixOS config.
 
@@ -61,6 +61,7 @@ Also verify/adjust:
 
 - `services.caddy.email`
 - `services.caddy.virtualHosts."cal.bromanko.com"`
+- `services.withings-mcp.domain`
 
 ## 4) Apply NixOS config
 
@@ -96,12 +97,13 @@ If you're using AWS S3 directly, omit `MICHAEL_BACKUP_S3_ENDPOINT`.
 ```sh
 ssh root@<server-ip> 'systemctl status caddy --no-pager'
 ssh root@<server-ip> 'systemctl status michael --no-pager'
+ssh root@<server-ip> 'systemctl status withings-mcp --no-pager'
 ssh root@<server-ip> 'systemctl status michael-backup.timer --no-pager'
 ssh root@<server-ip> 'systemctl start michael-backup.service'
 ssh root@<server-ip> 'journalctl -u michael-backup -n 50 --no-pager'
 ```
 
-`michael` may fail until app artifact and env file are deployed (expected).
+`michael` and `withings-mcp` may be skipped or fail until app artifacts and env files are deployed (expected).
 
 ## 7) Deploy Michael app artifact (from app repo)
 
@@ -114,3 +116,13 @@ ssh root@<server-ip> 'chown -R michael:michael /var/lib/michael/releases && ln -
 ```
 
 Create `/var/lib/michael/env` with required runtime variables, then restart `michael`.
+
+## 8) Deploy Withings MCP app artifact (from app repo)
+
+From `~/Code/withings-mcp`:
+
+```sh
+PUBLIC_BASE_URL=https://withings.bromanko.com scripts/deploy root@<server-ip>
+```
+
+Create `/var/lib/withings-mcp/env` from `scripts/withings-mcp.env.example` with required Withings, Supabase, and encryption-secret variables before restarting `withings-mcp`.
