@@ -56,7 +56,7 @@ let
     tmux rename-session "$(basename "$repo_root")"
   '';
 
-  # Remote entrypoint for `et -c 'et-attach [session]' host`.
+  # Remote entrypoint for `et -c 'et-attach [options] [session]' host`.
   # Loads the remote secret-proxy env file without baking secrets into Nix or
   # the local et command, then attaches to or creates a tmux session.
   et-attach = pkgs.writeShellScriptBin "et-attach" ''
@@ -64,10 +64,20 @@ let
 
     usage() {
       cat <<'USAGE'
-    usage: et-attach [SESSION]
+    usage: et-attach [OPTIONS] [SESSION]
 
     Attach to or create a tmux session after loading KEY=VALUE entries from
     ET_ENV_FILE, defaulting to ~/.config/secret-proxy/secrets.env.
+
+    Options:
+      -L, --socket-name NAME   Use a tmux socket name (tmux -L NAME).
+      -S, --socket-path PATH   Use a tmux socket path (tmux -S PATH).
+      -h, --help              Show this help.
+
+    Environment:
+      ET_TMUX_SESSION          Default session name (default: main).
+      ET_TMUX_SOCKET_NAME      Default tmux socket name.
+      ET_TMUX_SOCKET_PATH      Default tmux socket path.
     USAGE
     }
 
@@ -89,12 +99,59 @@ let
     }
 
     session="''${ET_TMUX_SESSION:-main}"
-    case "''${1:-}" in
-      -h | --help)
-        usage
-        exit 0
-        ;;
-    esac
+    tmux_socket_name="''${ET_TMUX_SOCKET_NAME:-}"
+    tmux_socket_path="''${ET_TMUX_SOCKET_PATH:-}"
+
+    while (( $# > 0 )); do
+      case "$1" in
+        -h | --help)
+          usage
+          exit 0
+          ;;
+        -L | --socket-name)
+          if (( $# < 2 )); then
+            echo "et-attach: $1 requires a socket name" >&2
+            usage >&2
+            exit 2
+          fi
+          tmux_socket_name="$2"
+          tmux_socket_path=""
+          shift 2
+          ;;
+        --socket-name=*)
+          tmux_socket_name="''${1#*=}"
+          tmux_socket_path=""
+          shift
+          ;;
+        -S | --socket-path)
+          if (( $# < 2 )); then
+            echo "et-attach: $1 requires a socket path" >&2
+            usage >&2
+            exit 2
+          fi
+          tmux_socket_path="$2"
+          tmux_socket_name=""
+          shift 2
+          ;;
+        --socket-path=*)
+          tmux_socket_path="''${1#*=}"
+          tmux_socket_name=""
+          shift
+          ;;
+        --)
+          shift
+          break
+          ;;
+        -*)
+          echo "et-attach: unknown option: $1" >&2
+          usage >&2
+          exit 2
+          ;;
+        *)
+          break
+          ;;
+      esac
+    done
 
     if (( $# > 0 )); then
       session="$1"
@@ -105,6 +162,18 @@ let
       echo "et-attach: unexpected arguments: $*" >&2
       usage >&2
       exit 2
+    fi
+
+    if [[ -n "$tmux_socket_name" && -n "$tmux_socket_path" ]]; then
+      echo "et-attach: use only one of ET_TMUX_SOCKET_NAME/-L or ET_TMUX_SOCKET_PATH/-S" >&2
+      exit 2
+    fi
+
+    tmux_socket_args=()
+    if [[ -n "$tmux_socket_name" ]]; then
+      tmux_socket_args=(-L "$tmux_socket_name")
+    elif [[ -n "$tmux_socket_path" ]]; then
+      tmux_socket_args=(-S "$tmux_socket_path")
     fi
 
     env_file="''${ET_ENV_FILE:-$HOME/.config/secret-proxy/secrets.env}"
@@ -143,7 +212,7 @@ let
 
     tmux_bin="${pkgs.tmux}/bin/tmux"
     default_update_environment="DISPLAY KRB5CCNAME MSYSTEM SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITY"
-    current_update_environment="$("$tmux_bin" show-options -gqv update-environment 2>/dev/null || true)"
+    current_update_environment="$("$tmux_bin" "''${tmux_socket_args[@]}" show-options -gqv update-environment 2>/dev/null || true)"
 
     if [[ -z "$current_update_environment" ]]; then
       current_update_environment="$default_update_environment"
@@ -154,7 +223,7 @@ let
       update_environment="$(merge_word "$update_environment" "$name")"
     done
 
-    exec "$tmux_bin" set-option -g update-environment "$update_environment" \; new-session -A -s "$session"
+    exec "$tmux_bin" "''${tmux_socket_args[@]}" set-option -g update-environment "$update_environment" \; new-session -A -s "$session"
   '';
 
   whichKeyXdgEnable = pkgs.writeTextFile {

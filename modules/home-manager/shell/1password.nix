@@ -65,17 +65,31 @@ in
       };
 
       # Preserve forwarded SSH agents when logging into a macOS host over SSH/ET.
-      # In local macOS shells, prefer 1Password over the default launchd agent.
-      # In SSH/ET sessions, keep a valid SSH_AUTH_SOCK from agent forwarding so
-      # commands like `jj git fetch` on a headless Mac can use the client Mac's
-      # 1Password prompt instead of trying to unlock the remote GUI app.
+      # ET's `--forward-ssh-agent` sets SSH_AUTH_SOCK to an `et_forward_sock_*`
+      # reverse-tunnel socket, but it does not set SSH_CONNECTION. Do not use
+      # SSH_CONNECTION as the proxy for "remote session" detection; instead,
+      # replace only missing/broken sockets and macOS' stock launchd agent.
       programs.zsh.initExtra =
         mkIf (config.modules.shell.zsh.enable && pkgs.stdenv.hostPlatform.isDarwin)
           ''
             if [[ -S "${sshSocketPath}" ]]; then
-              if [[ -z "$SSH_CONNECTION" || ! -S "$SSH_AUTH_SOCK" ]]; then
+              ssh_auth_sock_needs_1password=0
+
+              if [[ -z "$SSH_AUTH_SOCK" || ! -S "$SSH_AUTH_SOCK" ]]; then
+                ssh_auth_sock_needs_1password=1
+              else
+                case "$SSH_AUTH_SOCK" in
+                  /private/tmp/com.apple.launchd.*/Listeners|/tmp/com.apple.launchd.*/Listeners|/var/folders/*/T/com.apple.launchd.*/Listeners)
+                    ssh_auth_sock_needs_1password=1
+                    ;;
+                esac
+              fi
+
+              if [[ "$ssh_auth_sock_needs_1password" == 1 ]]; then
                 export SSH_AUTH_SOCK="${sshSocketPath}"
               fi
+
+              unset ssh_auth_sock_needs_1password
             fi
           '';
 
@@ -83,7 +97,19 @@ in
         mkIf (config.modules.shell.fish.enable && pkgs.stdenv.hostPlatform.isDarwin)
           ''
             if test -S "${sshSocketPath}"
-              if test -z "$SSH_CONNECTION"; or not test -S "$SSH_AUTH_SOCK"
+              set -l ssh_auth_sock_needs_1password 0
+
+              if test -z "$SSH_AUTH_SOCK"; or not test -S "$SSH_AUTH_SOCK"
+                set ssh_auth_sock_needs_1password 1
+              else if string match -q -- "/private/tmp/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
+                set ssh_auth_sock_needs_1password 1
+              else if string match -q -- "/tmp/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
+                set ssh_auth_sock_needs_1password 1
+              else if string match -q -- "/var/folders/*/T/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
+                set ssh_auth_sock_needs_1password 1
+              end
+
+              if test "$ssh_auth_sock_needs_1password" = 1
                 set -gx SSH_AUTH_SOCK "${sshSocketPath}"
               end
             end
