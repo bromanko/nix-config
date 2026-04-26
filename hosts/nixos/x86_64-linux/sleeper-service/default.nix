@@ -66,8 +66,7 @@
     443
   ];
 
-  # Caddy terminates TLS and forwards requests to Michael.
-  # Update domain and email before first production deploy.
+  # Caddy terminates TLS and forwards requests to hosted personal services.
   services.caddy = {
     enable = true;
     email = "hello@bromanko.com";
@@ -75,6 +74,11 @@
     virtualHosts."cal.bromanko.com".extraConfig = ''
       reverse_proxy 127.0.0.1:8000
     '';
+  };
+
+  services.withings-mcp = {
+    enable = true;
+    domain = "withings.bromanko.com";
   };
 
   users.groups.michael = { };

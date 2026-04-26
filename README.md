@@ -52,7 +52,7 @@ INSTALL_BOOTLOADER=1 scripts/hetzner/apply-host-config.sh <server-ip> sleeper-se
 # later applies: scripts/hetzner/apply-host-config.sh <server-ip> sleeper-service
 ```
 
-This host is designed for one always-on Michael process (API + static frontend + in-process calendar sync), with a separate systemd timer for SQLite backups.
+This host runs the always-on Michael process (API + static frontend + in-process calendar sync), a Withings MCP server, and a separate systemd timer for SQLite backups.
 
 Backups are written locally to `/var/lib/michael/backups` and can be uploaded offsite to S3-compatible object storage by creating `/var/lib/michael/backup-upload.env` (see `docs/runbooks/sleeper-service-provisioning.md`).
 

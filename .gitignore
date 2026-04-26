@@ -3,3 +3,4 @@ result
 .idea
 .claude/*.local.json
 __pycache__/
+.direnv/

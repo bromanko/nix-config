@@ -123,6 +123,7 @@
           packages = with pkgs.${system}; [
             nixfmt
             hcloud
+            nixos-rebuild
           ];
         };
       });
