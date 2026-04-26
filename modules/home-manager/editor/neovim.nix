@@ -43,6 +43,7 @@ in
           pkgs.vimPlugins."catppuccin-nvim"
           {
             plugin = vim-gitgutter;
+            type = "viml";
             config = ''
               let g:gitgutter_sign_added = '│'
               let g:gitgutter_sign_modified = '│'
