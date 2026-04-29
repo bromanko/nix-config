@@ -199,6 +199,7 @@ with lib.my;
         "homerow"
         "iina"
         "istat-menus"
+        "linear"
         "lunar"
         "signal"
         "utm"
@@ -206,7 +207,7 @@ with lib.my;
         "calibre"
         "obsidian"
         "sony-ps-remote-play"
-        "tailscale"
+        "tailscale-app"
         "copilot-money"
         "zen"
       ];
