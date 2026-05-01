@@ -61,7 +61,7 @@ in
     };
     editor = {
       default = "nvim";
-      visual = "zed-preview -w";
+      visual = "nvim";
       neovim.enable = true;
       zed.enable = true;
     };
