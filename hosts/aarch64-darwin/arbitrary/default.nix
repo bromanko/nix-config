@@ -60,7 +60,13 @@ with lib.my;
     };
     shell = {
       commonPkgs.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+        envForwarding = {
+          enable = true;
+          hosts = [ "gray-area" ];
+        };
+      };
       openssh.enable = true;
       fish = {
         enable = true;
@@ -183,6 +189,7 @@ with lib.my;
     openssh = {
       enable = true;
       tailscaleOnly = true;
+      envForwarding.enable = true;
     };
 
     homebrew = {

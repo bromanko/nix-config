@@ -34,12 +34,6 @@ in
         default = 19476;
         description = "Port for the local stt-gateway service.";
       };
-
-      model = mkOption {
-        type = str;
-        default = "moonshine-en";
-        description = "Model identifier written into MacWhisper's custom dictation provider settings.";
-      };
     };
   };
 
@@ -76,7 +70,7 @@ in
       # at the custom provider and leave regular transcription selection alone.
       defaults write com.goodsnooze.MacWhisper configuredCloudTranscriptionProviders -array '"custom"'
       defaults write com.goodsnooze.MacWhisper customOpenAIWhisperProviderBaseURL -string '${gatewayBaseUrl}'
-      defaults write com.goodsnooze.MacWhisper customOpenAIWhisperProviderModel -string '${cfg.gateway.model}'
+      defaults delete com.goodsnooze.MacWhisper customOpenAIWhisperProviderModel >/dev/null 2>&1 || true
       defaults write com.goodsnooze.MacWhisper dictationKeyboardButton -string '"custom"'
       defaults write com.goodsnooze.MacWhisper dictationRunnerConfig -string '{"engine":{"customOpenaiCloud":{}},"language":{"specific":"en"}}'
       killall cfprefsd >/dev/null 2>&1 || true

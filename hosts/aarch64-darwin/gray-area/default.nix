@@ -23,7 +23,13 @@ in
     };
     shell = {
       commonPkgs.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+        envForwarding = {
+          enable = true;
+          hosts = [ "arbitrary" ];
+        };
+      };
       openssh.enable = true;
       fish = {
         enable = true;
@@ -65,7 +71,10 @@ in
       neovim.enable = true;
       zed.enable = true;
     };
-    openssh.enable = true;
+    openssh = {
+      enable = true;
+      envForwarding.enable = true;
+    };
 
     homebrew = {
       enable = true;

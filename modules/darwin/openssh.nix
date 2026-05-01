@@ -10,6 +10,29 @@ in
     enable = mkBoolOpt false;
 
     tailscaleOnly = mkBoolOpt false;
+
+    envForwarding = {
+      enable = mkBoolOpt false;
+
+      users = mkOption {
+        type = nonEmptyListOf str;
+        default = [ config.user.name ];
+        description = ''
+          Local users whose SSH sessions may receive forwarded environment
+          variables.
+        '';
+      };
+
+      acceptEnv = mkOption {
+        type = nonEmptyListOf str;
+        default = [ "*" ];
+        description = ''
+          Environment variable name patterns accepted by sshd for the selected
+          users. The default accepts everything, leaving the client-side
+          SendEnv fragment as the single mutable allow-list.
+        '';
+      };
+    };
   };
 
   config = mkIf cfg.enable {
@@ -24,6 +47,13 @@ in
       PermitEmptyPasswords no
       ChallengeResponseAuthentication no
     '';
+
+    environment.etc."ssh/sshd_config.d/210-env-forwarding.conf" = mkIf cfg.envForwarding.enable {
+      text = concatMapStringsSep "\n" (user: ''
+        Match User ${user}
+          AcceptEnv ${concatStringsSep " " cfg.envForwarding.acceptEnv}
+      '') cfg.envForwarding.users;
+    };
 
     # On macOS, launchd manages the SSH socket and ignores ListenAddress in
     # sshd_config. Use pf (packet filter) to restrict SSH to Tailscale only.
