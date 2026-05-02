@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -8,6 +9,16 @@
 let
   brewPrefix = "/opt/homebrew";
   brewPath = "${brewPrefix}/bin";
+
+  github1PasswordPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia";
+  github1PasswordIdentityFile = "~/.ssh/github-1password.pub";
+  onePasswordSshAgent = ''"${config.modules.shell."1password".sshSocketPath}"'';
+
+  github1PasswordIdentity = {
+    identityFile = [ github1PasswordIdentityFile ];
+    identityAgent = [ onePasswordSshAgent ];
+    identitiesOnly = true;
+  };
 
   grayAreaEt = pkgs.writeShellScriptBin "gray-area" ''
     set -euo pipefail
@@ -22,7 +33,27 @@ let
       exit 1
     fi
 
-    exec ${pkgs.eternal-terminal}/bin/et -f --ssh-socket "$SSH_AUTH_SOCK" "$@" gray-area
+    ssh_options=()
+    env_forwarding_config="$HOME/.ssh/env-forwarding.conf"
+
+    if [[ -r "$env_forwarding_config" ]]; then
+      while IFS= read -r line || [[ -n "$line" ]]; do
+        line="''${line%%#*}"
+        line="''${line#"''${line%%[![:space:]]*}"}"
+        line="''${line%"''${line##*[![:space:]]}"}"
+
+        [[ -z "$line" ]] && continue
+
+        read -r keyword rest <<< "$line"
+        [[ "''${keyword,,}" == "sendenv" ]] || continue
+
+        for name in $rest; do
+          [[ -n "$name" ]] && ssh_options+=(--ssh-option "SendEnv=$name")
+        done
+      done < "$env_forwarding_config"
+    fi
+
+    exec ${pkgs.eternal-terminal}/bin/et -f --ssh-socket "$SSH_AUTH_SOCK" "''${ssh_options[@]}" "$@" gray-area
   '';
 
   grayAreaEtAttach = pkgs.writeShellScriptBin "gray-area-attach" ''
@@ -244,6 +275,20 @@ with lib.my;
           grayAreaEt
           grayAreaEtAttach
         ];
+
+      file.".ssh/github-1password.pub".text = "${github1PasswordPublicKey}\n";
+    };
+
+    programs.ssh.matchBlocks = {
+      github = github1PasswordIdentity // {
+        host = "github.com";
+        hostname = "github.com";
+        user = "git";
+      };
+
+      hetzner = github1PasswordIdentity // {
+        host = "hetzner sleeper-service";
+      };
     };
   };
 }
