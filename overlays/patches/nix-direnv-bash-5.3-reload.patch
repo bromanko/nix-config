@@ -1,0 +1,52 @@
+--- a/share/nix-direnv/direnvrc
++++ b/share/nix-direnv/direnvrc
+@@ -123,9 +123,5 @@
+-  cat >"${layout_dir}/bin/nix-direnv-reload" <<-EOF
+-#!/usr/bin/env bash
+-set -e
+-if [[ ! -d "$PWD" ]]; then
+-  echo "Cannot find source directory; Did you move it?"
+-  echo "(Looking for "$PWD")"
+-  echo 'Cannot force reload with this script - use "direnv reload" manually and then try again'
+-  exit 1
+-fi
++  # Bash 5.3 on macOS can hang while feeding a long expanded heredoc to `cat`.
++  # Generate the helper with builtin printf calls instead.
++  local source_dir layout_dir_quoted
++  printf -v source_dir '%q' "$PWD"
++  printf -v layout_dir_quoted '%q' "$layout_dir"
+@@ -133,11 +129,23 @@
+-# rebuild the cache forcefully
+-_nix_direnv_force_reload=1 direnv exec "$PWD" true
+-
+-# Update the mtime for .envrc.
+-# This will cause direnv to reload again - but without re-building.
+-touch "$PWD/.envrc"
+-
+-# Also update the timestamp of whatever profile_rc we have.
+-# This makes sure that we know we are up to date.
+-touch -r "$PWD/.envrc" "${layout_dir}"/*.rc
+-EOF
++  {
++    printf '%s\n' '#!/usr/bin/env bash'
++    printf '%s\n' 'set -e'
++    printf '%s\n' "source_dir=$source_dir"
++    printf '%s\n' "layout_dir=$layout_dir_quoted"
++    printf '%s\n' 'if [[ ! -d "$source_dir" ]]; then'
++    printf '%s\n' '  echo "Cannot find source directory; Did you move it?"'
++    printf '%s\n' '  echo "(Looking for $source_dir)"'
++    printf '%s\n' '  echo '\''Cannot force reload with this script - use "direnv reload" manually and then try again'\'''
++    printf '%s\n' '  exit 1'
++    printf '%s\n' 'fi'
++    printf '%s\n'
++    printf '%s\n' '# rebuild the cache forcefully'
++    printf '%s\n' '_nix_direnv_force_reload=1 direnv exec "$source_dir" true'
++    printf '%s\n'
++    printf '%s\n' '# Update the mtime for .envrc.'
++    printf '%s\n' '# This will cause direnv to reload again - but without re-building.'
++    printf '%s\n' 'touch "$source_dir/.envrc"'
++    printf '%s\n'
++    printf '%s\n' '# Also update the timestamp of whatever profile_rc we have.'
++    printf '%s\n' '# This makes sure that we know we are up to date.'
++    printf '%s\n' 'touch -r "$source_dir/.envrc" "$layout_dir"/*.rc'
++  } >"${layout_dir}/bin/nix-direnv-reload"

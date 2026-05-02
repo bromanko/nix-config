@@ -8,6 +8,39 @@
 let
   brewPrefix = "/opt/homebrew";
   brewPath = "${brewPrefix}/bin";
+
+  grayAreaEt = pkgs.writeShellScriptBin "gray-area" ''
+    set -euo pipefail
+
+    if [[ -z "''${SSH_AUTH_SOCK:-}" ]]; then
+      echo "gray-area: SSH_AUTH_SOCK is not set" >&2
+      exit 1
+    fi
+
+    if [[ ! -S "$SSH_AUTH_SOCK" ]]; then
+      echo "gray-area: SSH_AUTH_SOCK does not point to a socket: $SSH_AUTH_SOCK" >&2
+      exit 1
+    fi
+
+    exec ${pkgs.eternal-terminal}/bin/et -f --ssh-socket "$SSH_AUTH_SOCK" "$@" gray-area
+  '';
+
+  grayAreaEtAttach = pkgs.writeShellScriptBin "gray-area-attach" ''
+    set -euo pipefail
+
+    escaped_args=()
+    for arg in "$@"; do
+      printf -v escaped_arg "%q" "$arg"
+      escaped_args+=("$escaped_arg")
+    done
+
+    attach_command="et-attach"
+    if (( ''${#escaped_args[@]} > 0 )); then
+      attach_command+=" ''${escaped_args[*]}"
+    fi
+
+    exec ${grayAreaEt}/bin/gray-area -c "$attach_command"
+  '';
 in
 with lib;
 with lib.my;
@@ -27,7 +60,13 @@ with lib.my;
     };
     shell = {
       commonPkgs.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+        envForwarding = {
+          enable = true;
+          hosts = [ "gray-area" ];
+        };
+      };
       openssh.enable = true;
       fish = {
         enable = true;
@@ -150,6 +189,7 @@ with lib.my;
     openssh = {
       enable = true;
       tailscaleOnly = true;
+      envForwarding.enable = true;
     };
 
     homebrew = {
@@ -166,6 +206,7 @@ with lib.my;
         "homerow"
         "iina"
         "istat-menus"
+        "linear"
         "lunar"
         "signal"
         "utm"
@@ -173,7 +214,7 @@ with lib.my;
         "calibre"
         "obsidian"
         "sony-ps-remote-play"
-        "tailscale"
+        "tailscale-app"
         "copilot-money"
         "zen"
       ];
@@ -187,17 +228,22 @@ with lib.my;
   };
   hm = {
     home = {
-      packages = with pkgs; [
-        slack
-        tailscale
-        my.tldx
-        my.sprite
-        my.ticket
-        my.chrome-devtools-mcp
-        my.codex-app
-        devenv
-        podman
-      ];
+      packages =
+        (with pkgs; [
+          slack
+          tailscale
+          my.tldx
+          my.sprite
+          my.ticket
+          my.chrome-devtools-mcp
+          my.codex-app
+          devenv
+          podman
+        ])
+        ++ [
+          grayAreaEt
+          grayAreaEtAttach
+        ];
     };
   };
 }
