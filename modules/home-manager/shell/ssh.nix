@@ -8,6 +8,7 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.shell.ssh;
+  githubScherzoAgentPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIv1D8RgQfbHT0lBH6WjBnMSjsNYnH2xbF65cYhU+mQe";
 in
 {
   options.modules.shell.ssh = with types; {
@@ -68,6 +69,12 @@ in
             forwardAgent = true;
             controlMaster = "auto";
             controlPersist = "1800";
+          };
+          github-scherzo-agent = {
+            hostname = "github.com";
+            user = "git";
+            identityFile = [ "~/.ssh/github-scherzo-agent.pub" ];
+            identitiesOnly = true;
           };
           keychain = {
             host = "*";
