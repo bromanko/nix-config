@@ -81,15 +81,12 @@ in
         };
 
         interactiveShellInit = ''
-          # On Linux, SSH keys live in the forwarded agent. The stable symlink at
-          # ~/.ssh/agent.sock is updated by ~/.ssh/rc on each SSH connection.
-          # Re-point SSH_AUTH_SOCK here so tmux panes always use the current agent
-          # after a disconnect/reconnect rather than holding a stale socket path.
-          ${optionalString pkgs.stdenv.hostPlatform.isLinux ''
-            if test -S "$HOME/.ssh/agent.sock"
-                set -gx SSH_AUTH_SOCK "$HOME/.ssh/agent.sock"
-            end
-          ''}
+          # SSH keys may live in a forwarded agent whose concrete socket path
+          # changes on reconnect. Point shells at a stable symlink when one is
+          # available so tmux panes and ET sessions do not keep stale sockets.
+          if test -S "$HOME/.ssh/agent.sock"
+              set -gx SSH_AUTH_SOCK "$HOME/.ssh/agent.sock"
+          end
           fish_vi_key_bindings
           set fish_cursor_default block
           set fish_cursor_insert line

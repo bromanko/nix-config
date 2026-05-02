@@ -210,6 +210,12 @@ let
       exit 1
     fi
 
+    if [[ -n "''${SSH_AUTH_SOCK:-}" && -S "$SSH_AUTH_SOCK" && "$SSH_AUTH_SOCK" != "$HOME/.ssh/agent.sock" ]]; then
+      install -d -m 0700 "$HOME/.ssh"
+      ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh/agent.sock"
+      export SSH_AUTH_SOCK="$HOME/.ssh/agent.sock"
+    fi
+
     tmux_bin="${pkgs.tmux}/bin/tmux"
     default_update_environment="DISPLAY KRB5CCNAME MSYSTEM SSH_ASKPASS SSH_AUTH_SOCK SSH_AGENT_PID SSH_CONNECTION WINDOWID XAUTHORITY"
     current_update_environment="$("$tmux_bin" "''${tmux_socket_args[@]}" show-options -gqv update-environment 2>/dev/null || true)"
