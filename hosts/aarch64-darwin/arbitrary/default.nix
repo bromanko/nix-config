@@ -77,6 +77,16 @@ with lib.my;
           brewPath
         ];
       };
+      secretEnv = {
+        enable = true;
+        variables = [
+          "GITHUB_TOKEN"
+          "GEMINI_API_KEY"
+          "HCLOUD_TOKEN"
+          "BRAVE_API_KEY"
+          "LINEAR_API_KEY"
+        ];
+      };
       bat.enable = true;
       git.enable = true;
       jujutsu.enable = true;
