@@ -20,43 +20,13 @@ let
     identitiesOnly = true;
   };
 
-  grayAreaEt = pkgs.writeShellScriptBin "gray-area" ''
+  grayAreaSsh = pkgs.writeShellScriptBin "gray-area" ''
     set -euo pipefail
 
-    if [[ -z "''${SSH_AUTH_SOCK:-}" ]]; then
-      echo "gray-area: SSH_AUTH_SOCK is not set" >&2
-      exit 1
-    fi
-
-    if [[ ! -S "$SSH_AUTH_SOCK" ]]; then
-      echo "gray-area: SSH_AUTH_SOCK does not point to a socket: $SSH_AUTH_SOCK" >&2
-      exit 1
-    fi
-
-    ssh_options=()
-    env_forwarding_config="$HOME/.ssh/env-forwarding.conf"
-
-    if [[ -r "$env_forwarding_config" ]]; then
-      while IFS= read -r line || [[ -n "$line" ]]; do
-        line="''${line%%#*}"
-        line="''${line#"''${line%%[![:space:]]*}"}"
-        line="''${line%"''${line##*[![:space:]]}"}"
-
-        [[ -z "$line" ]] && continue
-
-        read -r keyword rest <<< "$line"
-        [[ "''${keyword,,}" == "sendenv" ]] || continue
-
-        for name in $rest; do
-          [[ -n "$name" ]] && ssh_options+=(--ssh-option "SendEnv=$name")
-        done
-      done < "$env_forwarding_config"
-    fi
-
-    exec ${pkgs.eternal-terminal}/bin/et -f --ssh-socket "$SSH_AUTH_SOCK" "''${ssh_options[@]}" "$@" gray-area
+    exec ${pkgs.openssh}/bin/ssh gray-area "$@"
   '';
 
-  grayAreaEtAttach = pkgs.writeShellScriptBin "gray-area-attach" ''
+  grayAreaSshAttach = pkgs.writeShellScriptBin "gray-area-attach" ''
     set -euo pipefail
 
     escaped_args=()
@@ -70,7 +40,7 @@ let
       attach_command+=" ''${escaped_args[*]}"
     fi
 
-    exec ${grayAreaEt}/bin/gray-area -c "$attach_command"
+    exec ${pkgs.openssh}/bin/ssh -t gray-area "$attach_command"
   '';
 in
 with lib;
@@ -208,7 +178,6 @@ with lib.my;
     term = {
       ghostty.enable = true;
       tmux.enable = true;
-      eternal-terminal.client.enable = true;
     };
     editor = {
       default = "nvim";
@@ -272,8 +241,8 @@ with lib.my;
           podman
         ])
         ++ [
-          grayAreaEt
-          grayAreaEtAttach
+          grayAreaSsh
+          grayAreaSshAttach
         ];
 
       file.".ssh/github-1password.pub".text = "${github1PasswordPublicKey}\n";

@@ -56,9 +56,9 @@ let
     tmux rename-session "$(basename "$repo_root")"
   '';
 
-  # Remote entrypoint for `et -c 'et-attach [options] [session]' host`.
+  # Remote entrypoint for SSH-based attach wrappers such as `gray-area-attach`.
   # Loads the remote secret-proxy env file without baking secrets into Nix or
-  # the local et command, then attaches to or creates a tmux session.
+  # the local SSH command, then attaches to or creates a tmux session.
   et-attach = pkgs.writeShellScriptBin "et-attach" ''
     set -euo pipefail
 
