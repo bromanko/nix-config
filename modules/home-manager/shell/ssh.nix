@@ -49,6 +49,23 @@ in
     hm = {
       home.file = {
         ".ssh/github-scherzo-agent.pub".text = "${githubScherzoAgentPublicKey}\n";
+
+        # Keep a stable path for forwarded SSH agents. OpenSSH creates a fresh
+        # socket for each login, and the concrete path goes stale after sleep,
+        # reconnects, or control master churn. This rc hook runs before the
+        # user's shell so tmux/fish can safely use ~/.ssh/agent.sock.
+        ".ssh/rc" = {
+          text = mkDefault ''
+            #!/bin/sh
+            stable_agent_sock="$HOME/.ssh/agent.sock"
+
+            if [ -n "$SSH_AUTH_SOCK" ] && [ -S "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$stable_agent_sock" ]; then
+              mkdir -p "$HOME/.ssh"
+              ln -sfn "$SSH_AUTH_SOCK" "$stable_agent_sock"
+            fi
+          '';
+          executable = mkDefault true;
+        };
       }
       // optionalAttrs cfg.envForwarding.enable {
         ".ssh/env-forwarding.conf".source =
