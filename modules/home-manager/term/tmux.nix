@@ -378,8 +378,16 @@ in
           set -g extended-keys-format csi-u
           set -as terminal-features 'xterm*:extkeys'
 
-          # Stay in copy mode after mouse drag selection
+          # Stay in copy mode after yanking from scrollback. The yank plugin
+          # honors @yank_action for its bindings, but keep explicit fallbacks
+          # here so Home Manager/plugin ordering changes cannot reintroduce
+          # copy-pipe-and-cancel.
+          bind-key -T copy-mode-vi y send-keys -X copy-pipe-no-clear
+          bind-key -T copy-mode y send-keys -X copy-pipe-no-clear
+          bind-key -T copy-mode-vi Enter send-keys -X copy-selection-no-clear
+          bind-key -T copy-mode Enter send-keys -X copy-selection-no-clear
           bind-key -T copy-mode-vi MouseDragEnd1Pane send-keys -X copy-selection-no-clear
+          bind-key -T copy-mode MouseDragEnd1Pane send-keys -X copy-selection-no-clear
 
           # Allow passthrough sequences for inline images and other terminal features
           set -g allow-passthrough on

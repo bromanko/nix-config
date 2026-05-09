@@ -51,6 +51,7 @@ in
       fonts.enable = true;
       apps = {
         raycast.enable = true;
+        zen.enable = true;
         "1Password".enable = true;
         dealmail.enable = true;
       };
@@ -86,7 +87,6 @@ in
         "google-chrome"
         "istat-menus"
         "jordanbaird-ice"
-        "zen"
       ];
       masApps = {
         Xcode = 497799835;

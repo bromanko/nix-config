@@ -103,6 +103,7 @@ with lib.my;
       dictionaries.enable = true;
       apps = {
         raycast.enable = true;
+        zen.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
@@ -226,7 +227,6 @@ with lib.my;
         "sony-ps-remote-play"
         "tailscale-app"
         "copilot-money"
-        "zen"
       ];
       masApps = {
         Keynote = 409183694;
