@@ -7,6 +7,12 @@
 // custom settings, run the `open default settings` command
 // from the command palette or from `Zed` application menu.
 {
+  "base_keymap": "Emacs",
+  "icon_theme": {
+    "mode": "dark",
+    "light": "Zed (Default)",
+    "dark": "Zed (Default)"
+  },
   "project_panel": {
     "dock": "right"
   },
@@ -35,7 +41,11 @@
       "model": "claude-sonnet-4",
     },
   },
-  "theme": "Catppuccin Mocha",
+  "theme": {
+    "mode": "dark",
+    "light": "One Light",
+    "dark": "One Dark"
+  },
   "ui_font_size": 15,
   "relative_line_numbers": "enabled",
   "buffer_font_size": 13,

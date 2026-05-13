@@ -52,9 +52,11 @@ in
       hideThinkingBlock = true;
       enabledModels = [
         "openai-codex/gpt-5.5:xhigh"
-        "anthropic/claude-sonnet-4-6:high"
-        "anthropic/claude-opus-4-6:high"
+        "openai-codex/gpt-5.5:high"
+        "openai-codex/gpt-5.5:medium"
         "openai-codex/gpt-5.4:high"
+        "openai-codex/gpt-5.4:medium"
+        "openai-codex/gpt-5.4-mini"
       ];
       branchSummary = {
         skipPrompt = true;

@@ -11,7 +11,7 @@ let
   cfg = config.modules.desktop.apps.zen;
 
   setZenIconAppleScript = pkgs.writeText "set-zen-icon.applescript" ''
-    use framework "AppKit"
+    use framework "Cocoa"
     use scripting additions
 
     on run argv

@@ -143,6 +143,10 @@ with lib.my;
               run = "move-node-to-workspace 5";
             }
             {
+              "if".app-id = "com.openai.chat";
+              run = "move-node-to-workspace 5";
+            }
+            {
               "if".app-id = "com.anthropic.claudefordesktop";
               run = "move-node-to-workspace 5";
             }
@@ -223,6 +227,7 @@ with lib.my;
         "utm"
         "crystalfetch"
         "calibre"
+        "chatgpt"
         "obsidian"
         "sony-ps-remote-play"
         "tailscale-app"
