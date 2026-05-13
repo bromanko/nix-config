@@ -82,10 +82,25 @@ in
 
         interactiveShellInit = ''
           # SSH keys may live in a forwarded agent whose concrete socket path
-          # changes on reconnect. Point shells at a stable symlink when one is
-          # available so tmux panes and ET sessions do not keep stale sockets.
-          if test -S "$HOME/.ssh/agent.sock"
-              set -gx SSH_AUTH_SOCK "$HOME/.ssh/agent.sock"
+          # changes on reconnect. Refresh a stable symlink from fresh SSH/ET
+          # agent sockets, then point remote tmux panes at that stable path.
+          # Do not blindly prefer an existing symlink: after sleep/wake the
+          # socket file may still exist while the agent connection is stale.
+          set -l stable_ssh_auth_sock "$HOME/.ssh/agent.sock"
+          set -l has_current_ssh_auth_sock 0
+
+          if test -n "$SSH_AUTH_SOCK"; and test -S "$SSH_AUTH_SOCK"
+              set has_current_ssh_auth_sock 1
+          end
+
+          if test "$has_current_ssh_auth_sock" = 1; and test "$SSH_AUTH_SOCK" != "$stable_ssh_auth_sock"; and begin
+              set -q SSH_CONNECTION; or string match -q -- "*/et_forward_sock_*/sock" "$SSH_AUTH_SOCK"
+          end
+              mkdir -p "$HOME/.ssh"
+              ln -sfn "$SSH_AUTH_SOCK" "$stable_ssh_auth_sock"
+              set -gx SSH_AUTH_SOCK "$stable_ssh_auth_sock"
+          else if test -n "$TMUX"; and test -S "$stable_ssh_auth_sock"
+              set -gx SSH_AUTH_SOCK "$stable_ssh_auth_sock"
           end
           fish_vi_key_bindings
           set fish_cursor_default block

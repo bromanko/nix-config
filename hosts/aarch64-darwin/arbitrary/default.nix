@@ -1,4 +1,5 @@
 {
+  config,
   pkgs,
   lib,
   inputs,
@@ -9,23 +10,23 @@ let
   brewPrefix = "/opt/homebrew";
   brewPath = "${brewPrefix}/bin";
 
-  grayAreaEt = pkgs.writeShellScriptBin "gray-area" ''
+  github1PasswordPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia";
+  github1PasswordIdentityFile = "~/.ssh/github-1password.pub";
+  onePasswordSshAgent = ''"${config.modules.shell."1password".sshSocketPath}"'';
+
+  github1PasswordIdentity = {
+    identityFile = [ github1PasswordIdentityFile ];
+    identityAgent = [ onePasswordSshAgent ];
+    identitiesOnly = true;
+  };
+
+  grayAreaSsh = pkgs.writeShellScriptBin "gray-area" ''
     set -euo pipefail
 
-    if [[ -z "''${SSH_AUTH_SOCK:-}" ]]; then
-      echo "gray-area: SSH_AUTH_SOCK is not set" >&2
-      exit 1
-    fi
-
-    if [[ ! -S "$SSH_AUTH_SOCK" ]]; then
-      echo "gray-area: SSH_AUTH_SOCK does not point to a socket: $SSH_AUTH_SOCK" >&2
-      exit 1
-    fi
-
-    exec ${pkgs.eternal-terminal}/bin/et -f --ssh-socket "$SSH_AUTH_SOCK" "$@" gray-area
+    exec ${pkgs.openssh}/bin/ssh gray-area "$@"
   '';
 
-  grayAreaEtAttach = pkgs.writeShellScriptBin "gray-area-attach" ''
+  grayAreaSshAttach = pkgs.writeShellScriptBin "gray-area-attach" ''
     set -euo pipefail
 
     escaped_args=()
@@ -39,7 +40,7 @@ let
       attach_command+=" ''${escaped_args[*]}"
     fi
 
-    exec ${grayAreaEt}/bin/gray-area -c "$attach_command"
+    exec ${pkgs.openssh}/bin/ssh -t gray-area "$attach_command"
   '';
 in
 with lib;
@@ -76,6 +77,16 @@ with lib.my;
           brewPath
         ];
       };
+      secretEnv = {
+        enable = true;
+        variables = [
+          "GITHUB_TOKEN"
+          "GEMINI_API_KEY"
+          "HCLOUD_TOKEN"
+          "BRAVE_API_KEY"
+          "LINEAR_API_KEY"
+        ];
+      };
       bat.enable = true;
       git.enable = true;
       jujutsu.enable = true;
@@ -92,6 +103,7 @@ with lib.my;
       dictionaries.enable = true;
       apps = {
         raycast.enable = true;
+        zen.enable = true;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
@@ -177,7 +189,6 @@ with lib.my;
     term = {
       ghostty.enable = true;
       tmux.enable = true;
-      eternal-terminal.client.enable = true;
     };
     editor = {
       default = "nvim";
@@ -216,7 +227,6 @@ with lib.my;
         "sony-ps-remote-play"
         "tailscale-app"
         "copilot-money"
-        "zen"
       ];
       masApps = {
         Keynote = 409183694;
@@ -241,9 +251,23 @@ with lib.my;
           podman
         ])
         ++ [
-          grayAreaEt
-          grayAreaEtAttach
+          grayAreaSsh
+          grayAreaSshAttach
         ];
+
+      file.".ssh/github-1password.pub".text = "${github1PasswordPublicKey}\n";
+    };
+
+    programs.ssh.matchBlocks = {
+      github = github1PasswordIdentity // {
+        host = "github.com";
+        hostname = "github.com";
+        user = "git";
+      };
+
+      hetzner = github1PasswordIdentity // {
+        host = "hetzner sleeper-service";
+      };
     };
   };
 }

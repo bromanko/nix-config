@@ -10,7 +10,7 @@ in
     "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDhMuyTBj/2cYLaBjtdi5nZHwm281C51LogGRhG8A7mt Gray Area"
   ];
 
-  # Keep this machine reachable over Tailscale for SSH and Eternal Terminal.
+  # Keep this machine reachable over Tailscale for SSH.
   power.sleep.computer = "never";
 
   modules = {
@@ -55,6 +55,7 @@ in
       fonts.enable = true;
       apps = {
         raycast.enable = true;
+        zen.enable = true;
         "1Password".enable = true;
         dealmail.enable = true;
       };
@@ -67,7 +68,6 @@ in
     term = {
       ghostty.enable = true;
       tmux.enable = true;
-      eternal-terminal.server.enable = true;
     };
     editor = {
       default = "nvim";
@@ -91,7 +91,6 @@ in
         "google-chrome"
         "istat-menus"
         "jordanbaird-ice"
-        "zen"
       ];
       masApps = {
         Xcode = 497799835;
