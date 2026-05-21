@@ -64,11 +64,7 @@
   # Use the compatible bundle format (plain PEM, no p11-kit trust rules)
   # so that all OpenSSL consumers can verify the MITM CA.
   security.pki.useCompatibleBundle = true;
-  security.pki.certificateFiles =
-    let
-      certPath = "${pkgs.my.secret-proxy}/share/secret-proxy/mitmproxy-ca-cert.pem";
-    in
-    lib.optional (builtins.pathExists certPath) certPath;
+  security.pki.certificateFiles = [ ../../../../packages/secret-proxy/mitmproxy-ca-cert.pem ];
 
   # SSH
   services.openssh = {
