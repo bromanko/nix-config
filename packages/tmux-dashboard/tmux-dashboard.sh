@@ -9,8 +9,9 @@
 # Preview pane shows detailed info for the selected session.
 # Selecting a session switches the tmux client to it.
 #
-# VCS checks run asynchronously — the picker appears instantly and VCS
-# status is filled in via fzf reload once the (parallel) checks finish.
+# VCS checks run asynchronously after the initial list has loaded — the
+# picker appears instantly and VCS status is filled in via fzf reload once the
+# (parallel) checks finish.
 
 set -euo pipefail
 
@@ -78,6 +79,64 @@ format_session_line() {
   echo -e "${session}\t${BOLD}${padded_name}${RESET}  ${vcs}  ${DIM}󰖯 ${SESSION_WINCOUNT[$session]:-0}${RESET}  ${SESSION_AGENTS[$session]:-}"
 }
 
+first_line() {
+  local text="$1"
+  printf '%s' "${text%%$'\n'*}"
+}
+
+line_count() {
+  local text="${1%$'\n'}"
+  local count=0
+
+  if [[ -z "$text" ]]; then
+    printf '0'
+    return
+  fi
+
+  count=1
+  while [[ "$text" == *$'\n'* ]]; do
+    text="${text#*$'\n'}"
+    ((++count))
+  done
+
+  printf '%s' "$count"
+}
+
+jj_status_changes() {
+  local text="$1"
+  local line rest="$text"
+
+  while [[ "$rest" == *$'\n'* ]]; do
+    line="${rest%%$'\n'*}"
+    case "$line" in
+      [AMDR]" "*) printf '%s\n' "$line" ;;
+    esac
+    rest="${rest#*$'\n'}"
+  done
+
+  if [[ -n "$rest" ]]; then
+    case "$rest" in
+      [AMDR]" "*) printf '%s\n' "$rest" ;;
+    esac
+  fi
+}
+
+print_dim_lines() {
+  local text="$1" limit="$2"
+  local line rest="$text" count=0
+
+  while [[ "$count" -lt "$limit" && "$rest" == *$'\n'* ]]; do
+    line="${rest%%$'\n'*}"
+    echo -e "    ${DIM}${line}${RESET}"
+    rest="${rest#*$'\n'}"
+    ((++count))
+  done
+
+  if [[ "$count" -lt "$limit" && -n "$rest" ]]; then
+    echo -e "    ${DIM}${rest}${RESET}"
+  fi
+}
+
 # ── VCS status detection ────────────────────────────────────────────────────
 
 get_vcs_status() {
@@ -91,7 +150,7 @@ get_vcs_status() {
       echo -e "${DIM}jj ⏳${RESET}"
     else
       local status_line
-      status_line=$(head -1 <<< "$full_status")
+      status_line=$(first_line "$full_status")
       if [[ "$status_line" == *"no changes"* ]]; then
         echo -e "${GREEN}jj ✓${RESET}"
       else
@@ -175,20 +234,18 @@ generate_preview() {
       echo -e "  ${DIM}⏳ Status timed out (large repo?)${RESET}"
     else
       local status_line
-      status_line=$(head -1 <<< "$full_status")
+      status_line=$(first_line "$full_status")
 
       if [[ "$status_line" == *"no changes"* ]]; then
         echo -e "  ${GREEN}✓ Working copy clean${RESET}"
       else
         echo -e "  ${YELLOW}● Working copy has changes:${RESET}"
         local changes
-        changes=$(grep -E '^[AMDR] ' <<< "$full_status") || true
+        changes=$(jj_status_changes "$full_status")
         if [[ -n "$changes" ]]; then
-          head -8 <<< "$changes" | while IFS= read -r line; do
-            echo -e "    ${DIM}${line}${RESET}"
-          done
+          print_dim_lines "$changes" 8
           local change_count
-          change_count=$(wc -l <<< "$changes" | tr -d ' ')
+          change_count=$(line_count "$changes")
           if [[ "$change_count" -gt 8 ]]; then
             echo -e "    ${DIM}… and $((change_count - 8)) more${RESET}"
           fi
@@ -201,7 +258,7 @@ generate_preview() {
       log_info=$(cd "$path" && timeout "$VCS_TIMEOUT" jj log --no-pager -r '@' --no-graph \
         -T 'separate(" ", bookmarks, if(description, description.first_line()))' \
         2>/dev/null) || true
-      log_info=$(head -1 <<< "$log_info")
+      log_info=$(first_line "$log_info")
       if [[ -n "$log_info" ]]; then
         echo -e "  ${MAGENTA}⎇ ${log_info}${RESET}"
       fi
@@ -226,11 +283,9 @@ generate_preview() {
       echo -e "  ${GREEN}✓ Working tree clean${RESET}"
     else
       local change_count
-      change_count=$(wc -l <<< "$porcelain" | tr -d ' ')
+      change_count=$(line_count "$porcelain")
       echo -e "  ${YELLOW}● Working tree has changes (${change_count} files):${RESET}"
-      head -8 <<< "$porcelain" | while IFS= read -r line; do
-        echo -e "    ${DIM}${line}${RESET}"
-      done
+      print_dim_lines "$porcelain" 8
       if [[ "$change_count" -gt 8 ]]; then
         echo -e "    ${DIM}… and $((change_count - 8)) more${RESET}"
       fi
@@ -293,7 +348,7 @@ main() {
       --with-nth=2.. \
       --preview="$self --preview {1}" \
       --preview-window=right:50%:wrap \
-      --header='enter: switch session  esc: cancel' \
+      --header='enter: switch session  ctrl-r: refresh VCS  esc: cancel' \
       --no-sort \
       --cycle \
       --layout=reverse \
@@ -303,13 +358,14 @@ main() {
       --margin=0 \
       --padding=0 \
       --color='header:italic:dim' \
-      --bind "start:reload:$self --full-list" \
+      --bind "load:reload($self --full-list)+unbind(load)" \
+      --bind "ctrl-r:reload($self --full-list)" \
     || true
   )
 
   # Extract clean session name (first field before tab)
   local session_name
-  session_name=$(cut -f1 <<< "$selected")
+  session_name="${selected%%$'\t'*}"
 
   if [[ -n "$session_name" ]]; then
     tmux switch-client -t "$session_name"

@@ -88,6 +88,9 @@ in
       onActivation = {
         autoUpdate = true;
         cleanup = "zap";
+        # Homebrew 5.1 requires an explicit confirmation flag when
+        # `brew bundle install` is invoked with `--cleanup`.
+        extraFlags = [ "--force-cleanup" ];
       };
       global = {
         brewfile = true;

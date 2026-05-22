@@ -107,7 +107,6 @@ with lib.my;
         "1Password".enable = true;
         vscode.enable = true;
         claude.enable = true;
-        macwhisper.enable = true;
         multitouch.enable = true;
         screencast = {
           enable = true;
@@ -163,10 +162,6 @@ with lib.my;
             }
             {
               "if".app-id = "com.apple.Music";
-              run = "move-node-to-workspace 7";
-            }
-            {
-              "if".app-id = "com.goodsnooze.MacWhisper";
               run = "move-node-to-workspace 7";
             }
           ];

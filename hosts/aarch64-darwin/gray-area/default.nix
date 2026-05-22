@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+{ lib, pkgs, ... }:
 
 let
   brewPrefix = "/opt/homebrew";
@@ -20,6 +20,10 @@ in
     };
     homeage = {
       enable = true;
+      file."github-scherzo-agent" = {
+        source = ../../../configs/ssh/github-scherzo-agent.age;
+        symlinks = [ "$HOME/.ssh/github-scherzo-agent" ];
+      };
     };
     shell = {
       commonPkgs.enable = true;
@@ -67,7 +71,7 @@ in
     };
     editor = {
       default = "nvim";
-      visual = "zed-preview -w";
+      visual = "nvim";
       neovim.enable = true;
       zed.enable = true;
     };
@@ -99,6 +103,15 @@ in
         tailscale
         devenv
       ];
+    };
+
+    programs.ssh.matchBlocks.github-scherzo-agent = {
+      identityFile = lib.mkForce [ "~/.ssh/github-scherzo-agent" ];
+      extraOptions = {
+        IdentityAgent = "none";
+        AddKeysToAgent = "no";
+        BatchMode = "yes";
+      };
     };
   };
 }

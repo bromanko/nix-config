@@ -8,6 +8,7 @@ with lib;
 with lib.my;
 let
   cfg = config.modules.shell.ssh;
+  githubBromankoPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia";
   githubScherzoAgentPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIIv1D8RgQfbHT0lBH6WjBnMSjsNYnH2xbF65cYhU+mQe";
 in
 {
@@ -48,6 +49,7 @@ in
 
     hm = {
       home.file = {
+        ".ssh/github-bromanko.pub".text = "${githubBromankoPublicKey}\n";
         ".ssh/github-scherzo-agent.pub".text = "${githubScherzoAgentPublicKey}\n";
 
         # Keep a stable path for forwarded SSH agents. OpenSSH creates a fresh
@@ -86,6 +88,12 @@ in
             forwardAgent = true;
             controlMaster = "auto";
             controlPersist = "1800";
+          };
+          "github.com" = {
+            hostname = "github.com";
+            user = "git";
+            identityFile = [ "~/.ssh/github-bromanko.pub" ];
+            identitiesOnly = true;
           };
           github-scherzo-agent = {
             hostname = "github.com";
