@@ -11,7 +11,6 @@
   imports = [
     (modulesPath + "/profiles/qemu-guest.nix")
     inputs.nixos-lima.nixosModules.lima
-    inputs.determinate.nixosModules.default
   ];
 
   # Lima guest agent and boot-time configuration
@@ -48,6 +47,15 @@
     ];
   };
 
+  # Keep first rebuilds from being killed by memory spikes while large
+  # development closures are being realised.
+  swapDevices = [
+    {
+      device = "/swapfile";
+      size = 12288;
+    }
+  ];
+
   # Networking
   networking.hostName = "lima-dev";
 
@@ -64,11 +72,7 @@
   # Use the compatible bundle format (plain PEM, no p11-kit trust rules)
   # so that all OpenSSL consumers can verify the MITM CA.
   security.pki.useCompatibleBundle = true;
-  security.pki.certificateFiles =
-    let
-      certPath = "${pkgs.my.secret-proxy}/share/secret-proxy/mitmproxy-ca-cert.pem";
-    in
-    lib.optional (builtins.pathExists certPath) certPath;
+  security.pki.certificateFiles = [ ../../../../packages/secret-proxy/mitmproxy-ca-cert.pem ];
 
   # SSH
   services.openssh = {
@@ -83,7 +87,7 @@
   security.sudo.wheelNeedsPassword = false;
 
   # Nix configuration
-  modules.nix.system.enable = "determinate";
+  modules.nix.system.enable = "default";
 
   nix.settings = {
     experimental-features = [
@@ -91,6 +95,8 @@
       "flakes"
     ];
     trusted-users = [ "@wheel" ];
+    max-jobs = 1;
+    cores = 2;
   };
 
   # Override user home directory to match Lima's convention (appends .linux).

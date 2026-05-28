@@ -15,7 +15,7 @@ user:
   home: "/home/{{.User}}.linux"
 
 cpus: 4
-memory: "8GiB"
+memory: "12GiB"
 disk: "100GiB"
 
 # No host mounts — full isolation between host and guest.
@@ -34,14 +34,31 @@ provision:
 
       export PATH="/run/current-system/sw/bin:/run/wrappers/bin:$PATH"
 
-      # Clone nix-config if not already present
+      retry() {
+        local attempt=1
+        local max_attempts=30
+        local delay=2
+
+        until "$@"; do
+          if [ "$attempt" -ge "$max_attempts" ]; then
+            echo "Command failed after $max_attempts attempts: $*" >&2
+            return 1
+          fi
+          echo "Command failed (attempt $attempt/$max_attempts), retrying in ${delay}s: $*" >&2
+          attempt=$((attempt + 1))
+          sleep "$delay"
+        done
+      }
+
+      # Clone nix-config if not already present. DNS can come up a few seconds
+      # after SSH, so retry instead of silently leaving the VM unconfigured.
       if [ ! -d /etc/nixos/nix-config ]; then
-        git clone https://github.com/bromanko/nix-config.git /etc/nixos/nix-config
+        retry git clone https://github.com/bromanko/nix-config.git /etc/nixos/nix-config
       fi
 
       # Rebuild with the NixOS flake configuration
       cd /etc/nixos/nix-config
-      nixos-rebuild switch --flake .#lima-dev
+      retry nixos-rebuild switch --flake .#lima-dev --option max-jobs 1 --option cores 2
 
   - mode: user
     script: |
@@ -69,7 +86,7 @@ provision:
       # Set up user Code directory with nix-config clone
       mkdir -p ~/Code
       if [ ! -d ~/Code/nix-config ]; then
-        git clone https://github.com/bromanko/nix-config.git ~/Code/nix-config
+        retry git clone https://github.com/bromanko/nix-config.git ~/Code/nix-config
       fi
 
       echo "NixOS lima-dev setup complete"

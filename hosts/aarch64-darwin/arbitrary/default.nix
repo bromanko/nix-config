@@ -181,7 +181,10 @@ with lib.my;
       lima.enable = true;
       "secret-proxy" = {
         enable = true;
-        namespaces = [ "michael" ];
+        namespaces = [
+          "michael"
+          "scherzo"
+        ];
         contextLens.enable = true;
       };
       context-lens.enable = true;
