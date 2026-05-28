@@ -3,12 +3,16 @@ os: "Linux"
 arch: "default"
 
 images:
-  - location: "https://github.com/nixos-lima/nixos-lima/releases/download/v0.0.3/nixos-lima-v0.0.3-aarch64.qcow2"
+  - location: "https://github.com/nixos-lima/nixos-lima/releases/download/v0.0.5/nixos-lima-v0.0.5-aarch64.qcow2"
     arch: "aarch64"
-    digest: "sha512:809bd6bf46e27719eb69cc248e31a6c98725415976f8f0111b86228148a4379ea05e7405930c086487c9d51961e8776f61744175f33423ce3508e74a7f1a87c4"
-  - location: "https://github.com/nixos-lima/nixos-lima/releases/download/v0.0.3/nixos-lima-v0.0.3-x86_64.qcow2"
+    digest: "sha256:c66e6fbc3c529c90cb72c8bdb459db058478bb015f446ece284b77921c4f32ee"
+  - location: "https://github.com/nixos-lima/nixos-lima/releases/download/v0.0.5/nixos-lima-v0.0.5-x86_64.qcow2"
     arch: "x86_64"
-    digest: "sha512:d7e6a9c9519d94e006af40f689b98c235624bcc5c32f13ad4fe6c6ae411db4a1d6f5415135cd06665fc6eccd4c857d64512c28ec76cd04bfdfbd791408c57eb6"
+    digest: "sha256:2bee23c26eb9a47db5b41386018c186e29464ab941455e68d50c67e726b7afd4"
+
+user:
+  # Match the NixOS host config, which forces /home/<user>.linux for Lima.
+  home: "/home/{{.User}}.linux"
 
 cpus: 4
 memory: "8GiB"
@@ -28,6 +32,8 @@ provision:
       #!/bin/bash
       set -eux -o pipefail
 
+      export PATH="/run/current-system/sw/bin:/run/wrappers/bin:$PATH"
+
       # Clone nix-config if not already present
       if [ ! -d /etc/nixos/nix-config ]; then
         git clone https://github.com/bromanko/nix-config.git /etc/nixos/nix-config
@@ -41,6 +47,24 @@ provision:
     script: |
       #!/bin/bash
       set -eux -o pipefail
+
+      export PATH="/run/current-system/sw/bin:/run/wrappers/bin:$PATH"
+
+      retry() {
+        local attempt=1
+        local max_attempts=30
+        local delay=2
+
+        until "$@"; do
+          if [ "$attempt" -ge "$max_attempts" ]; then
+            echo "Command failed after $max_attempts attempts: $*" >&2
+            return 1
+          fi
+          echo "Command failed (attempt $attempt/$max_attempts), retrying in ${delay}s: $*" >&2
+          attempt=$((attempt + 1))
+          sleep "$delay"
+        done
+      }
 
       # Set up user Code directory with nix-config clone
       mkdir -p ~/Code

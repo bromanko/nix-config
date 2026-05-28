@@ -64,6 +64,16 @@ in
       docker.enable = true;
       claude-code.enable = true;
       pi.enable = true;
+      lima.enable = true;
+      "secret-proxy" = {
+        enable = true;
+        namespaces = [
+          "michael"
+          "scherzo"
+        ];
+        contextLens.enable = true;
+      };
+      context-lens.enable = true;
     };
     term = {
       ghostty.enable = true;
