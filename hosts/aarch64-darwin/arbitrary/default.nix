@@ -11,14 +11,19 @@ let
   brewPath = "${brewPrefix}/bin";
 
   github1PasswordPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia";
+  grayAreaPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDhMuyTBj/2cYLaBjtdi5nZHwm281C51LogGRhG8A7mt";
   github1PasswordIdentityFile = "~/.ssh/github-1password.pub";
+  grayAreaIdentityFile = "~/.ssh/gray-area.pub";
   onePasswordSshAgent = ''"${config.modules.shell."1password".sshSocketPath}"'';
 
-  github1PasswordIdentity = {
-    identityFile = [ github1PasswordIdentityFile ];
+  onePasswordIdentity = identityFile: {
+    identityFile = [ identityFile ];
     identityAgent = [ onePasswordSshAgent ];
     identitiesOnly = true;
   };
+
+  github1PasswordIdentity = onePasswordIdentity github1PasswordIdentityFile;
+  grayAreaIdentity = onePasswordIdentity grayAreaIdentityFile;
 
   grayAreaSsh = pkgs.writeShellScriptBin "gray-area" ''
     set -euo pipefail
@@ -255,7 +260,10 @@ with lib.my;
           grayAreaSshAttach
         ];
 
-      file.".ssh/github-1password.pub".text = "${github1PasswordPublicKey}\n";
+      file = {
+        ".ssh/github-1password.pub".text = "${github1PasswordPublicKey}\n";
+        ".ssh/gray-area.pub".text = "${grayAreaPublicKey}\n";
+      };
     };
 
     programs.ssh.matchBlocks = {
@@ -263,6 +271,11 @@ with lib.my;
         host = "github.com";
         hostname = "github.com";
         user = "git";
+      };
+
+      gray-area = grayAreaIdentity // {
+        host = "gray-area";
+        user = config.user.name;
       };
 
       hetzner = github1PasswordIdentity // {
