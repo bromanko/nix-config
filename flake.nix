@@ -29,6 +29,7 @@
     llm-agents = {
       url = "github:numtide/llm-agents.nix";
     };
+    devenv.url = "github:cachix/devenv";
     homeage = {
       url = "github:bromanko/homeage/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -184,6 +185,7 @@
 
       overlays = mapModules ./overlays import // {
         default = final: prev: {
+          devenv = inputs.devenv.packages.${prev.stdenv.hostPlatform.system}.devenv;
           my = self.packages.${prev.stdenv.hostPlatform.system} // {
             age-plugin-op = age-plugin-op.defaultPackage.${prev.stdenv.hostPlatform.system};
           };
