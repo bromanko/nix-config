@@ -57,8 +57,9 @@ let
   '';
 
   # Remote entrypoint for SSH-based attach wrappers such as `gray-area-attach`.
-  # Loads the remote secret-proxy env file without baking secrets into Nix or
-  # the local SSH command, then attaches to or creates a tmux session.
+  # Attaches to or creates a tmux session. For local use it can load a
+  # secret-proxy env file, but it avoids touching 1Password Environment mounts
+  # from headless SSH sessions unless ET_ENV_FILE is explicitly set.
   et-attach = pkgs.writeShellScriptBin "et-attach" ''
     set -euo pipefail
 
@@ -66,8 +67,9 @@ let
       cat <<'USAGE'
     usage: et-attach [OPTIONS] [SESSION]
 
-    Attach to or create a tmux session after loading KEY=VALUE entries from
-    ET_ENV_FILE, defaulting to ~/.config/secret-proxy/secrets.env.
+    Attach to or create a tmux session. Locally, KEY=VALUE entries are loaded
+    from ET_ENV_FILE, defaulting to ~/.config/secret-proxy/secrets.env. In SSH
+    sessions, env loading is skipped unless ET_ENV_FILE is explicitly set.
 
     Options:
       -L, --socket-name NAME   Use a tmux socket name (tmux -L NAME).
@@ -75,6 +77,8 @@ let
       -h, --help              Show this help.
 
     Environment:
+      ET_ENV_FILE              Env file to load. Set empty to disable loading.
+      SECRET_ENV_DISABLE       Disable env file loading when set.
       ET_TMUX_SESSION          Default session name (default: main).
       ET_TMUX_SOCKET_NAME      Default tmux socket name.
       ET_TMUX_SOCKET_PATH      Default tmux socket path.
@@ -176,10 +180,25 @@ let
       tmux_socket_args=(-S "$tmux_socket_path")
     fi
 
-    env_file="''${ET_ENV_FILE:-$HOME/.config/secret-proxy/secrets.env}"
+    env_file_explicit=0
+    if [[ -n "''${ET_ENV_FILE+x}" ]]; then
+      env_file_explicit=1
+      env_file="$ET_ENV_FILE"
+    else
+      env_file="$HOME/.config/secret-proxy/secrets.env"
+    fi
+
+    if [[ -n "''${SECRET_ENV_DISABLE:-}" ]]; then
+      env_file=""
+    elif [[ "$env_file_explicit" == 0 ]]; then
+      if [[ -n "''${SSH_CONNECTION:-}" || -n "''${SSH_TTY:-}" ]]; then
+        env_file=""
+      fi
+    fi
+
     secret_names=""
 
-    if [[ -r "$env_file" ]]; then
+    if [[ -n "$env_file" && -r "$env_file" ]]; then
       while IFS= read -r line || [[ -n "$line" ]]; do
         line="$(trim "$line")"
 
@@ -205,7 +224,7 @@ let
         export "$key=$value"
         secret_names="$(merge_word "$secret_names" "$key")"
       done < "$env_file"
-    elif [[ -n "''${ET_ENV_FILE:-}" ]]; then
+    elif [[ -n "$env_file" && "$env_file_explicit" == 1 ]]; then
       echo "et-attach: ET_ENV_FILE is not readable: $env_file" >&2
       exit 1
     fi
@@ -225,7 +244,7 @@ let
     fi
 
     update_environment="$current_update_environment"
-    for name in $secret_names; do
+    for name in SECRET_ENV_DISABLE ET_ENV_FILE $secret_names; do
       update_environment="$(merge_word "$update_environment" "$name")"
     done
 

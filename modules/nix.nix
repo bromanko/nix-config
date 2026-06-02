@@ -33,6 +33,10 @@ in
           keep-outputs = true;
           extra-substituters = cfg.caches.extraSubstituters;
           extra-trusted-public-keys = cfg.caches.extraTrustedPublicKeys;
+          trusted-users = [
+            "root"
+            config.user.name
+          ];
         };
 
         system.activationScripts.postActivation.text = optionalString pkgs.stdenv.hostPlatform.isDarwin ''

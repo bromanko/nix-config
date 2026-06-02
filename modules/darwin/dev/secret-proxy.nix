@@ -13,6 +13,15 @@ let
   homeDir = "/Users/${config.user.name}";
   configDir = "${homeDir}/.config/secret-proxy";
   namespaceDir = "${configDir}/namespaces";
+  namespacePaths = map (namespace: "${namespaceDir}/${namespace}") cfg.namespaces;
+  secretProxyDirs = [
+    configDir
+    namespaceDir
+  ]
+  ++ namespacePaths;
+  ensureSecretProxyDirs = concatMapStringsSep "\n" (dir: ''
+    install -d -m 0700 -o ${escapeShellArg config.user.name} -g staff ${escapeShellArg dir}
+  '') secretProxyDirs;
   limaHome = "${homeDir}/.lima";
 
   # Script that maintains the SSH reverse tunnel to a Lima VM.
@@ -105,6 +114,10 @@ in
     ];
 
     environment.systemPackages = [ pkgs.mitmproxy ];
+
+    # Ensure 1Password Environment destinations exist before launchd starts
+    # secret-proxy. 1Password mounts its .env files inside these directories.
+    system.activationScripts.postActivation.text = ensureSecretProxyDirs;
 
     # Rotate launchd log files: keep 3 archives, rotate at 1 MB.
     #
