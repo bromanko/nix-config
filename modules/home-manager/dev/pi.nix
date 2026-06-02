@@ -18,10 +18,21 @@ let
   # Resolve ~/ prefixes to the user's home directory
   resolveTildePath = p: if hasPrefix "~/" p then homeDir + removePrefix "~" p else p;
 
+  # Package settings support either plain strings or object-form filters.
+  # Keep the object form intact while resolving ~/ in its source field.
+  resolvePackage =
+    p:
+    if isString p then
+      resolveTildePath p
+    else if isAttrs p && p ? source && isString p.source then
+      p // { source = resolveTildePath p.source; }
+    else
+      p;
+
   resolvedSettings =
     cfg.settings
     // (optionalAttrs (cfg.settings ? packages) {
-      packages = map resolveTildePath cfg.settings.packages;
+      packages = map resolvePackage cfg.settings.packages;
     })
     // (optionalAttrs (cfg.settings ? extensions) {
       extensions = map resolveTildePath cfg.settings.extensions;
@@ -42,7 +53,12 @@ in
       defaultProvider = "openai-codex";
       defaultModel = "gpt-5.5";
       packages = [
-        "~/Code/llm-agents"
+        {
+          source = "~/Code/llm-agents";
+          extensions = [
+            "!pi/ci-guard/extensions/**"
+          ];
+        }
         "~/Code/llm-agents-private"
         "~/Code/attractor"
         "${pkgs.my.pi-sub-bar}/lib/pi-sub-bar"
