@@ -78,29 +78,39 @@ in
     };
   };
 
-  config = mkIf enabled {
-    home-manager.users."${config.user.name}".home = {
-      packages = with pkgs; [ m-cli ];
-    };
-
-    homebrew = {
-      enable = true;
-      onActivation = {
-        autoUpdate = true;
-        cleanup = "zap";
-        # Homebrew 5.1 requires an explicit confirmation flag when
-        # `brew bundle install` is invoked with `--cleanup`.
-        extraFlags = [ "--force-cleanup" ];
-      };
-      global = {
-        brewfile = true;
+  config = mkMerge [
+    (mkIf enabled {
+      home-manager.users."${config.user.name}".home = {
+        packages = with pkgs; [ m-cli ];
       };
 
-      prefix = cfg.prefix;
-      taps = cfg.taps;
-      brews = cfg.brews;
-      casks = cfg.casks;
-      masApps = cfg.masApps;
-    };
-  };
+      homebrew = {
+        enable = true;
+        onActivation = {
+          autoUpdate = true;
+          cleanup = "zap";
+        };
+        global = {
+          brewfile = true;
+        };
+
+        prefix = cfg.prefix;
+        taps = cfg.taps;
+        brews = cfg.brews;
+        casks = cfg.casks;
+        masApps = cfg.masApps;
+      };
+    })
+
+    # Homebrew 5.1 requires an explicit confirmation flag when
+    # `brew bundle install` is invoked with `--cleanup`. Apply this to
+    # any darwin host that enables Homebrew, whether via this wrapper
+    # module or via nix-darwin's `homebrew.enable` directly.
+    (mkIf (pkgs.stdenv.hostPlatform.isDarwin && config.homebrew.enable) {
+      homebrew.onActivation.extraFlags = mkIf (elem config.homebrew.onActivation.cleanup [
+        "uninstall"
+        "zap"
+      ]) [ "--force-cleanup" ];
+    })
+  ];
 }
