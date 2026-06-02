@@ -62,6 +62,8 @@ in
       The value may contain shell-expanded variables such as $HOME.
     '';
 
+    skipSshSessions = mkBoolOpt true;
+
     variables = mkOption {
       type = listOf str;
       default = [ ];
@@ -99,8 +101,21 @@ in
     hm.programs.fish.interactiveShellInit = mkAfter ''
       set -l secret_env_file "${cfg.envFile}"
       set -l secret_env_variables ${escapeShellArgs cfg.variables}
+      set -l secret_env_should_load 1
 
-      if test -r "$secret_env_file"
+      # 1Password Environment mounts can require GUI authentication on read.
+      # Avoid touching them in headless SSH sessions unless explicitly enabled.
+      if set -q SECRET_ENV_DISABLE
+          set secret_env_should_load 0
+      end
+
+      if test "${boolToString cfg.skipSshSessions}" = "true"
+          if set -q SSH_CONNECTION; or set -q SSH_TTY
+              set secret_env_should_load 0
+          end
+      end
+
+      if test "$secret_env_should_load" = 1; and test -r "$secret_env_file"
           for name in $secret_env_variables
               set -e $name
           end
