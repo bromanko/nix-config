@@ -29,13 +29,17 @@ let
     else
       p;
 
-  hasPackages = (cfg.settings ? packages) || cfg.extraPackages != [ ];
+  claudeCodeUsePackage = "${pkgs.my.pi-claude-code-use}/lib/pi-claude-code-use";
+  effectiveExtraPackages =
+    cfg.extraPackages ++ optional cfg.claudeCodeUse.enable claudeCodeUsePackage;
+
+  hasPackages = (cfg.settings ? packages) || effectiveExtraPackages != [ ];
   configuredPackages = cfg.settings.packages or [ ];
 
   resolvedSettings =
     cfg.settings
     // (optionalAttrs hasPackages {
-      packages = map resolvePackage (configuredPackages ++ cfg.extraPackages);
+      packages = map resolvePackage (configuredPackages ++ effectiveExtraPackages);
     })
     // (optionalAttrs (cfg.settings ? extensions) {
       extensions = map resolveTildePath cfg.settings.extensions;
@@ -43,6 +47,11 @@ let
 
   settingsFile = pkgs.writeText "pi-settings.json" (builtins.toJSON resolvedSettings);
   designStudioFile = pkgs.writeText "pi-design-studio.json" (builtins.toJSON cfg.designStudio);
+  claudeCodeUseConfigFile = pkgs.writeText "pi-claude-code-use.json" (
+    builtins.toJSON {
+      inherit (cfg.claudeCodeUse) toolAliases;
+    }
+  );
 in
 {
   options.modules.dev.pi = with types; {
@@ -92,6 +101,38 @@ in
       attrs
     ])) [ ];
 
+    # Anthropic OAuth compatibility package for Claude Code-style subscription use.
+    # Adds the pi-claude-code-use package and writes its tool alias config.
+    claudeCodeUse = {
+      enable = mkBoolOpt false;
+      toolAliases = mkOpt (listOf (listOf str)) [
+        [
+          "web_search"
+          "mcp__brave__web_search"
+        ]
+        [
+          "fetch"
+          "mcp__web__fetch"
+        ]
+        [
+          "find"
+          "mcp__filesystem__find"
+        ]
+        [
+          "lsp"
+          "mcp__lsp__code_intelligence"
+        ]
+        [
+          "design_checkpoint"
+          "mcp__design_studio__checkpoint"
+        ]
+        [
+          "autoresearch_log"
+          "mcp__autoresearch__log"
+        ]
+      ];
+    };
+
     # Design Studio settings written to ~/.pi/agent/design-studio.json.
     # See llm-agents/pi/design-studio/README.md for schema.
     designStudio = mkOpt attrs { };
@@ -105,11 +146,14 @@ in
         ];
 
         file = mkMerge [
-          (mkIf (cfg.settings != { }) {
+          (mkIf (resolvedSettings != { }) {
             ".pi/agent/settings.json".source = settingsFile;
           })
           (mkIf (cfg.designStudio != { }) {
             ".pi/agent/design-studio.json".source = designStudioFile;
+          })
+          (mkIf cfg.claudeCodeUse.enable {
+            ".pi/agent/extensions/pi-claude-code-use.json".source = claudeCodeUseConfigFile;
           })
         ];
       };

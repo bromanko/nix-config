@@ -65,9 +65,7 @@ in
       claude-code.enable = true;
       pi = {
         enable = true;
-        extraPackages = [
-          "${pkgs.my.pi-claude-code-use}/lib/pi-claude-code-use"
-        ];
+        claudeCodeUse.enable = true;
       };
       lima.enable = true;
       "secret-proxy" = {
