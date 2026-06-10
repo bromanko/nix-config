@@ -25,5 +25,6 @@
     "enabled": true,
     "autoAllowBashIfSandboxed": false
   },
-  "alwaysThinkingEnabled": true
+  "alwaysThinkingEnabled": true,
+  "model": "claude-fable-5[1m]"
 }

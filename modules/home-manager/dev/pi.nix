@@ -29,10 +29,13 @@ let
     else
       p;
 
+  hasPackages = (cfg.settings ? packages) || cfg.extraPackages != [ ];
+  configuredPackages = cfg.settings.packages or [ ];
+
   resolvedSettings =
     cfg.settings
-    // (optionalAttrs (cfg.settings ? packages) {
-      packages = map resolvePackage cfg.settings.packages;
+    // (optionalAttrs hasPackages {
+      packages = map resolvePackage (configuredPackages ++ cfg.extraPackages);
     })
     // (optionalAttrs (cfg.settings ? extensions) {
       extensions = map resolveTildePath cfg.settings.extensions;
@@ -67,6 +70,9 @@ in
       defaultThinkingLevel = "xhigh";
       hideThinkingBlock = true;
       enabledModels = [
+        "anthropic/claude-fable-5:xhigh"
+        "anthropic/claude-opus-4-8:xhigh"
+        "anthropic/claude-opus-4-6:xhigh"
         "openai-codex/gpt-5.5:xhigh"
         "openai-codex/gpt-5.5:high"
         "openai-codex/gpt-5.5:medium"
@@ -78,6 +84,13 @@ in
         skipPrompt = true;
       };
     };
+
+    # Additional Pi packages appended to settings.packages.
+    # Useful for host-specific packages without replacing the shared defaults.
+    extraPackages = mkOpt (listOf (oneOf [
+      str
+      attrs
+    ])) [ ];
 
     # Design Studio settings written to ~/.pi/agent/design-studio.json.
     # See llm-agents/pi/design-studio/README.md for schema.

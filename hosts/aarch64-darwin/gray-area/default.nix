@@ -63,7 +63,12 @@ in
     dev = {
       docker.enable = true;
       claude-code.enable = true;
-      pi.enable = true;
+      pi = {
+        enable = true;
+        extraPackages = [
+          "${pkgs.my.pi-claude-code-use}/lib/pi-claude-code-use"
+        ];
+      };
       lima.enable = true;
       "secret-proxy" = {
         enable = true;
