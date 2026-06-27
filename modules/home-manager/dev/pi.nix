@@ -46,6 +46,7 @@ let
     });
 
   settingsFile = pkgs.writeText "pi-settings.json" (builtins.toJSON resolvedSettings);
+  modelsJsonFile = pkgs.writeText "pi-models.json" (builtins.toJSON cfg.modelsJson);
   designStudioFile = pkgs.writeText "pi-design-studio.json" (builtins.toJSON cfg.designStudio);
   claudeCodeUseConfigFile = pkgs.writeText "pi-claude-code-use.json" (
     builtins.toJSON {
@@ -91,6 +92,26 @@ in
       ];
       branchSummary = {
         skipPrompt = true;
+      };
+    };
+
+    # Model registry written to ~/.pi/agent/models.json.
+    # Use providers.<name>.modelOverrides to tweak built-in models (e.g.
+    # thinkingLevelMap) without redefining the provider's full model list.
+    # The default remaps Opus 4.8's top thinking rung (pi's `xhigh`) onto
+    # Anthropic's `max` effort, matching what Opus 4.6 ships with. Built-in
+    # Opus 4.8 only maps xhigh -> "xhigh", leaving `max` unreachable.
+    modelsJson = mkOpt attrs {
+      providers = {
+        anthropic = {
+          modelOverrides = {
+            "claude-opus-4-8" = {
+              thinkingLevelMap = {
+                xhigh = "max";
+              };
+            };
+          };
+        };
       };
     };
 
@@ -148,6 +169,9 @@ in
         file = mkMerge [
           (mkIf (resolvedSettings != { }) {
             ".pi/agent/settings.json".source = settingsFile;
+          })
+          (mkIf (cfg.modelsJson != { }) {
+            ".pi/agent/models.json".source = modelsJsonFile;
           })
           (mkIf (cfg.designStudio != { }) {
             ".pi/agent/design-studio.json".source = designStudioFile;
