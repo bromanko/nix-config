@@ -45,7 +45,7 @@ in
 
           core = {
             whitespace = "trailing-space";
-            fsmonitor = true;
+            fsmonitor = false;
             untrackedCache = true;
           };
 
