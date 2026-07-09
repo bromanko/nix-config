@@ -17,9 +17,9 @@ let
   onePasswordSshAgent = ''"${config.modules.shell."1password".sshSocketPath}"'';
 
   onePasswordIdentity = identityFile: {
-    identityFile = [ identityFile ];
-    identityAgent = [ onePasswordSshAgent ];
-    identitiesOnly = true;
+    IdentityFile = [ identityFile ];
+    IdentityAgent = [ onePasswordSshAgent ];
+    IdentitiesOnly = true;
   };
 
   github1PasswordIdentity = onePasswordIdentity github1PasswordIdentityFile;
@@ -259,20 +259,19 @@ with lib.my;
       };
     };
 
-    programs.ssh.matchBlocks = {
+    programs.ssh.settings = {
       github = github1PasswordIdentity // {
-        host = "github.com";
-        hostname = "github.com";
-        user = "git";
+        header = "Host github.com";
+        HostName = "github.com";
+        User = "git";
       };
 
       gray-area = grayAreaIdentity // {
-        host = "gray-area";
-        user = config.user.name;
+        User = config.user.name;
       };
 
       hetzner = github1PasswordIdentity // {
-        host = "hetzner sleeper-service";
+        header = "Host hetzner sleeper-service";
       };
     };
   };
