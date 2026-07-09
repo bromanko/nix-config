@@ -171,7 +171,10 @@ with lib.my;
       nodejs.enable = true;
       codex.enable = true;
       claude-code.enable = true;
-      pi.enable = true;
+      pi = {
+        enable = true;
+        claudeCodeUse.enable = true;
+      };
       lima.enable = true;
       "secret-proxy" = {
         enable = true;
