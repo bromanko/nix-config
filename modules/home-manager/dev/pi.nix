@@ -46,7 +46,7 @@ let
     });
 
   settingsFile = pkgs.writeText "pi-settings.json" (builtins.toJSON resolvedSettings);
-  modelsJsonFile = pkgs.writeText "pi-models.json" (builtins.toJSON cfg.modelsJson);
+  modelsFile = pkgs.writeText "pi-models.json" (builtins.toJSON cfg.models);
   designStudioFile = pkgs.writeText "pi-design-studio.json" (builtins.toJSON cfg.designStudio);
   claudeCodeUseConfigFile = pkgs.writeText "pi-claude-code-use.json" (
     builtins.toJSON {
@@ -80,38 +80,18 @@ in
       defaultThinkingLevel = "xhigh";
       hideThinkingBlock = true;
       enabledModels = [
+        # :minimal maps to backend ultra for gpt-5.6-sol in models.json.
+        "openai-codex/gpt-5.6-sol:minimal"
+        "openai-codex/gpt-5.6-sol:xhigh"
+        "openai-codex/gpt-5.6-terra:xhigh"
+        "openai-codex/gpt-5.6-luna:xhigh"
+        "openai-codex/gpt-5.5:xhigh"
         "anthropic/claude-fable-5:xhigh"
         "anthropic/claude-opus-4-8:xhigh"
         "anthropic/claude-opus-4-6:xhigh"
-        "openai-codex/gpt-5.5:xhigh"
-        "openai-codex/gpt-5.5:high"
-        "openai-codex/gpt-5.5:medium"
-        "openai-codex/gpt-5.4:high"
-        "openai-codex/gpt-5.4:medium"
-        "openai-codex/gpt-5.4-mini"
       ];
       branchSummary = {
         skipPrompt = true;
-      };
-    };
-
-    # Model registry written to ~/.pi/agent/models.json.
-    # Use providers.<name>.modelOverrides to tweak built-in models (e.g.
-    # thinkingLevelMap) without redefining the provider's full model list.
-    # The default remaps Opus 4.8's top thinking rung (pi's `xhigh`) onto
-    # Anthropic's `max` effort, matching what Opus 4.6 ships with. Built-in
-    # Opus 4.8 only maps xhigh -> "xhigh", leaving `max` unreachable.
-    modelsJson = mkOpt attrs {
-      providers = {
-        anthropic = {
-          modelOverrides = {
-            "claude-opus-4-8" = {
-              thinkingLevelMap = {
-                xhigh = "max";
-              };
-            };
-          };
-        };
       };
     };
 
@@ -154,6 +134,96 @@ in
       ];
     };
 
+    # Model registry written to ~/.pi/agent/models.json.
+    # Pi keeps built-in provider models, applies modelOverrides, and upserts
+    # custom models by id.
+    models = mkOpt attrs {
+      providers = {
+        anthropic = {
+          # Remap Opus 4.8's top thinking rung (pi's `xhigh`) onto Anthropic's
+          # `max` effort, matching what Opus 4.6 ships with.
+          modelOverrides = {
+            "claude-opus-4-8" = {
+              thinkingLevelMap = {
+                xhigh = "max";
+              };
+            };
+          };
+        };
+
+        "openai-codex" = {
+          models = [
+            {
+              id = "gpt-5.6-sol";
+              name = "GPT-5.6 Sol";
+              reasoning = true;
+              # Pi does not expose max/ultra as native thinking levels yet.
+              # Use :minimal as the UI/CLI alias for backend ultra, while
+              # keeping :xhigh mapped to backend xhigh.
+              thinkingLevelMap = {
+                minimal = "ultra";
+                xhigh = "xhigh";
+              };
+              input = [
+                "text"
+                "image"
+              ];
+              contextWindow = 372000;
+              maxTokens = 128000;
+              cost = {
+                input = 0;
+                output = 0;
+                cacheRead = 0;
+                cacheWrite = 0;
+              };
+            }
+            {
+              id = "gpt-5.6-terra";
+              name = "GPT-5.6 Terra";
+              reasoning = true;
+              thinkingLevelMap = {
+                minimal = "low";
+                xhigh = "xhigh";
+              };
+              input = [
+                "text"
+                "image"
+              ];
+              contextWindow = 372000;
+              maxTokens = 128000;
+              cost = {
+                input = 0;
+                output = 0;
+                cacheRead = 0;
+                cacheWrite = 0;
+              };
+            }
+            {
+              id = "gpt-5.6-luna";
+              name = "GPT-5.6 Luna";
+              reasoning = true;
+              thinkingLevelMap = {
+                minimal = "low";
+                xhigh = "xhigh";
+              };
+              input = [
+                "text"
+                "image"
+              ];
+              contextWindow = 372000;
+              maxTokens = 128000;
+              cost = {
+                input = 0;
+                output = 0;
+                cacheRead = 0;
+                cacheWrite = 0;
+              };
+            }
+          ];
+        };
+      };
+    };
+
     # Design Studio settings written to ~/.pi/agent/design-studio.json.
     # See llm-agents/pi/design-studio/README.md for schema.
     designStudio = mkOpt attrs { };
@@ -170,8 +240,8 @@ in
           (mkIf (resolvedSettings != { }) {
             ".pi/agent/settings.json".source = settingsFile;
           })
-          (mkIf (cfg.modelsJson != { }) {
-            ".pi/agent/models.json".source = modelsJsonFile;
+          (mkIf (cfg.models != { }) {
+            ".pi/agent/models.json".source = modelsFile;
           })
           (mkIf (cfg.designStudio != { }) {
             ".pi/agent/design-studio.json".source = designStudioFile;

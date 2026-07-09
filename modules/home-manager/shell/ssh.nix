@@ -83,31 +83,29 @@ in
             Include ${cfg.envForwarding.configFile}
         '');
 
-        matchBlocks = {
+        settings = {
           "*" = {
-            forwardAgent = true;
-            controlMaster = "auto";
-            controlPersist = "1800";
+            ForwardAgent = true;
+            ControlMaster = "auto";
+            ControlPersist = "1800";
           };
           "github.com" = {
-            hostname = "github.com";
-            user = "git";
-            identityFile = [ "~/.ssh/github-bromanko.pub" ];
-            identitiesOnly = true;
+            HostName = "github.com";
+            User = "git";
+            IdentityFile = [ "~/.ssh/github-bromanko.pub" ];
+            IdentitiesOnly = true;
           };
           github-scherzo-agent = {
-            hostname = "github.com";
-            user = "git";
-            identityFile = [ "~/.ssh/github-scherzo-agent.pub" ];
-            identitiesOnly = true;
+            HostName = "github.com";
+            User = "git";
+            IdentityFile = [ "~/.ssh/github-scherzo-agent.pub" ];
+            IdentitiesOnly = true;
           };
           keychain = {
-            host = "*";
-            extraOptions = {
-              IgnoreUnknown = "UseKeychain";
-              AddKeysToAgent = "yes";
-              UseKeychain = "yes";
-            };
+            header = "Host *";
+            IgnoreUnknown = "UseKeychain";
+            AddKeysToAgent = "yes";
+            UseKeychain = "yes";
           };
         };
       };

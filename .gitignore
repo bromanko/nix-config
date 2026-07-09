@@ -4,6 +4,7 @@ result
 .claude/*.local.json
 __pycache__/
 .direnv/
+.env.local
 
 # Plaintext SSH private keys staged for age encryption.
 configs/ssh/github-scherzo-agent

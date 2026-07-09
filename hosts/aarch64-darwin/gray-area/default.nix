@@ -118,13 +118,11 @@ in
       ];
     };
 
-    programs.ssh.matchBlocks.github-scherzo-agent = {
-      identityFile = lib.mkForce [ "~/.ssh/github-scherzo-agent" ];
-      extraOptions = {
-        IdentityAgent = "none";
-        AddKeysToAgent = "no";
-        BatchMode = "yes";
-      };
+    programs.ssh.settings.github-scherzo-agent = {
+      IdentityFile = lib.mkForce [ "~/.ssh/github-scherzo-agent" ];
+      IdentityAgent = "none";
+      AddKeysToAgent = "no";
+      BatchMode = "yes";
     };
   };
 }
