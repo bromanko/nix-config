@@ -64,7 +64,7 @@ in
     # instead of editing settings.json or running `pi install`.
     settings = mkOpt attrs {
       defaultProvider = "openai-codex";
-      defaultModel = "gpt-5.5";
+      defaultModel = "gpt-5.6-sol";
       packages = [
         {
           source = "~/Code/llm-agents";
@@ -80,9 +80,9 @@ in
       defaultThinkingLevel = "xhigh";
       hideThinkingBlock = true;
       enabledModels = [
+        "openai-codex/gpt-5.6-sol:xhigh"
         # :minimal maps to backend ultra for gpt-5.6-sol in models.json.
         "openai-codex/gpt-5.6-sol:minimal"
-        "openai-codex/gpt-5.6-sol:xhigh"
         "openai-codex/gpt-5.6-terra:xhigh"
         "openai-codex/gpt-5.6-luna:xhigh"
         "openai-codex/gpt-5.5:xhigh"
