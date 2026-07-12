@@ -237,6 +237,9 @@ in
         ];
 
         file = mkMerge [
+          {
+            ".pi/agent/AGENTS.md".source = ./pi/AGENTS.md;
+          }
           (mkIf (resolvedSettings != { }) {
             ".pi/agent/settings.json".source = settingsFile;
           })
