@@ -202,29 +202,21 @@ in
         # Node.js ignores the system CA store; point it at the NixOS bundle
         # which includes the mitmproxy CA from security.pki.certificateFiles.
         NODE_EXTRA_CA_CERTS = "/etc/ssl/certs/ca-certificates.crt";
-        # Stable SSH agent socket path — .ssh/rc updates this symlink on each
-        # SSH connection so tmux and other persistent sessions always find the
-        # current forwarded agent even after the control master reconnects.
-        SSH_AUTH_SOCK = "\${HOME}/.ssh/agent.sock";
-      };
-
-      # Create .ssh/rc to symlink the forwarded SSH agent socket to a stable
-      # path. Runs on every SSH login before the user shell starts, so the
-      # symlink is always current even when Lima's control master reconnects.
-      file.".ssh/rc" = {
-        text = ''
-          #!/bin/bash
-          if [ -n "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$HOME/.ssh/agent.sock" ]; then
-            ln -sf "$SSH_AUTH_SOCK" "$HOME/.ssh/agent.sock"
-          fi
-        '';
-        executable = true;
       };
     };
 
     programs = {
-      fish.shellAliases = {
-        "rebuild!" = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-dev";
+      fish = {
+        shellAliases = {
+          "rebuild!" = "sudo nixos-rebuild switch --flake ~/Code/nix-config#lima-dev";
+        };
+        interactiveShellInit = lib.mkAfter ''
+          # OpenSSH's ~/.ssh/rc has now captured the concrete forwarded agent
+          # socket. Use its stable symlink in persistent shells such as tmux.
+          if test -S "$HOME/.ssh/agent.sock"
+            set -gx SSH_AUTH_SOCK "$HOME/.ssh/agent.sock"
+          end
+        '';
       };
       jujutsu.settings.ui.editor = "nvim";
 
