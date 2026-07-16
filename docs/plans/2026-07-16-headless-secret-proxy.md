@@ -102,7 +102,7 @@ and authorize the existing FIFO destinations.
 - [x] (2026-07-16 16:22Z) Integrated provider selection into the mitmproxy addon without changing policy behavior.
 - [x] (2026-07-16 16:29Z) Added nix-darwin provider options, assertions, and launch arguments.
 - [x] (2026-07-16 16:37Z) Updated operator documentation and ran formatting, parsing, nine unit tests, package builds, current-host evaluation, and a synthetic service-account launch-argument evaluation.
-- [ ] Obtain the service-account Environment IDs and locally encrypt its token with Homeage.
+- [ ] Obtain the service-account Environment IDs and locally encrypt its token with Homeage (blocked: waiting for the default and Scherzo IDs plus a non-secret `op://` reference to the saved token).
 - [ ] Switch Gray Area to service-account mode, rebuild, and run allowed and blocked end-to-end tests with the 1Password desktop app unavailable.
 
 ## Surprises & Discoveries
@@ -150,7 +150,9 @@ and authorize the existing FIFO destinations.
 
 ## Outcomes & Retrospective
 
-(To be completed after implementation and deployment.)
+The implementation milestones before secret handoff are complete in three focused commits. The stable CLI remains unchanged, beta CLI use is isolated, the provider has nine unit tests, FIFO reads are bounded, and both current and future launch configurations evaluate. Gray Area remains on the proven Environment-file backend, so stopping here does not disrupt development.
+
+Deployment remains intentionally incomplete until the operator supplies the two non-secret Environment IDs and a safe local source for encrypting the service-account token. End-to-end headless acceptance has not yet been claimed.
 
 ## Context and Orientation
 
