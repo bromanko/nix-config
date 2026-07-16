@@ -1,5 +1,6 @@
 {
   lib,
+  python3,
   stdenv,
 }:
 
@@ -11,13 +12,24 @@ stdenv.mkDerivation {
 
   dontBuild = true;
 
+  nativeCheckInputs = [ python3 ];
+
+  doCheck = true;
+  checkPhase = ''
+    runHook preCheck
+
+    python -m unittest -v test_secret_provider.py
+
+    runHook postCheck
+  '';
+
   installPhase = ''
     runHook preInstall
 
     mkdir -p $out/lib/secret-proxy $out/share/secret-proxy
 
-    # Core proxy script
-    cp secret_proxy.py $out/lib/secret-proxy/
+    # Core proxy scripts
+    cp secret_provider.py secret_proxy.py $out/lib/secret-proxy/
 
     # CA certificate (public cert, safe to distribute)
     cp mitmproxy-ca-cert.pem $out/share/secret-proxy/

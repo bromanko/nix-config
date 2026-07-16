@@ -98,8 +98,8 @@ and authorize the existing FIFO destinations.
 - [x] (2026-07-16 16:08Z) Verified the existing proxy, Homeage, host module, stable CLI version, and beta CLI download layout.
 - [x] (2026-07-16 16:08Z) Chose an additive CLI-backed provider with the FIFO backend retained for rollback.
 - [x] (2026-07-16 16:13Z) Packaged and verified 1Password CLI beta 2.38.0-beta.01 for supported systems.
-- [ ] Add and unit-test bounded file and service-account Environment providers.
-- [ ] Integrate provider selection into the mitmproxy addon without changing policy behavior.
+- [x] (2026-07-16 16:22Z) Added and unit-tested bounded file and service-account Environment providers.
+- [x] (2026-07-16 16:22Z) Integrated provider selection into the mitmproxy addon without changing policy behavior.
 - [ ] Add nix-darwin provider options, assertions, and launch arguments.
 - [ ] Update operator documentation and run formatting, parsing, unit, package, and host evaluation checks.
 - [ ] Obtain the service-account Environment IDs and locally encrypt its token with Homeage.
@@ -196,7 +196,7 @@ The first milestone packages the beta CLI and proves the exact binary exposes
 `op environment read`. This validates the highest external dependency risk before proxy
 code depends on it.
 
-The second milestone introduces a standalone provider module with unit tests. It proves
+The second milestone introduced a standalone provider module with eight passing unit tests. It proves
 bounded FIFO reads, service-account command construction, token isolation, namespace
 mapping, caching, timeout handling, and safe errors without requiring mitmproxy or a real
 service account.
