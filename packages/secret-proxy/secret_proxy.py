@@ -394,8 +394,13 @@ class SecretProxy:
         self._secret_provider = None
 
         if self.provider_name == "environment-files":
-            if not ctx.options.secret_proxy_env_file or not ctx.options.secret_proxy_namespace_dir:
-                ctx.log.error("secret-proxy: Environment file provider paths are incomplete")
+            if (
+                not ctx.options.secret_proxy_env_file
+                or not ctx.options.secret_proxy_namespace_dir
+            ):
+                ctx.log.error(
+                    "secret-proxy: Environment file provider paths are incomplete"
+                )
                 return
 
             default_env_file = Path(ctx.options.secret_proxy_env_file).expanduser()
@@ -420,10 +425,14 @@ class SecretProxy:
                 isinstance(key, str) and isinstance(value, str)
                 for key, value in environment_ids.items()
             ):
-                ctx.log.error("secret-proxy: Environment ID mapping must contain string values")
+                ctx.log.error(
+                    "secret-proxy: Environment ID mapping must contain string values"
+                )
                 return
             if not ctx.options.secret_proxy_service_account_token_file:
-                ctx.log.error("secret-proxy: Service-account token file is not configured")
+                ctx.log.error(
+                    "secret-proxy: Service-account token file is not configured"
+                )
                 return
 
             self._secret_provider = OnePasswordServiceAccountProvider(

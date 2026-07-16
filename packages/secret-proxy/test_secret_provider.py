@@ -88,6 +88,7 @@ class OnePasswordServiceAccountProviderTests(unittest.TestCase):
     def make_token_file(self, directory: str, content: str = "service-token\n") -> Path:
         token_file = Path(directory) / "token"
         token_file.write_text(content)
+        token_file.chmod(0o400)
         return token_file
 
     def test_maps_namespaces_and_passes_token_only_in_child_environment(self):
@@ -197,6 +198,23 @@ class OnePasswordServiceAccountProviderTests(unittest.TestCase):
                 )
                 with self.assertRaises(SecretProviderError):
                     provider.load(None)
+
+            self.assertEqual(calls, [])
+
+    def test_insecure_token_file_permissions_fail_without_running_cli(self):
+        with tempfile.TemporaryDirectory() as directory:
+            calls = []
+            token_file = self.make_token_file(directory)
+            token_file.chmod(0o644)
+            provider = OnePasswordServiceAccountProvider(
+                op_cli="op",
+                token_file=token_file,
+                environment_ids={"default": "env-default"},
+                runner=lambda *args, **kwargs: calls.append((args, kwargs)),
+            )
+
+            with self.assertRaisesRegex(SecretProviderError, "permissions are unsafe"):
+                provider.load(None)
 
             self.assertEqual(calls, [])
 

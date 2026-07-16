@@ -9,6 +9,7 @@ service-account token supplied only in the child process environment.
 from __future__ import annotations
 
 import os
+import stat
 import subprocess
 import time
 from pathlib import Path
@@ -123,6 +124,11 @@ class OnePasswordServiceAccountProvider:
 
     def _service_account_token(self) -> str:
         try:
+            token_stat = self.token_file.stat()
+            if not stat.S_ISREG(token_stat.st_mode):
+                raise SecretProviderError("Service account token path is not a file")
+            if stat.S_IMODE(token_stat.st_mode) & 0o077:
+                raise SecretProviderError("Service account token file permissions are unsafe")
             token = self.token_file.read_text().strip()
         except OSError as error:
             raise SecretProviderError("Service account token file is unavailable") from error

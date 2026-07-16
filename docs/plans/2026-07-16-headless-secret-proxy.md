@@ -100,8 +100,8 @@ and authorize the existing FIFO destinations.
 - [x] (2026-07-16 16:13Z) Packaged and verified 1Password CLI beta 2.38.0-beta.01 for supported systems.
 - [x] (2026-07-16 16:22Z) Added and unit-tested bounded file and service-account Environment providers.
 - [x] (2026-07-16 16:22Z) Integrated provider selection into the mitmproxy addon without changing policy behavior.
-- [ ] Add nix-darwin provider options, assertions, and launch arguments.
-- [ ] Update operator documentation and run formatting, parsing, unit, package, and host evaluation checks.
+- [x] (2026-07-16 16:29Z) Added nix-darwin provider options, assertions, and launch arguments.
+- [x] (2026-07-16 16:37Z) Updated operator documentation and ran formatting, parsing, nine unit tests, package builds, current-host evaluation, and a synthetic service-account launch-argument evaluation.
 - [ ] Obtain the service-account Environment IDs and locally encrypt its token with Homeage.
 - [ ] Switch Gray Area to service-account mode, rebuild, and run allowed and blocked end-to-end tests with the 1Password desktop app unavailable.
 
@@ -115,6 +115,12 @@ and authorize the existing FIFO destinations.
 
 - Observation: Stable `op` 2.34.1 lacks the Environment subcommand even though its version is newer than the first beta that introduced it.
   Evidence: `op environment read --help` reports `unknown command`, while beta 2.38.0-beta.01 exposes the command.
+
+- Observation: Gray Area declares a `michael` namespace in addition to the default and Scherzo namespaces requested for this migration.
+  Evidence: `hosts/aarch64-darwin/gray-area/default.nix` lists both `michael` and `scherzo`; service-account maps intentionally allow an omitted namespace to fail closed.
+
+- Observation: Repository-wide `nix flake check --no-build` reaches an unrelated pre-existing invalid Linux derivation while evaluating `nixosConfigurations.lima-dev` from Darwin.
+  Evidence: The check repeatedly fails on missing store path `yvv5b8kasbhy7258yqmmcwdisfhqd56x-cabal2nix-cachix.drv`, including with `eval-cache` disabled. The aarch64-darwin formatting check, Gray Area system build, both changed packages, and synthetic service-account module evaluation all pass.
 
 ## Decision Log
 
@@ -132,6 +138,14 @@ and authorize the existing FIFO destinations.
 
 - Decision: Use bounded synchronous subprocesses rather than adding an asynchronous provider framework.
   Rationale: Environment reads happen only on cache misses, strict timeouts bound impact, and this is the smallest change compatible with mitmproxy's synchronous request hook.
+  Date: 2026-07-16
+
+- Decision: Require a default Environment ID but allow named namespaces to be omitted from the service-account map.
+  Rationale: The requested rollout covers default and Scherzo. An omitted namespace fails closed, allowing Michael to remain unavailable until its Environment is deliberately granted to this service account.
+  Date: 2026-07-16
+
+- Decision: Refuse service-account token files readable by group or other users.
+  Rationale: Homeage produces mode 0400 files, and failing closed on broader permissions prevents accidental plaintext exposure during manual recovery.
   Date: 2026-07-16
 
 ## Outcomes & Retrospective
@@ -196,7 +210,7 @@ The first milestone packages the beta CLI and proves the exact binary exposes
 `op environment read`. This validates the highest external dependency risk before proxy
 code depends on it.
 
-The second milestone introduced a standalone provider module with eight passing unit tests. It proves
+The second milestone introduced a standalone provider module with nine passing unit tests. It proves
 bounded FIFO reads, service-account command construction, token isolation, namespace
 mapping, caching, timeout handling, and safe errors without requiring mitmproxy or a real
 service account.
@@ -240,9 +254,10 @@ closed with the existing generic client response.
 
 Modify `modules/darwin/dev/secret-proxy.nix` to add `provider`,
 `environmentFiles.readTimeoutSeconds`, and a `serviceAccount` option group containing
-token file, Environment ID mapping, cache TTL, command timeout, and package. Add
-assertions that service-account mode has a `default` ID and an ID for every configured
-namespace. Build backend-specific mitmdump arguments; never read the token in Nix.
+token file, Environment ID mapping, cache TTL, command timeout, and package. Add an
+assertion that service-account mode has a `default` ID. Named namespaces may be omitted
+and then fail closed. Build backend-specific mitmdump arguments; never read the token in
+Nix.
 
 Update `packages/secret-proxy/README.md` to describe both backends, headless setup,
 Homeage token handling, timeout behavior, and rollback. Correct the direct listener
