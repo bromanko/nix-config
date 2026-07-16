@@ -24,6 +24,9 @@ in
         source = ../../../configs/ssh/github-scherzo-agent.age;
         symlinks = [ "$HOME/.ssh/github-scherzo-agent" ];
       };
+      file."secret-proxy-service-account-token" = {
+        source = ../../../configs/secret-proxy/service-account-token.age;
+      };
     };
     shell = {
       commonPkgs.enable = true;
@@ -70,10 +73,16 @@ in
       lima.enable = true;
       "secret-proxy" = {
         enable = true;
+        provider = "serviceAccount";
         namespaces = [
           "michael"
           "scherzo"
         ];
+        serviceAccount.environments = {
+          default = "23cige3iryi55h4p2h5pmqcppa";
+          michael = "jzrtussqcnihcskljt5vcpl5ey";
+          scherzo = "6yr7tvsgkqeipnpaorm2kmbubu";
+        };
         contextLens.enable = true;
       };
       context-lens.enable = true;
