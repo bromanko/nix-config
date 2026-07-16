@@ -103,7 +103,7 @@ and authorize the existing FIFO destinations.
 - [x] (2026-07-16 16:29Z) Added nix-darwin provider options, assertions, and launch arguments.
 - [x] (2026-07-16 16:37Z) Updated operator documentation and ran formatting, parsing, nine unit tests, package builds, current-host evaluation, and a synthetic service-account launch-argument evaluation.
 - [x] (2026-07-16 16:42Z) Obtained all three Environment IDs, verified service-account access, and encrypted its token locally with Homeage without retaining clipboard or plaintext data.
-- [ ] Switch Gray Area to service-account mode, rebuild, and run allowed and blocked end-to-end tests with the 1Password desktop app unavailable (completed: configuration committed and generation built; blocked: activation requires an administrator password in an interactive terminal).
+- [x] (2026-07-16 17:08Z) Switched Gray Area to service-account mode, rebuilt, and passed cache-cold allowed and blocked end-to-end tests while the 1Password desktop app was stopped.
 
 ## Surprises & Discoveries
 
@@ -164,9 +164,11 @@ and authorize the existing FIFO destinations.
 
 ## Outcomes & Retrospective
 
-The implementation milestones before secret handoff are complete in three focused commits. The stable CLI remains unchanged, beta CLI use is isolated, the provider has nine unit tests, FIFO reads are bounded, and both current and future launch configurations evaluate. Gray Area remains on the proven Environment-file backend, so stopping here does not disrupt development.
+The implementation landed in focused commits with the stable CLI unchanged and beta CLI use isolated to secret-proxy. The provider has nine unit tests, FIFO reads are bounded, both launch configurations evaluate, and the Environment-file backend remains available as a one-option rollback even though Gray Area now uses the service-account backend.
 
-The service account successfully read the default, Scherzo, and Michael Environments through the pinned beta CLI. Its token is committed only as an Age-encrypted file, the clipboard was cleared, host configuration and launch arguments contain no plaintext token, and the service-account generation builds. Deployment remains incomplete because this harness cannot satisfy macOS sudo authentication; the operator must activate the built configuration interactively before end-to-end headless acceptance can be tested.
+The service account successfully read the default, Scherzo, and Michael Environments through the pinned beta CLI. Its token is committed only as an Age-encrypted file, the clipboard was cleared, and host configuration and launch arguments contain no plaintext token. The operator activated the generation interactively.
+
+Final acceptance passed with the 1Password desktop app stopped and the proxy restarted to guarantee an empty cache. The default namespace authenticated to GitHub as `bromanko`, the Scherzo namespace authenticated as `bromanko-agent`, both `.invalid` exfiltration attempts returned the generic HTTP 403 response, and all four allowed/blocked audit records were present. 1Password was reopened after the test. The original purpose—headless runtime without weakening destination policy or exposing secrets to the VM—is achieved.
 
 ## Context and Orientation
 
@@ -384,14 +386,16 @@ Never test allowlist failure against a real unauthorized host. Use the reserved
 
 ## Artifacts and Notes
 
-The live pre-change successful audit evidence was:
+The live pre-change and final headless audit evidence was:
 
     GITHUB_TOKEN: host=api.github.com blocked=false
     scherzo:GITHUB_TOKEN: host=api.github.com blocked=false
     GITHUB_TOKEN: host=not-allowed.invalid blocked=true
     scherzo:GITHUB_TOKEN: host=not-allowed.invalid blocked=true
 
-No secret values were printed while collecting this evidence.
+For final validation, the 1Password desktop app was stopped and the proxy restarted
+before these requests, proving the service-account path on a cold cache. No secret values
+were printed while collecting this evidence.
 
 ## Interfaces and Dependencies
 
