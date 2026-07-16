@@ -123,7 +123,10 @@ and authorize the existing FIFO destinations.
   Evidence: The check repeatedly fails on missing store path `yvv5b8kasbhy7258yqmmcwdisfhqd56x-cabal2nix-cachix.drv`, including with `eval-cache` disabled. The aarch64-darwin formatting check, Gray Area system build, both changed packages, and synthetic service-account module evaluation all pass.
 
 - Observation: Resolving the saved service-account item through stable `op item get` still requires one-time desktop authorization during provisioning.
-  Evidence: The metadata-only command initially timed out and then succeeded after approval, but three subsequent `op read` attempts timed out without approval. Every incomplete Age output was removed. Provisioning will use a one-time clipboard-to-Age pipe and immediately clear the clipboard instead; no plaintext file is created.
+  Evidence: The metadata-only command initially timed out and then succeeded after approval, but three subsequent `op read` attempts timed out without approval. Every incomplete Age output was removed. Provisioning used a one-time clipboard-to-Age pipe and immediately cleared the clipboard instead; no plaintext file was created.
+
+- Observation: Files decrypted by `age-plugin-op` must be encrypted to the plugin recipient from `configs/age/age-identity.txt`, not directly to the underlying SSH public key.
+  Evidence: A direct SSH stanza omitted the plugin path tag and failed with `failed to read line: EOF`. Re-encryption to the existing `age1op…` recipient produced the tagged stanza and passed a decrypt-to-`/dev/null` round trip.
 
 ## Decision Log
 
@@ -153,6 +156,10 @@ and authorize the existing FIFO destinations.
 
 - Decision: Fall back to a one-time clipboard pipe for initial token encryption when desktop CLI authorization cannot complete.
   Rationale: The token remains local and is streamed directly into Age, the clipboard is cleared immediately, and failed encryption removes its output. This is safer than a plaintext temporary file or asking the operator to expose the token in chat.
+  Date: 2026-07-16
+
+- Decision: Continue using only the existing 1Password-backed Homeage identity.
+  Rationale: Encrypting to its documented `age1op…` recipient preserves the established security model and requires no additional machine private key.
   Date: 2026-07-16
 
 ## Outcomes & Retrospective
