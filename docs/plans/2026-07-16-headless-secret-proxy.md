@@ -123,7 +123,7 @@ and authorize the existing FIFO destinations.
   Evidence: The check repeatedly fails on missing store path `yvv5b8kasbhy7258yqmmcwdisfhqd56x-cabal2nix-cachix.drv`, including with `eval-cache` disabled. The aarch64-darwin formatting check, Gray Area system build, both changed packages, and synthetic service-account module evaluation all pass.
 
 - Observation: Resolving the saved service-account item through stable `op item get` still requires one-time desktop authorization during provisioning.
-  Evidence: The metadata-only command failed with `error initializing client: authorization timeout`; no item values were emitted or persisted.
+  Evidence: The metadata-only command initially timed out and then succeeded after approval, but three subsequent `op read` attempts timed out without approval. Every incomplete Age output was removed. Provisioning will use a one-time clipboard-to-Age pipe and immediately clear the clipboard instead; no plaintext file is created.
 
 ## Decision Log
 
@@ -149,6 +149,10 @@ and authorize the existing FIFO destinations.
 
 - Decision: Refuse service-account token files readable by group or other users.
   Rationale: Homeage produces mode 0400 files, and failing closed on broader permissions prevents accidental plaintext exposure during manual recovery.
+  Date: 2026-07-16
+
+- Decision: Fall back to a one-time clipboard pipe for initial token encryption when desktop CLI authorization cannot complete.
+  Rationale: The token remains local and is streamed directly into Age, the clipboard is cleared immediately, and failed encryption removes its output. This is safer than a plaintext temporary file or asking the operator to expose the token in chat.
   Date: 2026-07-16
 
 ## Outcomes & Retrospective
