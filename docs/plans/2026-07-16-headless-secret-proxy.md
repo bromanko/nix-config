@@ -102,8 +102,8 @@ and authorize the existing FIFO destinations.
 - [x] (2026-07-16 16:22Z) Integrated provider selection into the mitmproxy addon without changing policy behavior.
 - [x] (2026-07-16 16:29Z) Added nix-darwin provider options, assertions, and launch arguments.
 - [x] (2026-07-16 16:37Z) Updated operator documentation and ran formatting, parsing, nine unit tests, package builds, current-host evaluation, and a synthetic service-account launch-argument evaluation.
-- [ ] Obtain the service-account Environment IDs and locally encrypt its token with Homeage (completed: received default, Scherzo, and Michael IDs plus the saved item ID; blocked: desktop CLI authorization timed out while resolving the token field metadata).
-- [ ] Switch Gray Area to service-account mode, rebuild, and run allowed and blocked end-to-end tests with the 1Password desktop app unavailable.
+- [x] (2026-07-16 16:42Z) Obtained all three Environment IDs, verified service-account access, and encrypted its token locally with Homeage without retaining clipboard or plaintext data.
+- [ ] Switch Gray Area to service-account mode, rebuild, and run allowed and blocked end-to-end tests with the 1Password desktop app unavailable (completed: configuration committed and generation built; blocked: activation requires an administrator password in an interactive terminal).
 
 ## Surprises & Discoveries
 
@@ -159,7 +159,7 @@ and authorize the existing FIFO destinations.
 
 The implementation milestones before secret handoff are complete in three focused commits. The stable CLI remains unchanged, beta CLI use is isolated, the provider has nine unit tests, FIFO reads are bounded, and both current and future launch configurations evaluate. Gray Area remains on the proven Environment-file backend, so stopping here does not disrupt development.
 
-Deployment remains intentionally incomplete until the operator supplies the two non-secret Environment IDs and a safe local source for encrypting the service-account token. End-to-end headless acceptance has not yet been claimed.
+The service account successfully read the default, Scherzo, and Michael Environments through the pinned beta CLI. Its token is committed only as an Age-encrypted file, the clipboard was cleared, host configuration and launch arguments contain no plaintext token, and the service-account generation builds. Deployment remains incomplete because this harness cannot satisfy macOS sudo authentication; the operator must activate the built configuration interactively before end-to-end headless acceptance can be tested.
 
 ## Context and Orientation
 
