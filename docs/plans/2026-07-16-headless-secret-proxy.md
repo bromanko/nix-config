@@ -102,7 +102,7 @@ and authorize the existing FIFO destinations.
 - [x] (2026-07-16 16:22Z) Integrated provider selection into the mitmproxy addon without changing policy behavior.
 - [x] (2026-07-16 16:29Z) Added nix-darwin provider options, assertions, and launch arguments.
 - [x] (2026-07-16 16:37Z) Updated operator documentation and ran formatting, parsing, nine unit tests, package builds, current-host evaluation, and a synthetic service-account launch-argument evaluation.
-- [ ] Obtain the service-account Environment IDs and locally encrypt its token with Homeage (blocked: waiting for the default and Scherzo IDs plus a non-secret `op://` reference to the saved token).
+- [ ] Obtain the service-account Environment IDs and locally encrypt its token with Homeage (completed: received default, Scherzo, and Michael IDs plus the saved item ID; blocked: desktop CLI authorization timed out while resolving the token field metadata).
 - [ ] Switch Gray Area to service-account mode, rebuild, and run allowed and blocked end-to-end tests with the 1Password desktop app unavailable.
 
 ## Surprises & Discoveries
@@ -121,6 +121,9 @@ and authorize the existing FIFO destinations.
 
 - Observation: Repository-wide `nix flake check --no-build` reaches an unrelated pre-existing invalid Linux derivation while evaluating `nixosConfigurations.lima-dev` from Darwin.
   Evidence: The check repeatedly fails on missing store path `yvv5b8kasbhy7258yqmmcwdisfhqd56x-cabal2nix-cachix.drv`, including with `eval-cache` disabled. The aarch64-darwin formatting check, Gray Area system build, both changed packages, and synthetic service-account module evaluation all pass.
+
+- Observation: Resolving the saved service-account item through stable `op item get` still requires one-time desktop authorization during provisioning.
+  Evidence: The metadata-only command failed with `error initializing client: authorization timeout`; no item values were emitted or persisted.
 
 ## Decision Log
 
@@ -191,9 +194,11 @@ The verified unpacked hashes are:
 - aarch64-linux: `sha256-gRG1hQKkv/+8sC2nNbhYn7BYnzuc3rU1yOLMVQu+z90=`
 - x86_64-linux: `sha256-xRmqPvl961zDnwFAVaSGUpU3ex7L3j+CtBLK8/Vys7E=`
 
-The service account has been created but its token and Environment IDs have not been
-provided to this implementation. They must never be pasted into this plan, source files,
-chat output, or command-line arguments.
+The service account has been created. The non-secret Environment IDs are default
+`23cige3iryi55h4p2h5pmqcppa`, Scherzo `6yr7tvsgkqeipnpaorm2kmbubu`, and Michael
+`jzrtussqcnihcskljt5vcpl5ey`. Its saved 1Password item ID is
+`6vt7pfcfipigtzta5ogxsfecea`. The token itself must never be pasted into this plan,
+source files, chat output, or command-line arguments.
 
 ## Scope Boundaries
 
