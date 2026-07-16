@@ -14,6 +14,11 @@ in
   power.sleep.computer = "never";
 
   modules = {
+    services = {
+      jellyfin.enable = true;
+      tubearchivistRetention.enable = true;
+    };
+
     nix = {
       system.enable = "determinate";
       dev.enable = true;
