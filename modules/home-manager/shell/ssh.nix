@@ -61,7 +61,7 @@ in
             #!/bin/sh
             stable_agent_sock="$HOME/.ssh/agent.sock"
 
-            if [ -n "$SSH_AUTH_SOCK" ] && [ -S "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$stable_agent_sock" ]; then
+            if [ "''${LIMA_SSH_AGENT_BRIDGE:-0}" != "1" ] && [ -n "$SSH_AUTH_SOCK" ] && [ -S "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$stable_agent_sock" ]; then
               mkdir -p "$HOME/.ssh"
               ln -sfn "$SSH_AUTH_SOCK" "$stable_agent_sock"
             fi
