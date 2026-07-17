@@ -9,6 +9,13 @@ in 1Password — no manual token rotation needed.
 Designed to run on a macOS host and serve a Lima NixOS VM over an SSH tunnel,
 so secrets never enter the VM.
 
+The host supports two ways to read 1Password Environments:
+
+- **Service account (recommended):** headless access through a narrowly scoped
+  service account and 1Password CLI. Values are cached only in host memory.
+- **Local Environment files (legacy/fallback):** reads 1Password's mounted UNIX
+  named pipes. The first read after 1Password locks requires GUI approval.
+
 ## How It Works
 
 A client sends a request with placeholders instead of real credentials,
@@ -92,10 +99,11 @@ the client uses the same `{{PLACEHOLDER}}` syntax for both.
 ## Namespaces
 
 Namespaces allow separate 1Password Environments for different projects
-or contexts. Each namespace has its own `.env` file with its own secrets
-and host allowlists, providing full isolation.
+or contexts. Each namespace has its own secrets and host allowlists,
+providing full isolation. Service-account mode maps namespace names to
+1Password Environment IDs. Environment-file mode maps them to mounted files.
 
-### File Layout
+### File Layout (Environment-file mode)
 
 ```
 ~/.config/secret-proxy/
@@ -123,7 +131,9 @@ one namespace cannot be accessed from another.
 
 ### 1Password Setup for Namespaces
 
-Each namespace maps to a separate 1Password Environment:
+Each namespace maps to a separate 1Password Environment. In service-account
+mode, grant the service account read access when it is created and configure
+the Environment ID in Nix. In environment-file mode:
 
 1. Open 1Password Desktop → Developer → Environments
 2. Create a new Environment named for the namespace (e.g., "michael")
@@ -133,14 +143,26 @@ Each namespace maps to a separate 1Password Environment:
 
 ### Nix Configuration
 
-Enable namespaces in the darwin host config:
+Enable namespaces and the headless provider in the Darwin host config:
 
 ```nix
 modules.dev.secret-proxy = {
   enable = true;
-  namespaces = [ "michael" ];
+  namespaces = [ "scherzo" ];
+  provider = "serviceAccount";
+  serviceAccount = {
+    tokenFile = "/Users/example/.config/age/secrets/secret-proxy-service-account-token";
+    environments = {
+      default = "default-environment-id";
+      scherzo = "scherzo-environment-id";
+    };
+  };
 };
 ```
+
+An unlisted namespace fails closed. Environment IDs are identifiers, not
+credentials; the service-account token is the only value that must be managed
+as an encrypted secret.
 
 ## Derived Secrets (Generators)
 
@@ -429,11 +451,36 @@ Blocked requests include the reason:
 | Derived token intercepted | Tokens are short-lived (e.g., 12h JWTs); private keys stay on host |
 | Generator misconfigured (missing inputs) | Missing component secrets cause fail-closed error, logged on host |
 
+## Headless Service-account Provider
+
+Create a 1Password service account on 1Password.com with read-only access to
+only the Environments the proxy needs. Environment access is immutable after
+account creation. Store its token as an encrypted Homeage source; never put the
+token directly in a Nix expression because Nix expressions and launchd plists
+are copied into the world-readable Nix store.
+
+At runtime, secret-proxy reads the Homeage-decrypted token file and invokes a
+pinned beta 1Password CLI as:
+
+```text
+op environment read <environment-id>
+```
+
+The token is passed only in the child process environment. `OP_CONNECT_HOST`
+and `OP_CONNECT_TOKEN` are removed because Connect configuration takes
+precedence over service-account authentication. Successful reads are cached by
+namespace in host memory for five minutes by default. CLI failures and timeouts
+are not cached and requests fail closed.
+
+The repository's regular stable `op` installation is unchanged. Only the proxy
+uses the separately pinned beta package that provides Environment support.
+
 ## Setup
 
 ### Prerequisites
 
-- 1Password Desktop with Developer experience enabled
+- A 1Password service account with Environment read access for headless mode,
+  or 1Password Desktop with Developer experience enabled for fallback mode
 - The `secret-proxy` nix-darwin module enabled on the host
 - The Lima NixOS VM configured as a proxy client
 
@@ -452,6 +499,13 @@ This installs mitmproxy, deploys the proxy script, and creates a launchd
 agent that runs automatically.
 
 ### 2. Configure 1Password Environments
+
+For headless mode, copy each Environment ID from **Manage environment** and add
+it to `serviceAccount.environments` in the host configuration. Encrypt the
+service-account token with Homeage and set `serviceAccount.tokenFile` to the
+decrypted runtime path.
+
+The following mounted-file steps are needed only for fallback mode.
 
 #### Default Environment (shared secrets)
 
@@ -612,8 +666,8 @@ tail -f ~/.config/secret-proxy/proxy.err
 
 ```bash
 curl -s -o /dev/null -w "%{http_code}" http://127.0.0.1:17329/
-# Should return 400 (mitmproxy is running but this isn't a proxy request)
-# Connection refused = tunnel not working
+# Any HTTP response proves the listener is reachable. Current mitmproxy returns 502
+# for this direct non-proxy request. Connection refused means the tunnel is broken.
 ```
 
 ### Request returns 403
@@ -625,11 +679,13 @@ grep "secret-proxy-audit" ~/.config/secret-proxy/proxy.log | tail -5
 ```
 
 Common causes:
-- Secret not defined in 1Password Environment
+- Secret not defined in the selected 1Password Environment
 - `_HOSTS` variable missing for the secret
 - Request host not in the allowed hosts list
-- Namespace not configured or env file not mounted
-- 1Password is locked
+- Namespace not mapped to an Environment ID
+- Service-account token missing, revoked, expired, or not authorized for the Environment
+- Beta 1Password CLI timed out or failed
+- In fallback mode, the namespace file is not mounted or its approval prompt timed out
 
 ### HTTPS certificate errors
 
@@ -661,9 +717,13 @@ Consider setting up rotation via macOS `newsyslog`. Create
 
 - **Headers and query parameters only**: Body placeholders are not scanned (by design)
 - **HTTPS requires CA**: The VM must trust the mitmproxy CA certificate
-- **1Password must be unlocked**: Secrets require an unlocked vault
-  (consider Service Accounts for unattended use)
-- **No rate limiting**: Relies on upstream API rate limits
+- **Environment-file mode needs approval**: Mounted FIFO reads require an
+  unlocked desktop vault and GUI authorization. Reads time out rather than
+  blocking the proxy indefinitely.
+- **Service-account mode uses beta CLI support**: The beta package is pinned in
+  Nix and isolated to secret-proxy. Service-account permissions and rate limits
+  still apply.
+- **No request rate limiting**: The proxy relies on upstream API rate limits
 - **Generator cache is in-memory**: Restarting the proxy clears cached
   derived secrets (they regenerate on next request, so this only adds
   a one-time latency cost)

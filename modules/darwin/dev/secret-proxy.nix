@@ -22,6 +22,33 @@ let
   ensureSecretProxyDirs = concatMapStringsSep "\n" (dir: ''
     install -d -m 0700 -o ${escapeShellArg config.user.name} -g staff ${escapeShellArg dir}
   '') secretProxyDirs;
+  providerArgs =
+    if cfg.provider == "environmentFiles" then
+      [
+        "--set"
+        "secret_proxy_provider=environment-files"
+        "--set"
+        "secret_proxy_env_file=${configDir}/secrets.env"
+        "--set"
+        "secret_proxy_namespace_dir=${namespaceDir}"
+        "--set"
+        "secret_proxy_file_read_timeout=${toString cfg.environmentFiles.readTimeoutSeconds}"
+      ]
+    else
+      [
+        "--set"
+        "secret_proxy_provider=service-account"
+        "--set"
+        "secret_proxy_op_cli=${cfg.serviceAccount.package}/bin/op"
+        "--set"
+        "secret_proxy_service_account_token_file=${cfg.serviceAccount.tokenFile}"
+        "--set"
+        "secret_proxy_environment_map=${builtins.toJSON cfg.serviceAccount.environments}"
+        "--set"
+        "secret_proxy_cache_ttl=${toString cfg.serviceAccount.cacheTtlSeconds}"
+        "--set"
+        "secret_proxy_command_timeout=${toString cfg.serviceAccount.commandTimeoutSeconds}"
+      ];
   limaHome = "${homeDir}/.lima";
 
   # Script that maintains the SSH reverse tunnel to a Lima VM.
@@ -67,6 +94,61 @@ in
       description = "Port for the secret proxy to listen on";
     };
 
+    provider = mkOption {
+      type = types.enum [
+        "environmentFiles"
+        "serviceAccount"
+      ];
+      default = "environmentFiles";
+      description = "1Password Environment provider used by secret-proxy";
+    };
+
+    environmentFiles.readTimeoutSeconds = mkOption {
+      type = types.ints.positive;
+      default = 15;
+      description = "Maximum time to wait for 1Password local Environment approval";
+    };
+
+    serviceAccount = {
+      tokenFile = mkOption {
+        type = types.str;
+        default = "${homeDir}/.config/age/secrets/secret-proxy-service-account-token";
+        description = "Runtime path to the Homeage-decrypted service-account token";
+      };
+
+      environments = mkOption {
+        type = types.attrsOf types.str;
+        default = { };
+        example = {
+          default = "environment-id";
+          scherzo = "environment-id";
+        };
+        description = ''
+          Mapping from placeholder namespace to 1Password Environment ID.
+          The unqualified placeholder namespace uses the key "default".
+          Unlisted namespaces fail closed.
+        '';
+      };
+
+      cacheTtlSeconds = mkOption {
+        type = types.ints.unsigned;
+        default = 300;
+        description = "Time to cache fetched Environment values in host memory";
+      };
+
+      commandTimeoutSeconds = mkOption {
+        type = types.ints.positive;
+        default = 15;
+        description = "Maximum time to wait for 1Password CLI";
+      };
+
+      package = mkOption {
+        type = types.package;
+        default = pkgs.my."1password-cli-beta";
+        description = "1Password CLI package with Environment support";
+      };
+    };
+
     limaInstance = mkOption {
       type = types.str;
       default = "lima-dev";
@@ -77,9 +159,9 @@ in
       type = types.listOf types.str;
       default = [ ];
       description = ''
-        List of namespace names. Each namespace has its own 1Password
-        Environment mounted at ~/.config/secret-proxy/namespaces/<name>/secrets.env.
-        Clients reference namespaced secrets with {{namespace:SECRET_NAME}}.
+        List of namespace names available to secret-proxy. Environment-file
+        mode mounts each under ~/.config/secret-proxy/namespaces/<name>/secrets.env.
+        Service-account mode resolves configured Environment IDs instead.
       '';
     };
 
@@ -95,6 +177,20 @@ in
   };
 
   config = mkIf cfg.enable {
+    assertions = optionals (cfg.provider == "serviceAccount") [
+      {
+        assertion = cfg.serviceAccount.tokenFile != "";
+        message = "modules.dev.secret-proxy.serviceAccount.tokenFile must not be empty";
+      }
+      {
+        assertion = (cfg.serviceAccount.environments.default or "") != "";
+        message = ''
+          modules.dev.secret-proxy.serviceAccount.environments.default must contain
+          the default 1Password Environment ID
+        '';
+      }
+    ];
+
     # mitmproxy pins strict upper bounds on dependencies (e.g. aioquic<=1.2.0)
     # that nixpkgs routinely exceeds with compatible minor/patch bumps.
     # Relax all dependency version constraints and skip tests to avoid
@@ -115,8 +211,8 @@ in
 
     environment.systemPackages = [ pkgs.mitmproxy ];
 
-    # Ensure 1Password Environment destinations exist before launchd starts
-    # secret-proxy. 1Password mounts its .env files inside these directories.
+    # Keep fallback 1Password Environment destination directories available.
+    # This also preserves a one-option rollback from service-account mode.
     system.activationScripts.postActivation.text = ensureSecretProxyDirs;
 
     # Rotate launchd log files: keep 3 archives, rotate at 1 MB.
@@ -157,10 +253,9 @@ in
           (toString cfg.port)
           "-s"
           "${secretProxyPkg}/lib/secret-proxy/secret_proxy.py"
-          "--set"
-          "secret_proxy_env_file=${configDir}/secrets.env"
-          "--set"
-          "secret_proxy_namespace_dir=${namespaceDir}"
+        ]
+        ++ providerArgs
+        ++ [
           "--set"
           "block_global=false"
         ]

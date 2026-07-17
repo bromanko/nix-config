@@ -56,10 +56,16 @@ import re
 import time
 from datetime import datetime, timezone
 from pathlib import Path
-from typing import Callable, Optional
+from typing import Optional
 
 from mitmproxy import ctx, http as mhttp
 from mitmproxy.addonmanager import Loader
+
+from secret_provider import (
+    EnvironmentFileProvider,
+    OnePasswordServiceAccountProvider,
+    SecretProviderError,
+)
 
 # PyJWT is optional — only required when using JWT-based generators.
 # The import is deferred so the proxy starts even if PyJWT isn't installed;
@@ -212,57 +218,7 @@ def parse_placeholder(placeholder: str) -> tuple[Optional[str], str]:
     return None, placeholder
 
 
-# ── Env file loading ──────────────────────────────────────────────────
-
-def load_env_from_path(path: Path) -> dict[str, str]:
-    """
-    Load all variables from a .env file.
-
-    For 1Password Environments, this is a UNIX named pipe that returns
-    secrets on read. We read fresh each time to pick up changes.
-
-    Returns a dict of all KEY=VALUE pairs (both secrets and _HOSTS variables).
-    """
-    if not path.exists():
-        ctx.log.warn(f"secret-proxy: Env file not found: {path}")
-        return {}
-
-    env_vars = {}
-
-    try:
-        with open(path) as f:
-            content = f.read()
-
-        for line in content.splitlines():
-            line = line.strip()
-
-            # Skip comments and empty lines
-            if not line or line.startswith('#'):
-                continue
-
-            # Parse KEY=VALUE
-            if '=' not in line:
-                continue
-
-            key, _, value = line.partition('=')
-            key = key.strip()
-            value = value.strip()
-
-            # Remove surrounding quotes if present
-            if len(value) >= 2:
-                if (value[0] == '"' and value[-1] == '"') or \
-                   (value[0] == "'" and value[-1] == "'"):
-                    value = value[1:-1]
-
-            if key:
-                env_vars[key] = value
-
-        return env_vars
-
-    except Exception as e:
-        ctx.log.error(f"secret-proxy: Failed to load env file {path}: {e}")
-        return {}
-
+# ── Environment variable parsing ─────────────────────────────────────
 
 def parse_secrets_and_hosts(
     env_vars: dict[str, str],
@@ -306,16 +262,15 @@ class SecretProxy:
     """
     Scans HTTP request headers and query parameters for {{PLACEHOLDER}} or
     {{namespace:PLACEHOLDER}} patterns and replaces them with secrets from
-    1Password Environment .env files.
+    a configured 1Password Environment provider.
 
     Secrets can be either:
     - **Direct**: The value is read straight from the env file
     - **Derived**: A registered generator computes the value from component
       secrets (e.g., signing a JWT from a private key + key ID + issuer)
 
-    Namespacing allows separate 1Password Environments per project. Each
-    namespace has its own env file under the namespace directory. Placeholders
-    without a namespace use the default env file.
+    Namespacing allows separate 1Password Environments per project.
+    Placeholders without a namespace use the default Environment.
 
     Security model:
     - Each secret must have a corresponding _HOSTS variable defining allowed destinations
@@ -327,8 +282,8 @@ class SecretProxy:
     """
 
     def __init__(self):
-        self.env_file_path: Optional[Path] = None
-        self.namespace_dir: Optional[Path] = None
+        self.provider_name: str = "environment-files"
+        self._secret_provider = None
 
         # Cache for derived (generated) secrets
         self._derived_cache = DerivedSecretCache()
@@ -343,6 +298,12 @@ class SecretProxy:
 
     def load(self, loader: Loader):
         loader.add_option(
+            name="secret_proxy_provider",
+            typespec=str,
+            default="environment-files",
+            help="Secret provider: environment-files or service-account",
+        )
+        loader.add_option(
             name="secret_proxy_env_file",
             typespec=str,
             default="",
@@ -353,6 +314,42 @@ class SecretProxy:
             typespec=str,
             default="",
             help="Directory containing per-namespace env files (each in <name>/secrets.env)",
+        )
+        loader.add_option(
+            name="secret_proxy_file_read_timeout",
+            typespec=int,
+            default=15,
+            help="Maximum seconds to wait for a local Environment FIFO read",
+        )
+        loader.add_option(
+            name="secret_proxy_op_cli",
+            typespec=str,
+            default="op",
+            help="Path to a 1Password CLI with Environment support",
+        )
+        loader.add_option(
+            name="secret_proxy_service_account_token_file",
+            typespec=str,
+            default="",
+            help="Path to the Homeage-decrypted service-account token",
+        )
+        loader.add_option(
+            name="secret_proxy_environment_map",
+            typespec=str,
+            default="{}",
+            help="JSON mapping from namespace names to 1Password Environment IDs",
+        )
+        loader.add_option(
+            name="secret_proxy_cache_ttl",
+            typespec=int,
+            default=300,
+            help="Seconds to cache service-account Environment variables in memory",
+        )
+        loader.add_option(
+            name="secret_proxy_command_timeout",
+            typespec=int,
+            default=15,
+            help="Maximum seconds to wait for 1Password CLI",
         )
         loader.add_option(
             name="context_lens_enabled",
@@ -368,13 +365,19 @@ class SecretProxy:
         )
 
     def configure(self, updated: set[str]):
-        if "secret_proxy_env_file" in updated and ctx.options.secret_proxy_env_file:
-            self.env_file_path = Path(ctx.options.secret_proxy_env_file).expanduser()
-            ctx.log.info(f"secret-proxy: Default secrets from {self.env_file_path}")
-
-        if "secret_proxy_namespace_dir" in updated and ctx.options.secret_proxy_namespace_dir:
-            self.namespace_dir = Path(ctx.options.secret_proxy_namespace_dir).expanduser()
-            ctx.log.info(f"secret-proxy: Namespace directory: {self.namespace_dir}")
+        provider_options = {
+            "secret_proxy_provider",
+            "secret_proxy_env_file",
+            "secret_proxy_namespace_dir",
+            "secret_proxy_file_read_timeout",
+            "secret_proxy_op_cli",
+            "secret_proxy_service_account_token_file",
+            "secret_proxy_environment_map",
+            "secret_proxy_cache_ttl",
+            "secret_proxy_command_timeout",
+        }
+        if updated & provider_options:
+            self._configure_secret_provider()
 
         if "context_lens_enabled" in updated:
             self.context_lens_enabled = ctx.options.context_lens_enabled
@@ -385,6 +388,69 @@ class SecretProxy:
 
         if "context_lens_port" in updated:
             self.context_lens_port = ctx.options.context_lens_port
+
+    def _configure_secret_provider(self) -> None:
+        self.provider_name = ctx.options.secret_proxy_provider
+        self._secret_provider = None
+
+        if self.provider_name == "environment-files":
+            if (
+                not ctx.options.secret_proxy_env_file
+                or not ctx.options.secret_proxy_namespace_dir
+            ):
+                ctx.log.error(
+                    "secret-proxy: Environment file provider paths are incomplete"
+                )
+                return
+
+            default_env_file = Path(ctx.options.secret_proxy_env_file).expanduser()
+            namespace_dir = Path(ctx.options.secret_proxy_namespace_dir).expanduser()
+            self._secret_provider = EnvironmentFileProvider(
+                default_env_file=default_env_file,
+                namespace_dir=namespace_dir,
+                read_timeout_seconds=ctx.options.secret_proxy_file_read_timeout,
+            )
+            ctx.log.info(f"secret-proxy: Default secrets from {default_env_file}")
+            ctx.log.info(f"secret-proxy: Namespace directory: {namespace_dir}")
+            return
+
+        if self.provider_name == "service-account":
+            try:
+                environment_ids = json.loads(ctx.options.secret_proxy_environment_map)
+            except json.JSONDecodeError:
+                ctx.log.error("secret-proxy: Environment ID mapping is not valid JSON")
+                return
+
+            if not isinstance(environment_ids, dict) or not all(
+                isinstance(key, str) and isinstance(value, str)
+                for key, value in environment_ids.items()
+            ):
+                ctx.log.error(
+                    "secret-proxy: Environment ID mapping must contain string values"
+                )
+                return
+            if not ctx.options.secret_proxy_service_account_token_file:
+                ctx.log.error(
+                    "secret-proxy: Service-account token file is not configured"
+                )
+                return
+
+            self._secret_provider = OnePasswordServiceAccountProvider(
+                op_cli=ctx.options.secret_proxy_op_cli,
+                token_file=Path(
+                    ctx.options.secret_proxy_service_account_token_file
+                ).expanduser(),
+                environment_ids=environment_ids,
+                cache_ttl_seconds=ctx.options.secret_proxy_cache_ttl,
+                command_timeout_seconds=ctx.options.secret_proxy_command_timeout,
+            )
+            ctx.log.info(
+                "secret-proxy: Service-account provider configured for namespaces: "
+                + ", ".join(sorted(environment_ids))
+            )
+            return
+
+        ctx.log.error(f"secret-proxy: Unknown secret provider: {self.provider_name}")
 
     def _is_context_lens_alive(self) -> bool:
         """
@@ -451,35 +517,23 @@ class SecretProxy:
             f"{original_url} → http://127.0.0.1:{self.context_lens_port}/{prefix}/..."
         )
 
-    def _env_file_for_namespace(self, namespace: Optional[str]) -> Optional[Path]:
-        """
-        Return the env file path for a given namespace.
-
-        None namespace -> default env file
-        Named namespace -> <namespace_dir>/<namespace>/secrets.env
-        """
-        if namespace is None:
-            return self.env_file_path
-
-        if not self.namespace_dir:
-            return None
-
-        return self.namespace_dir / namespace / "secrets.env"
-
     def _load_namespace(
         self, namespace: Optional[str]
     ) -> tuple[dict[str, str], dict[str, set[str]], dict[str, str]]:
-        """
-        Load and parse secrets, hosts, and generators for a given namespace.
-
-        Returns (secrets, allowed_hosts, generators) or empty dicts if the
-        env file doesn't exist.
-        """
-        path = self._env_file_for_namespace(namespace)
-        if path is None:
+        """Load and parse one namespace, returning empty data on provider failure."""
+        if self._secret_provider is None:
+            ctx.log.error("secret-proxy: Secret provider is not configured")
             return {}, {}, {}
 
-        env_vars = load_env_from_path(path)
+        try:
+            env_vars = self._secret_provider.load(namespace)
+        except SecretProviderError as error:
+            label = "default" if namespace is None else namespace
+            ctx.log.error(
+                f"secret-proxy: Failed to load namespace '{label}': {error}"
+            )
+            return {}, {}, {}
+
         return parse_secrets_and_hosts(env_vars)
 
     def _find_placeholders(self, value: str) -> list[str]:
@@ -653,18 +707,6 @@ class SecretProxy:
             namespace, key = parse_placeholder(placeholder)
             ns_label = f"{namespace}:" if namespace else ""
             secrets, allowed_hosts, generators = namespace_data[namespace]
-
-            # Check if the namespace env file was loadable
-            env_path = self._env_file_for_namespace(namespace)
-            if env_path is None:
-                self._block_request(
-                    flow,
-                    unique_placeholders,
-                    f"Namespace not configured: {namespace}"
-                    if namespace
-                    else "Default env file not configured",
-                )
-                return
 
             # Resolve: direct secret or derived via generator
             if key not in secrets:
