@@ -102,6 +102,7 @@ in
   services.openssh = {
     enable = true;
     settings = {
+      AcceptEnv = [ "LIMA_SSH_AGENT_BRIDGE" ];
       PermitRootLogin = "no";
       PasswordAuthentication = false;
     };
@@ -219,6 +220,14 @@ in
         '';
       };
       jujutsu.settings.ui.editor = "nvim";
+
+      # Managed Git operations use the dedicated host-maintained agent bridge,
+      # not the ephemeral socket associated with Lima's SSH control master.
+      ssh.settings.github-scherzo-agent = {
+        IdentityAgent = "~/.ssh/host-agent.sock";
+        AddKeysToAgent = "no";
+        BatchMode = "yes";
+      };
 
       # Bypass the MITM proxy for git operations to github.com so that
       # git/jj can fetch without needing to trust the proxy CA.

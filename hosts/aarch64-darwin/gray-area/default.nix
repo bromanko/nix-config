@@ -75,7 +75,13 @@ in
         enable = true;
         claudeCodeUse.enable = true;
       };
-      lima.enable = true;
+      lima = {
+        enable = true;
+        sshAgentBridge = {
+          enable = true;
+          identityFiles = [ ".ssh/github-scherzo-agent" ];
+        };
+      };
       "secret-proxy" = {
         enable = true;
         provider = "serviceAccount";
