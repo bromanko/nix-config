@@ -137,10 +137,6 @@ with lib.my;
               run = "move-node-to-workspace 5";
             }
             {
-              "if".app-id = "com.openai.chat";
-              run = "move-node-to-workspace 5";
-            }
-            {
               "if".app-id = "com.anthropic.claudefordesktop";
               run = "move-node-to-workspace 5";
             }
@@ -171,7 +167,10 @@ with lib.my;
       nodejs.enable = true;
       codex.enable = true;
       claude-code.enable = true;
-      pi.enable = true;
+      pi = {
+        enable = true;
+        claudeCodeUse.enable = true;
+      };
       lima.enable = true;
       "secret-proxy" = {
         enable = true;
@@ -220,6 +219,7 @@ with lib.my;
         "utm"
         "crystalfetch"
         "calibre"
+        # Homebrew's chatgpt cask is the new all-in-one ChatGPT/Codex desktop app.
         "chatgpt"
         "obsidian"
         "sony-ps-remote-play"
@@ -244,7 +244,6 @@ with lib.my;
           my.sprite
           my.ticket
           my.chrome-devtools-mcp
-          my.codex-app
           devenv
           podman
         ])
