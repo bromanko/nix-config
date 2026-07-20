@@ -163,6 +163,10 @@ with lib.my;
       elixir.enable = true;
       idea.enable = true;
       psql.enable = true;
+      secretspec = {
+        enable = true;
+        settings.defaults.providers.scherzo_cloud_dev = "onepassword://Development";
+      };
       docker.enable = true;
       nodejs.enable = true;
       codex.enable = true;
