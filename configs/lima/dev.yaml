@@ -14,9 +14,9 @@ user:
   # Match the NixOS host config, which forces /home/<user>.linux for Lima.
   home: "/home/{{.User}}.linux"
 
-cpus: 4
+cpus: 6
 memory: "12GiB"
-disk: "100GiB"
+disk: "150GiB"
 
 # No host mounts — full isolation between host and guest.
 # Code is cloned independently inside the VM.
