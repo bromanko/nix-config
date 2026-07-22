@@ -103,6 +103,15 @@ with lib.my;
         vscode.enable = true;
         claude.enable = true;
         multitouch.enable = true;
+        swiftbar = {
+          enable = true;
+          buildkite = {
+            enable = true;
+            organization = "scherzo";
+            pipeline = "scherzo-cloud";
+            displayName = "Scherzo Cloud";
+          };
+        };
         screencast = {
           enable = true;
           keycastr.enable = true;
