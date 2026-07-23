@@ -58,6 +58,9 @@ items:
       - name: New
         key: c
         command: "neww -c #{pane_current_path}"
+      - name: New pi
+        key: C
+        command: "neww -c #{pane_current_path} pi"
       - separator: true
       - name: +Layout
         key: l
