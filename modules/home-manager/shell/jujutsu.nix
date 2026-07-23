@@ -242,6 +242,7 @@ in
       '';
 
       xdg.configFile."jjui/config.toml".text = ''
+        [ui]
         theme = "base24-catppuccin-mocha"
 
         # Use non-split delta in preview to avoid width detection issues
