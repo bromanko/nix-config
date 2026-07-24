@@ -178,7 +178,6 @@ with lib.my;
       };
       docker.enable = true;
       nodejs.enable = true;
-      codex.enable = true;
       claude-code.enable = true;
       pi = {
         enable = true;
