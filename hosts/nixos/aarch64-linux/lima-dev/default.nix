@@ -23,9 +23,11 @@ let
     "api.flakehub.com"
     "cache.flakehub.com"
     "*.githubusercontent.com"
-    # OpenAI Codex/ChatGPT traffic uses OAuth credentials already held by pi.
-    # Context Lens currently stalls Codex response streams when routed through
-    # secret-proxy, so bypass the proxy for these non-placeholder requests.
+    # OAuth login/token-exchange traffic uses credentials already held by pi.
+    # It does not contain secret-proxy placeholders, and login should keep
+    # working even if the Lima reverse tunnel is not yet established.
+    "platform.claude.com"
+    "claude.ai"
     "chatgpt.com"
     "auth.openai.com"
     "status.openai.com"
