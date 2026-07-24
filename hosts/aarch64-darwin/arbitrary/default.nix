@@ -103,6 +103,15 @@ with lib.my;
         vscode.enable = true;
         claude.enable = true;
         multitouch.enable = true;
+        swiftbar = {
+          enable = true;
+          buildkite = {
+            enable = true;
+            organization = "scherzo";
+            pipeline = "scherzo-cloud";
+            displayName = "Scherzo Cloud";
+          };
+        };
         screencast = {
           enable = true;
           keycastr.enable = true;
@@ -137,10 +146,6 @@ with lib.my;
               run = "move-node-to-workspace 5";
             }
             {
-              "if".app-id = "com.openai.chat";
-              run = "move-node-to-workspace 5";
-            }
-            {
               "if".app-id = "com.anthropic.claudefordesktop";
               run = "move-node-to-workspace 5";
             }
@@ -167,11 +172,17 @@ with lib.my;
       elixir.enable = true;
       idea.enable = true;
       psql.enable = true;
+      secretspec = {
+        enable = true;
+        settings.defaults.providers.scherzo_cloud_dev = "onepassword://Development";
+      };
       docker.enable = true;
       nodejs.enable = true;
-      codex.enable = true;
       claude-code.enable = true;
-      pi.enable = true;
+      pi = {
+        enable = true;
+        claudeCodeUse.enable = true;
+      };
       lima.enable = true;
       "secret-proxy" = {
         enable = true;
@@ -220,6 +231,7 @@ with lib.my;
         "utm"
         "crystalfetch"
         "calibre"
+        # Homebrew's chatgpt cask is the new all-in-one ChatGPT/Codex desktop app.
         "chatgpt"
         "obsidian"
         "sony-ps-remote-play"
@@ -244,7 +256,6 @@ with lib.my;
           my.sprite
           my.ticket
           my.chrome-devtools-mcp
-          my.codex-app
           devenv
           podman
         ])
