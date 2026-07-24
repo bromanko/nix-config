@@ -87,7 +87,6 @@ in
         "openai-codex/gpt-5.5:xhigh"
         "anthropic/claude-opus-5:max"
         "anthropic/claude-fable-5:xhigh"
-        "anthropic/claude-opus-4-8:max"
         "anthropic/claude-opus-4-6:max"
       ];
       branchSummary = {
