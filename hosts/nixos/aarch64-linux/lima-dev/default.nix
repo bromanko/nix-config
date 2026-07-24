@@ -177,7 +177,10 @@ in
       nodejs.enable = true;
       codex.enable = false;
       claude-code.enable = true;
-      pi.enable = true;
+      pi = {
+        enable = true;
+        claudeCodeUse.enable = true;
+      };
     };
     term = {
       tmux.enable = true;
