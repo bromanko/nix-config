@@ -78,7 +78,7 @@
           overlays = [
             nur.overlays.default
             emacs-overlay.overlay
-            inputs.llm-agents.overlays.default
+            inputs.llm-agents.overlays.shared-nixpkgs
             (
               _final: prev:
               nixpkgs.lib.optionalAttrs prev.stdenv.isDarwin {
