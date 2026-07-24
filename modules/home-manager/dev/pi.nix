@@ -81,14 +81,14 @@ in
       hideThinkingBlock = true;
       enabledModels = [
         "openai-codex/gpt-5.6-sol:xhigh"
-        # :minimal maps to backend ultra for gpt-5.6-sol in models.json.
-        "openai-codex/gpt-5.6-sol:minimal"
+        "openai-codex/gpt-5.6-sol:max"
         "openai-codex/gpt-5.6-terra:xhigh"
         "openai-codex/gpt-5.6-luna:xhigh"
         "openai-codex/gpt-5.5:xhigh"
+        "anthropic/claude-opus-5:max"
         "anthropic/claude-fable-5:xhigh"
-        "anthropic/claude-opus-4-8:xhigh"
-        "anthropic/claude-opus-4-6:xhigh"
+        "anthropic/claude-opus-4-8:max"
+        "anthropic/claude-opus-4-6:max"
       ];
       branchSummary = {
         skipPrompt = true;
@@ -135,93 +135,36 @@ in
     };
 
     # Model registry written to ~/.pi/agent/models.json.
-    # Pi keeps built-in provider models, applies modelOverrides, and upserts
-    # custom models by id.
+    # Remove custom models once they are included in Pi's built-in catalog.
     models = mkOpt attrs {
-      providers = {
-        anthropic = {
-          # Remap Opus 4.8's top thinking rung (pi's `xhigh`) onto Anthropic's
-          # `max` effort, matching what Opus 4.6 ships with.
-          modelOverrides = {
-            "claude-opus-4-8" = {
-              thinkingLevelMap = {
-                xhigh = "max";
-              };
-            };
+      providers.anthropic.models = [
+        {
+          id = "claude-opus-5";
+          name = "Claude Opus 5";
+          reasoning = true;
+          thinkingLevelMap = {
+            xhigh = "xhigh";
+            max = "max";
           };
-        };
-
-        "openai-codex" = {
-          models = [
-            {
-              id = "gpt-5.6-sol";
-              name = "GPT-5.6 Sol";
-              reasoning = true;
-              # Pi does not expose max/ultra as native thinking levels yet.
-              # Use :minimal as the UI/CLI alias for backend ultra, while
-              # keeping :xhigh mapped to backend xhigh.
-              thinkingLevelMap = {
-                minimal = "ultra";
-                xhigh = "xhigh";
-              };
-              input = [
-                "text"
-                "image"
-              ];
-              contextWindow = 372000;
-              maxTokens = 128000;
-              cost = {
-                input = 0;
-                output = 0;
-                cacheRead = 0;
-                cacheWrite = 0;
-              };
-            }
-            {
-              id = "gpt-5.6-terra";
-              name = "GPT-5.6 Terra";
-              reasoning = true;
-              thinkingLevelMap = {
-                minimal = "low";
-                xhigh = "xhigh";
-              };
-              input = [
-                "text"
-                "image"
-              ];
-              contextWindow = 372000;
-              maxTokens = 128000;
-              cost = {
-                input = 0;
-                output = 0;
-                cacheRead = 0;
-                cacheWrite = 0;
-              };
-            }
-            {
-              id = "gpt-5.6-luna";
-              name = "GPT-5.6 Luna";
-              reasoning = true;
-              thinkingLevelMap = {
-                minimal = "low";
-                xhigh = "xhigh";
-              };
-              input = [
-                "text"
-                "image"
-              ];
-              contextWindow = 372000;
-              maxTokens = 128000;
-              cost = {
-                input = 0;
-                output = 0;
-                cacheRead = 0;
-                cacheWrite = 0;
-              };
-            }
+          input = [
+            "text"
+            "image"
           ];
-        };
-      };
+          contextWindow = 1000000;
+          maxTokens = 128000;
+          cost = {
+            input = 5;
+            output = 25;
+            cacheRead = 0.5;
+            cacheWrite = 6.25;
+          };
+          compat = {
+            forceAdaptiveThinking = true;
+            supportsTemperature = false;
+            supportsStrictTools = true;
+          };
+        }
+      ];
     };
 
     # Design Studio settings written to ~/.pi/agent/design-studio.json.
