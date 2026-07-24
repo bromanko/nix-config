@@ -8,16 +8,16 @@
 # pi-sub-bar has only 2 runtime deps (pi-sub-core, pi-sub-shared) with no
 # further transitive dependencies, so we can wire up node_modules directly.
 let
-  version = "1.3.0";
+  version = "1.5.0";
 
   pi-sub-shared = fetchzip {
     url = "https://registry.npmjs.org/@marckrenn/pi-sub-shared/-/pi-sub-shared-${version}.tgz";
-    hash = "sha256-Y6hGljD+0rWZ8xC005Tg188KBit+I8F+u0MZmAiNFOE=";
+    hash = "sha256-aZg/hXNa6cU7IrrhkGsHeUUO5c/YsUoW8HYlf7afWM4=";
   };
 
   pi-sub-core = fetchzip {
     url = "https://registry.npmjs.org/@marckrenn/pi-sub-core/-/pi-sub-core-${version}.tgz";
-    hash = "sha256-t8+036k/ZpbFZ5d0DlkYALzraBfY6GrHhfMtrpyTxBY=";
+    hash = "sha256-vBl7ribwxgkLE/zS7A0AHnZcowZ9ViPceTsGtRcPIOo=";
   };
 in
 stdenv.mkDerivation {
@@ -26,7 +26,7 @@ stdenv.mkDerivation {
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@marckrenn/pi-sub-bar/-/pi-sub-bar-${version}.tgz";
-    hash = "sha256-gC0fNee/iwulstlZFiosxVUHOMMULkVb8PCEhONCSzw=";
+    hash = "sha256-OKcBxTIjilFAI2xaCHgzeyA/gwE6essdf+S8/z4ZnVE=";
   };
 
   dontBuild = true;
