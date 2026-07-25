@@ -116,14 +116,20 @@ in
   # Nix configuration
   modules.nix.system.enable = "default";
 
-  nix.settings = {
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    trusted-users = [ "@wheel" ];
-    max-jobs = 1;
-    cores = 2;
+  nix = {
+    gc.dates = lib.mkForce "daily";
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [ "@wheel" ];
+      max-jobs = 1;
+      cores = 2;
+      # Trigger garbage collection before large development builds fill root.
+      min-free = 10 * 1024 * 1024 * 1024;
+      max-free = 20 * 1024 * 1024 * 1024;
+    };
   };
 
   # Override user home directory to match Lima's convention (appends .linux).
