@@ -94,9 +94,7 @@ in
           michael = "jzrtussqcnihcskljt5vcpl5ey";
           scherzo = "6yr7tvsgkqeipnpaorm2kmbubu";
         };
-        contextLens.enable = true;
       };
-      context-lens.enable = true;
     };
     term = {
       ghostty.enable = true;
