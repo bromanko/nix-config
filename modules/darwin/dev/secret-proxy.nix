@@ -72,13 +72,16 @@ let
     }
 
     guest_proxy_listening() {
+      # SSH evaluates remote commands with the guest's login shell, which may
+      # be Fish. Keep the outer command shell-agnostic and perform the TCP
+      # redirection explicitly in Bash.
       /usr/bin/ssh \
         -F "$LIMA_SSH_CONFIG" \
         -o BatchMode=yes \
         -o ConnectTimeout=5 \
         -o ConnectionAttempts=1 \
         "$LIMA_HOST" \
-        "if command -v nc >/dev/null 2>&1; then nc -z 127.0.0.1 $PORT; elif command -v bash >/dev/null 2>&1; then bash -lc '</dev/tcp/127.0.0.1/$PORT'; elif command -v ss >/dev/null 2>&1; then ss -H -ltn 'sport = :$PORT' | grep -q .; else exit 1; fi" \
+        "bash -lc '</dev/tcp/127.0.0.1/$PORT'" \
         >/dev/null 2>&1
     }
 
