@@ -163,7 +163,10 @@ in
     shell = {
       commonPkgs.enable = true;
       openssh.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+        forwardedAgentRecovery.enable = true;
+      };
       "1password".enable = true;
       fish.enable = true;
       bat.enable = true;
@@ -205,6 +208,7 @@ in
         ncurses
         devenv
       ];
+
       # Placeholder tokens — replaced by secret-proxy with real values from
       # the host's 1Password Environment. See packages/secret-proxy/README.md.
       sessionVariables = {
