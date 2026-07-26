@@ -270,6 +270,7 @@ with lib.my;
       };
     };
 
+    programs.jujutsu.settings.ui.editor = "nvim";
     programs.ssh.settings = {
       github = github1PasswordIdentity // {
         header = "Host github.com";
