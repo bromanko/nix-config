@@ -71,15 +71,29 @@ let
         && /usr/bin/ssh -F "$LIMA_SSH_CONFIG" -O check "$LIMA_HOST" >/dev/null 2>&1
     }
 
-    guest_proxy_listening() {
+    guest_proxy_healthy() {
+      # SSH evaluates remote commands with the guest's login shell, which may
+      # be Fish. Keep the outer command shell-agnostic and perform the proxy
+      # health check explicitly in Bash. A TCP-only check is not enough: after
+      # the host proxy restarts, sshd can keep a stale remote listener that
+      # accepts and then resets connections.
       /usr/bin/ssh \
         -F "$LIMA_SSH_CONFIG" \
         -o BatchMode=yes \
         -o ConnectTimeout=5 \
         -o ConnectionAttempts=1 \
         "$LIMA_HOST" \
-        "if command -v nc >/dev/null 2>&1; then nc -z 127.0.0.1 $PORT; elif command -v bash >/dev/null 2>&1; then bash -lc '</dev/tcp/127.0.0.1/$PORT'; elif command -v ss >/dev/null 2>&1; then ss -H -ltn 'sport = :$PORT' | grep -q .; else exit 1; fi" \
+        "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/$PORT || exit 1; printf \"GARBAGE\\r\\n\\r\\n\" >&3; IFS= read -r -t 5 line <&3 || exit 1; [[ \"\$line\" == HTTP/* ]]'" \
         >/dev/null 2>&1
+    }
+
+    cancel_forward() {
+      /usr/bin/ssh \
+        -F "$LIMA_SSH_CONFIG" \
+        -O cancel \
+        -R "127.0.0.1:$PORT:127.0.0.1:$PORT" \
+        "$LIMA_HOST" \
+        >/dev/null 2>&1 || true
     }
 
     establish_forward() {
@@ -98,18 +112,19 @@ let
         sleep 5
       done
 
-      if guest_proxy_listening; then
+      if guest_proxy_healthy; then
         sleep 10
         continue
       fi
 
-      log "guest port 127.0.0.1:$PORT is closed; requesting reverse forward"
+      log "guest proxy health check failed; recreating reverse forward"
+      cancel_forward
       if establish_forward; then
         sleep 1
-        if guest_proxy_listening; then
+        if guest_proxy_healthy; then
           log "reverse tunnel established"
         else
-          log "reverse tunnel command succeeded but guest port is still closed"
+          log "reverse tunnel command succeeded but proxy health check still fails"
           sleep 5
         fi
       else
