@@ -175,6 +175,7 @@ with lib.my;
       secretspec = {
         enable = true;
         settings.defaults.providers.scherzo_cloud_dev = "onepassword://Development";
+        settings.defaults.providers.scherzo_cloud_infra = "onepassword://Development";
       };
       docker.enable = true;
       nodejs.enable = true;
