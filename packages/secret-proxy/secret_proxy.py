@@ -50,9 +50,9 @@ Usage:
       --set context_lens_port=4040
 """
 
-import http.client
 import json
 import re
+import socket
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -184,6 +184,13 @@ CONTEXT_LENS_HOSTS: dict[str, str] = {
     "generativelanguage.googleapis.com": "gemini",
     "cloudcode-pa.googleapis.com": "gemini",
     "us-central1-aiplatform.googleapis.com": "vertex",
+}
+
+# Provider control-plane requests do not carry model context and can be
+# sensitive to proxy behavior, retries, and rate limits. Leave them on the
+# direct secret-proxy path instead of sending them through Context Lens.
+CONTEXT_LENS_BYPASS_PATH_PREFIXES: dict[str, tuple[str, ...]] = {
+    "api.anthropic.com": ("/api/oauth/",),
 }
 
 
@@ -465,12 +472,10 @@ class SecretProxy:
 
         self._context_lens_last_check = now
         try:
-            conn = http.client.HTTPConnection(
-                "127.0.0.1", self.context_lens_port, timeout=1
-            )
-            conn.request("HEAD", "/")
-            conn.getresponse()
-            conn.close()
+            with socket.create_connection(
+                ("127.0.0.1", self.context_lens_port), timeout=1
+            ):
+                pass
             if not self._context_lens_alive:
                 ctx.log.info(
                     f"secret-proxy: Context Lens is available on port {self.context_lens_port}"
@@ -497,6 +502,15 @@ class SecretProxy:
         original_host = flow.request.host.lower()
         prefix = CONTEXT_LENS_HOSTS.get(original_host)
         if prefix is None:
+            return
+
+        path = flow.request.path.split("?", 1)[0]
+        bypass_prefixes = CONTEXT_LENS_BYPASS_PATH_PREFIXES.get(original_host, ())
+        if any(path.startswith(bypass_prefix) for bypass_prefix in bypass_prefixes):
+            ctx.log.debug(
+                f"secret-proxy: Bypassing Context Lens for control-plane request: "
+                f"{original_host}{path}"
+            )
             return
 
         if not self._is_context_lens_alive():
