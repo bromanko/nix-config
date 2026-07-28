@@ -222,6 +222,7 @@ with lib.my;
         "betterdisplay"
         "figma"
         "google-chrome"
+        "granola"
         "hazeover"
         "homerow"
         "iina"
