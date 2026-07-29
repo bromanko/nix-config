@@ -27,6 +27,16 @@ in
       };
 
       optimise = mkBoolOpt true;
+      keepDerivations = mkOption {
+        type = bool;
+        default = true;
+        description = "Whether garbage collection keeps derivations for live outputs.";
+      };
+      keepOutputs = mkOption {
+        type = bool;
+        default = true;
+        description = "Whether garbage collection keeps outputs for live derivations.";
+      };
     };
 
     caches = {

@@ -30,7 +30,8 @@ in
         nix.enable = false;
         determinateNix.customSettings = {
           flake-registry = "/etc/nix/flake-registry.json";
-          keep-outputs = true;
+          keep-derivations = cfg.system.keepDerivations;
+          keep-outputs = cfg.system.keepOutputs;
           extra-substituters = cfg.caches.extraSubstituters;
           extra-trusted-public-keys = cfg.caches.extraTrustedPublicKeys;
           trusted-users = [
@@ -77,8 +78,8 @@ in
 
           extraOptions = ''
             experimental-features = nix-command flakes
-            keep-derivations = true
-            keep-outputs = true
+            keep-derivations = ${boolToString cfg.system.keepDerivations}
+            keep-outputs = ${boolToString cfg.system.keepOutputs}
             extra-substituters = ${cfg.caches.extraSubstituters}
             extra-trusted-public-keys = ${cfg.caches.extraTrustedPublicKeys}
           ''

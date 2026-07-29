@@ -16,7 +16,8 @@ user:
 
 cpus: 6
 memory: "12GiB"
-disk: "150GiB"
+# Resize existing instances with: limactl edit lima-dev --disk 250
+disk: "250GiB"
 
 # No host mounts — full isolation between host and guest.
 # Code is cloned independently inside the VM.
