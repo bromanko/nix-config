@@ -51,15 +51,16 @@ provision:
         done
       }
 
-      # Clone nix-config if not already present. DNS can come up a few seconds
-      # after SSH, so retry instead of silently leaving the VM unconfigured.
+      # Bootstrap the NixOS configuration only when creating the VM. Rebuilding
+      # this checkout on every boot can roll back newer configurations applied
+      # from the user's working tree.
       if [ ! -d /etc/nixos/nix-config ]; then
+        # DNS can come up a few seconds after SSH, so retry instead of silently
+        # leaving the VM unconfigured.
         retry git clone https://github.com/bromanko/nix-config.git /etc/nixos/nix-config
+        cd /etc/nixos/nix-config
+        retry nixos-rebuild switch --flake .#lima-dev --option max-jobs 1 --option cores 2
       fi
-
-      # Rebuild with the NixOS flake configuration
-      cd /etc/nixos/nix-config
-      retry nixos-rebuild switch --flake .#lima-dev --option max-jobs 1 --option cores 2
 
   - mode: user
     script: |
