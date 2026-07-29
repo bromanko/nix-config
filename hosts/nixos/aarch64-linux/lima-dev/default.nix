@@ -44,6 +44,8 @@ in
 
   # Boot configuration (matches nixos-lima image layout)
   boot = {
+    # Expand the image's root partition when Lima enlarges the virtual disk.
+    growPartition = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ "console=tty0" ];
     loader.grub = {
