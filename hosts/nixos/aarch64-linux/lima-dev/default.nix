@@ -52,8 +52,10 @@ in
       efiInstallAsRemovable = true;
       configurationLimit = 3;
     };
+    # Development builds regularly exceed the RAM-backed tmpfs limit. Keep
+    # /tmp on the guest's ext4 disk; modules/linux/security.nix cleans it at boot.
     tmp = {
-      useTmpfs = true;
+      useTmpfs = false;
     };
   };
 
