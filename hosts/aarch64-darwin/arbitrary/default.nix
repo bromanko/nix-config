@@ -220,6 +220,7 @@ with lib.my;
         "anki"
         "bartender"
         "betterdisplay"
+        "fantastical"
         "figma"
         "google-chrome"
         "granola"
