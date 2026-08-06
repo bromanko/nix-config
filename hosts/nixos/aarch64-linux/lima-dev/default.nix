@@ -23,9 +23,11 @@ let
     "api.flakehub.com"
     "cache.flakehub.com"
     "*.githubusercontent.com"
-    # OpenAI Codex/ChatGPT traffic uses OAuth credentials already held by pi.
-    # Context Lens currently stalls Codex response streams when routed through
-    # secret-proxy, so bypass the proxy for these non-placeholder requests.
+    # OAuth login/token-exchange traffic uses credentials already held by pi.
+    # It does not contain secret-proxy placeholders, and login should keep
+    # working even if the Lima reverse tunnel is not yet established.
+    "platform.claude.com"
+    "claude.ai"
     "chatgpt.com"
     "auth.openai.com"
     "status.openai.com"
@@ -42,6 +44,8 @@ in
 
   # Boot configuration (matches nixos-lima image layout)
   boot = {
+    # Expand the image's root partition when Lima enlarges the virtual disk.
+    growPartition = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ "console=tty0" ];
     loader.grub = {
@@ -112,16 +116,33 @@ in
   security.sudo.wheelNeedsPassword = false;
 
   # Nix configuration
-  modules.nix.system.enable = "default";
+  modules.nix.system = {
+    enable = "default";
+    # Devenv creates explicit GC roots for live shells. Retaining every output
+    # of their build-time derivations makes parallel agent workspaces pin a
+    # disproportionately large closure.
+    keepDerivations = true;
+    keepOutputs = false;
+  };
 
-  nix.settings = {
-    experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
-    trusted-users = [ "@wheel" ];
-    max-jobs = 1;
-    cores = 2;
+  nix = {
+    gc = {
+      dates = lib.mkForce "daily";
+      options = lib.mkForce "--delete-older-than 3d";
+    };
+    settings = {
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+      trusted-users = [ "@wheel" ];
+      max-jobs = 1;
+      cores = 2;
+      # Trigger garbage collection before large development builds fill root,
+      # leaving headroom for non-Nix build caches and agent workspaces.
+      min-free = 20 * 1024 * 1024 * 1024;
+      max-free = 30 * 1024 * 1024 * 1024;
+    };
   };
 
   # Override user home directory to match Lima's convention (appends .linux).
@@ -155,7 +176,10 @@ in
     shell = {
       commonPkgs.enable = true;
       openssh.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+        forwardedAgentRecovery.enable = true;
+      };
       "1password".enable = true;
       fish.enable = true;
       bat.enable = true;
@@ -175,7 +199,10 @@ in
       nodejs.enable = true;
       codex.enable = false;
       claude-code.enable = true;
-      pi.enable = true;
+      pi = {
+        enable = true;
+        claudeCodeUse.enable = true;
+      };
     };
     term = {
       tmux.enable = true;
@@ -194,6 +221,7 @@ in
         ncurses
         devenv
       ];
+
       # Placeholder tokens — replaced by secret-proxy with real values from
       # the host's 1Password Environment. See packages/secret-proxy/README.md.
       sessionVariables = {

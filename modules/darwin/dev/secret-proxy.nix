@@ -57,30 +57,80 @@ let
     set -euo pipefail
 
     LIMA_SSH_CONFIG="${limaHome}/${cfg.limaInstance}/ssh.config"
+    LIMA_SOCKET="${limaHome}/${cfg.limaInstance}/ssh.sock"
     LIMA_HOST="lima-${cfg.limaInstance}"
     PORT="${toString cfg.port}"
 
-    # Wait for Lima SSH config to exist (VM might not be started yet)
-    while [ ! -f "$LIMA_SSH_CONFIG" ]; do
-      sleep 5
-    done
+    log() {
+      printf '%s secret-proxy-tunnel: %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*"
+    }
 
-    # Wait for the SSH control socket (VM must be running)
-    while [ ! -S "${limaHome}/${cfg.limaInstance}/ssh.sock" ]; do
-      sleep 5
-    done
+    control_master_ready() {
+      [ -f "$LIMA_SSH_CONFIG" ] \
+        && [ -S "$LIMA_SOCKET" ] \
+        && /usr/bin/ssh -F "$LIMA_SSH_CONFIG" -O check "$LIMA_HOST" >/dev/null 2>&1
+    }
 
-    # Set up the reverse forward using the existing control connection.
-    # -O forward uses the existing ControlMaster — no new SSH session needed.
-    # If it fails (e.g., VM rebooted), retry after a delay.
+    guest_proxy_healthy() {
+      # SSH evaluates remote commands with the guest's login shell, which may
+      # be Fish. Keep the outer command shell-agnostic and perform the proxy
+      # health check explicitly in Bash. A TCP-only check is not enough: after
+      # the host proxy restarts, sshd can keep a stale remote listener that
+      # accepts and then resets connections.
+      /usr/bin/ssh \
+        -F "$LIMA_SSH_CONFIG" \
+        -o BatchMode=yes \
+        -o ConnectTimeout=5 \
+        -o ConnectionAttempts=1 \
+        "$LIMA_HOST" \
+        "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/$PORT || exit 1; printf \"GARBAGE\\r\\n\\r\\n\" >&3; IFS= read -r -t 5 line <&3 || exit 1; [[ \"\$line\" == HTTP/* ]]'" \
+        >/dev/null 2>&1
+    }
+
+    cancel_forward() {
+      /usr/bin/ssh \
+        -F "$LIMA_SSH_CONFIG" \
+        -O cancel \
+        -R "127.0.0.1:$PORT:127.0.0.1:$PORT" \
+        "$LIMA_HOST" \
+        >/dev/null 2>&1 || true
+    }
+
+    establish_forward() {
+      /usr/bin/ssh \
+        -F "$LIMA_SSH_CONFIG" \
+        -o ExitOnForwardFailure=yes \
+        -O forward \
+        -R "127.0.0.1:$PORT:127.0.0.1:$PORT" \
+        "$LIMA_HOST"
+    }
+
+    log "monitoring reverse tunnel on guest 127.0.0.1:$PORT"
+
     while true; do
-      if /usr/bin/ssh -F "$LIMA_SSH_CONFIG" -O forward -R "$PORT:127.0.0.1:$PORT" "$LIMA_HOST" 2>/dev/null; then
-        # Forward established. Wait until the control socket disappears (VM stopped).
-        while [ -S "${limaHome}/${cfg.limaInstance}/ssh.sock" ]; do
-          sleep 10
-        done
+      until control_master_ready; do
+        sleep 5
+      done
+
+      if guest_proxy_healthy; then
+        sleep 10
+        continue
       fi
-      sleep 5
+
+      log "guest proxy health check failed; recreating reverse forward"
+      cancel_forward
+      if establish_forward; then
+        sleep 1
+        if guest_proxy_healthy; then
+          log "reverse tunnel established"
+        else
+          log "reverse tunnel command succeeded but proxy health check still fails"
+          sleep 5
+        fi
+      else
+        log "reverse tunnel setup failed; retrying"
+        sleep 5
+      fi
     done
   '';
 in

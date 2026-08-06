@@ -1,6 +1,7 @@
 {
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -14,6 +15,8 @@ in
 {
   options.modules.shell.ssh = with types; {
     enable = mkBoolOpt false;
+
+    forwardedAgentRecovery.enable = mkBoolOpt false;
 
     envForwarding = {
       enable = mkBoolOpt false;
@@ -51,20 +54,41 @@ in
       home.file = {
         ".ssh/github-bromanko.pub".text = "${githubBromankoPublicKey}\n";
         ".ssh/github-scherzo-agent.pub".text = "${githubScherzoAgentPublicKey}\n";
-
-        # Keep a stable path for forwarded SSH agents. OpenSSH creates a fresh
-        # socket for each login, and the concrete path goes stale after sleep,
-        # reconnects, or control master churn. This rc hook runs before the
-        # user's shell so tmux/fish can safely use ~/.ssh/agent.sock.
+      }
+      // optionalAttrs cfg.forwardedAgentRecovery.enable {
+        # Keep persistent tmux panes on a stable forwarded-agent path. Only
+        # promote agents that contain the normal GitHub identity; isolated
+        # automation agents must not replace this socket.
         ".ssh/rc" = {
           text = mkDefault ''
             #!/bin/sh
             stable_agent_sock="$HOME/.ssh/agent.sock"
+            required_public_key="$HOME/.ssh/github-bromanko.pub"
 
-            if [ "''${LIMA_SSH_AGENT_BRIDGE:-0}" != "1" ] && [ -n "$SSH_AUTH_SOCK" ] && [ -S "$SSH_AUTH_SOCK" ] && [ "$SSH_AUTH_SOCK" != "$stable_agent_sock" ]; then
-              mkdir -p "$HOME/.ssh"
-              ln -sfn "$SSH_AUTH_SOCK" "$stable_agent_sock"
+            if [ "''${LIMA_SSH_AGENT_BRIDGE:-0}" = "1" ] || [ -z "$SSH_AUTH_SOCK" ] || [ ! -S "$SSH_AUTH_SOCK" ] || [ "$SSH_AUTH_SOCK" = "$stable_agent_sock" ] || [ ! -r "$required_public_key" ]; then
+              exit 0
             fi
+
+            forwarded_agent_keys="$(${pkgs.openssh}/bin/ssh-add -l 2>/dev/null)" || exit 0
+            required_key_record="$(${pkgs.openssh}/bin/ssh-keygen -lf "$required_public_key" 2>/dev/null)" || exit 0
+            required_key_fingerprint="''${required_key_record#* }"
+            required_key_fingerprint="''${required_key_fingerprint%% *}"
+            [ -n "$required_key_fingerprint" ] || exit 0
+
+            case "$forwarded_agent_keys" in
+              *" $required_key_fingerprint "*) ;;
+              *) exit 0 ;;
+            esac
+
+            # Replace the stable link atomically so persistent tmux panes never
+            # observe a missing path while concurrent SSH logins reconnect.
+            umask 077
+            agent_link_tmp="$stable_agent_sock.$$"
+            ${pkgs.coreutils}/bin/rm -f "$agent_link_tmp"
+            if ${pkgs.coreutils}/bin/ln -s "$SSH_AUTH_SOCK" "$agent_link_tmp"; then
+              ${pkgs.coreutils}/bin/mv -f "$agent_link_tmp" "$stable_agent_sock"
+            fi
+            ${pkgs.coreutils}/bin/rm -f "$agent_link_tmp"
           '';
           executable = mkDefault true;
         };
