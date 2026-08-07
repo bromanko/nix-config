@@ -82,8 +82,8 @@ in
 
         interactiveShellInit = ''
           # SSH keys may live in a forwarded agent whose concrete socket path
-          # changes on reconnect. Refresh a stable symlink from fresh SSH/ET
-          # agent sockets, then point remote tmux panes at that stable path.
+          # changes on reconnect. Refresh a stable symlink only in SSH/ET
+          # sessions; local tmux sessions must retain their configured agent.
           # Do not blindly prefer an existing symlink: after sleep/wake the
           # socket file may still exist while the agent connection is stale.
           set -l stable_ssh_auth_sock "$HOME/.ssh/agent.sock"
@@ -99,8 +99,12 @@ in
               mkdir -p "$HOME/.ssh"
               ln -sfn "$SSH_AUTH_SOCK" "$stable_ssh_auth_sock"
               set -gx SSH_AUTH_SOCK "$stable_ssh_auth_sock"
-          else if test -n "$TMUX"; and test -S "$stable_ssh_auth_sock"
-              set -gx SSH_AUTH_SOCK "$stable_ssh_auth_sock"
+          end
+
+          # Keep new tmux panes aligned with the agent selected above. This also
+          # repairs servers started with macOS' identity-less launchd socket.
+          if test -n "$TMUX"; and test "$has_current_ssh_auth_sock" = 1
+              command tmux set-environment -g SSH_AUTH_SOCK "$SSH_AUTH_SOCK"
           end
           fish_vi_key_bindings
           set fish_cursor_default block
