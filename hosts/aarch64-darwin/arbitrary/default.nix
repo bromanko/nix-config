@@ -175,6 +175,7 @@ with lib.my;
       secretspec = {
         enable = true;
         settings.defaults.providers.scherzo_cloud_dev = "onepassword://Development";
+        settings.defaults.providers.scherzo_cloud_infra = "onepassword://Development";
       };
       docker.enable = true;
       nodejs.enable = true;
@@ -219,8 +220,10 @@ with lib.my;
         "anki"
         "bartender"
         "betterdisplay"
+        "fantastical"
         "figma"
         "google-chrome"
+        "granola"
         "hazeover"
         "homerow"
         "iina"
@@ -270,6 +273,7 @@ with lib.my;
       };
     };
 
+    programs.jujutsu.settings.ui.editor = "nvim";
     programs.ssh.settings = {
       github = github1PasswordIdentity // {
         header = "Host github.com";

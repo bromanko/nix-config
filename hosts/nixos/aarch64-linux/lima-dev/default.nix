@@ -44,6 +44,8 @@ in
 
   # Boot configuration (matches nixos-lima image layout)
   boot = {
+    # Expand the image's root partition when Lima enlarges the virtual disk.
+    growPartition = true;
     kernelPackages = pkgs.linuxPackages_latest;
     kernelParams = [ "console=tty0" ];
     loader.grub = {
@@ -116,10 +118,20 @@ in
   security.sudo.wheelNeedsPassword = false;
 
   # Nix configuration
-  modules.nix.system.enable = "default";
+  modules.nix.system = {
+    enable = "default";
+    # Devenv creates explicit GC roots for live shells. Retaining every output
+    # of their build-time derivations makes parallel agent workspaces pin a
+    # disproportionately large closure.
+    keepDerivations = true;
+    keepOutputs = false;
+  };
 
   nix = {
-    gc.dates = lib.mkForce "daily";
+    gc = {
+      dates = lib.mkForce "daily";
+      options = lib.mkForce "--delete-older-than 3d";
+    };
     settings = {
       experimental-features = [
         "nix-command"
@@ -128,9 +140,10 @@ in
       trusted-users = [ "@wheel" ];
       max-jobs = 1;
       cores = 2;
-      # Trigger garbage collection before large development builds fill root.
-      min-free = 10 * 1024 * 1024 * 1024;
-      max-free = 20 * 1024 * 1024 * 1024;
+      # Trigger garbage collection before large development builds fill root,
+      # leaving headroom for non-Nix build caches and agent workspaces.
+      min-free = 20 * 1024 * 1024 * 1024;
+      max-free = 30 * 1024 * 1024 * 1024;
     };
   };
 
@@ -165,7 +178,10 @@ in
     shell = {
       commonPkgs.enable = true;
       openssh.enable = true;
-      ssh.enable = true;
+      ssh = {
+        enable = true;
+        forwardedAgentRecovery.enable = true;
+      };
       "1password".enable = true;
       fish.enable = true;
       bat.enable = true;
@@ -207,6 +223,7 @@ in
         ncurses
         devenv
       ];
+
       # Placeholder tokens — replaced by secret-proxy with real values from
       # the host's 1Password Environment. See packages/secret-proxy/README.md.
       sessionVariables = {
