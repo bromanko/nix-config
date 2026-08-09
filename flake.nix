@@ -30,6 +30,9 @@
       url = "github:numtide/llm-agents.nix";
     };
     devenv.url = "github:cachix/devenv";
+    # The unattended Scherzo workspace requires exactly 2.2.2, independently
+    # of the interactive developer environment.
+    scherzo-devenv.url = "github:cachix/devenv/v2.2.2";
     homeage = {
       url = "github:bromanko/homeage/main";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -81,7 +84,7 @@
             inputs.llm-agents.overlays.shared-nixpkgs
             (
               _final: prev:
-              nixpkgs.lib.optionalAttrs prev.stdenv.isDarwin {
+              nixpkgs.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
                 direnv = prev.direnv.overrideAttrs (_: {
                   # direnv's shell integration tests hang on macOS runners under
                   # nixpkgs 26.05; skip them for Darwin system builds.
