@@ -81,7 +81,7 @@
             inputs.llm-agents.overlays.shared-nixpkgs
             (
               _final: prev:
-              nixpkgs.lib.optionalAttrs prev.stdenv.isDarwin {
+              nixpkgs.lib.optionalAttrs prev.stdenv.hostPlatform.isDarwin {
                 direnv = prev.direnv.overrideAttrs (_: {
                   # direnv's shell integration tests hang on macOS runners under
                   # nixpkgs 26.05; skip them for Darwin system builds.
