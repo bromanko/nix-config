@@ -70,6 +70,7 @@ in
           source = "~/Code/llm-agents";
           extensions = [
             "!pi/ci-guard/extensions/**"
+            "!pi/live-edit/extensions/**"
           ];
         }
         "~/Code/llm-agents-private"
