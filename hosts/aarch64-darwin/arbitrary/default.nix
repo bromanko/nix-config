@@ -180,6 +180,11 @@ with lib.my;
       docker.enable = true;
       nodejs.enable = true;
       claude-code.enable = true;
+      codex = {
+        enable = true;
+        # Installed through Homebrew's prebuilt cask instead of built by Nix.
+        package = null;
+      };
       pi = {
         enable = true;
         claudeCodeUse.enable = true;
@@ -236,6 +241,8 @@ with lib.my;
         "calibre"
         # Homebrew's chatgpt cask is the new all-in-one ChatGPT/Codex desktop app.
         "chatgpt"
+        # The codex cask installs the official prebuilt CLI binary.
+        "codex"
         "obsidian"
         "sony-ps-remote-play"
         "tailscale-app"
