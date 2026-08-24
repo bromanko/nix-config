@@ -108,7 +108,7 @@ with lib.my;
           buildkite = {
             enable = true;
             organization = "scherzo";
-            pipeline = "scherzo-cloud";
+            pipeline = "scherzo-cloud-main";
             displayName = "Scherzo Cloud";
           };
         };
