@@ -223,7 +223,6 @@ with lib.my;
       taps = [ ];
       casks = [
         "anki"
-        "bartender"
         "betterdisplay"
         "fantastical"
         "figma"
@@ -262,6 +261,7 @@ with lib.my;
         (with pkgs; [
           slack
           tailscale
+          my.bartender-golden-gate
           my.tldx
           my.sprite
           my.ticket
