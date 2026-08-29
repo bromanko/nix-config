@@ -27,6 +27,7 @@
     "autoAllowBashIfSandboxed": false
   },
   "alwaysThinkingEnabled": true,
+  "tui": "fullscreen",
   "theme": "auto",
-  "tui": "fullscreen"
+  "skipDangerousModePermissionPrompt": true
 }
