@@ -88,7 +88,7 @@ in
         "openai-codex/gpt-5.6-luna:xhigh"
         "openai-codex/gpt-5.5:xhigh"
         "anthropic/claude-opus-5:max"
-        "anthropic/claude-fable-5:xhigh"
+        "anthropic/claude-fable-5-1:xhigh"
         "anthropic/claude-opus-4-6:max"
       ];
       branchSummary = {
@@ -138,7 +138,37 @@ in
     # Model registry written to ~/.pi/agent/models.json.
     # Remove custom models once they are included in Pi's built-in catalog.
     models = mkOpt attrs {
+      # Pi 0.84.x identifies OAuth requests as Claude Code 2.1.75, which
+      # Anthropic rejects for Fable 5.1. Override the stale built-in header.
+      providers.anthropic.headers."user-agent" = "claude-cli/2.1.257";
       providers.anthropic.models = [
+        {
+          id = "claude-fable-5-1";
+          name = "Claude Fable 5.1";
+          reasoning = true;
+          thinkingLevelMap = {
+            off = null;
+            xhigh = "xhigh";
+            max = "max";
+          };
+          input = [
+            "text"
+            "image"
+          ];
+          contextWindow = 1000000;
+          maxTokens = 128000;
+          cost = {
+            input = 10;
+            output = 50;
+            cacheRead = 0.25;
+            cacheWrite = 12.5;
+          };
+          compat = {
+            forceAdaptiveThinking = true;
+            supportsTemperature = false;
+            supportsStrictTools = true;
+          };
+        }
         {
           id = "claude-opus-5";
           name = "Claude Opus 5";
