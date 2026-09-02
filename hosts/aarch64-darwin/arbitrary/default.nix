@@ -220,9 +220,15 @@ with lib.my;
     homebrew = {
       enable = true;
       prefix = brewPrefix;
-      taps = [ ];
+      taps = [
+        {
+          name = "deskflow/tap";
+          trusted = true;
+        }
+      ];
       casks = [
         "anki"
+        "deskflow"
         "betterdisplay"
         "fantastical"
         "figma"
