@@ -16,9 +16,12 @@ in
   };
 
   config = mkIf cfg.enable {
-    modules.homebrew = {
-      casks = [ "raycast" ];
-    };
+    modules.homebrew.casks = [
+      {
+        name = "raycast";
+        greedy = true;
+      }
+    ];
 
     home-manager.users."${config.user.name}".home.file.".config/raycast" = {
       recursive = true;
