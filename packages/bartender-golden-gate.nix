@@ -6,11 +6,11 @@
 
 stdenvNoCC.mkDerivation (finalAttrs: {
   pname = "bartender-golden-gate";
-  version = "7.0.0-preview.3";
+  version = "7.0.0-beta.1";
 
   src = fetchzip {
-    url = "https://downloads.macbartender.com/GoldenGate/b7-003.zip";
-    hash = "sha256-pWThj0Mf1ZoHv+5xr9nyN6oPfBM4oqtURLgUZHXsXYU=";
+    url = "https://downloads.macbartender.com/GoldenGate/bt7-b1.zip";
+    hash = "sha256-cwMO/5qEeM3r9ny/Kk3QHSuyWG721rAhx3bUm7Ho2JY=";
     stripRoot = false;
   };
 
@@ -18,7 +18,7 @@ stdenvNoCC.mkDerivation (finalAttrs: {
     runHook preInstall
 
     mkdir -p "$out/Applications"
-    cp -R "bt-003/Bartender 7.app" "$out/Applications/"
+    cp -R "bt7-b1/Bartender 7.app" "$out/Applications/"
 
     runHook postInstall
   '';
