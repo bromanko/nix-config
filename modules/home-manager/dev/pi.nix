@@ -64,7 +64,7 @@ in
     # instead of editing settings.json or running `pi install`.
     settings = mkOpt attrs {
       defaultProvider = "openai-codex";
-      defaultModel = "gpt-5.6-sol";
+      defaultModel = "gpt-6-astra";
       packages = [
         {
           source = "~/Code/llm-agents";
@@ -79,14 +79,13 @@ in
         "${pkgs.my.pi-sub-bar}/lib/pi-sub-bar"
       ];
       theme = "catppuccin-mocha";
-      defaultThinkingLevel = "xhigh";
+      defaultThinkingLevel = "medium";
       hideThinkingBlock = true;
       enabledModels = [
         "openai-codex/gpt-6-astra:medium"
         "openai-codex/gpt-5.6-sol:xhigh"
         "openai-codex/gpt-6-astra:xhigh"
         "openai-codex/gpt-6-astra:max"
-        "openai-codex/gpt-5.6-sol:xhigh"
         "openai-codex/gpt-5.6-sol:max"
         "openai-codex/gpt-5.6-terra:xhigh"
         "openai-codex/gpt-5.6-luna:xhigh"
