@@ -108,7 +108,7 @@ with lib.my;
           buildkite = {
             enable = true;
             organization = "scherzo";
-            pipeline = "scherzo-cloud";
+            pipeline = "scherzo-cloud-main";
             displayName = "Scherzo Cloud";
           };
         };
@@ -175,10 +175,16 @@ with lib.my;
       secretspec = {
         enable = true;
         settings.defaults.providers.scherzo_cloud_dev = "onepassword://Development";
+        settings.defaults.providers.scherzo_cloud_infra = "onepassword://Development";
       };
       docker.enable = true;
       nodejs.enable = true;
       claude-code.enable = true;
+      codex = {
+        enable = true;
+        # Installed through Homebrew's prebuilt cask instead of built by Nix.
+        package = null;
+      };
       pi = {
         enable = true;
         claudeCodeUse.enable = true;
@@ -214,13 +220,20 @@ with lib.my;
     homebrew = {
       enable = true;
       prefix = brewPrefix;
-      taps = [ ];
+      taps = [
+        {
+          name = "deskflow/tap";
+          trusted = true;
+        }
+      ];
       casks = [
         "anki"
-        "bartender"
+        "deskflow"
         "betterdisplay"
+        "fantastical"
         "figma"
         "google-chrome"
+        "granola"
         "hazeover"
         "homerow"
         "iina"
@@ -233,6 +246,8 @@ with lib.my;
         "calibre"
         # Homebrew's chatgpt cask is the new all-in-one ChatGPT/Codex desktop app.
         "chatgpt"
+        # The codex cask installs the official prebuilt CLI binary.
+        "codex"
         "obsidian"
         "sony-ps-remote-play"
         "tailscale-app"
@@ -252,6 +267,7 @@ with lib.my;
         (with pkgs; [
           slack
           tailscale
+          my.bartender-golden-gate
           my.tldx
           my.sprite
           my.ticket
@@ -270,6 +286,7 @@ with lib.my;
       };
     };
 
+    programs.jujutsu.settings.ui.editor = "nvim";
     programs.ssh.settings = {
       github = github1PasswordIdentity // {
         header = "Host github.com";

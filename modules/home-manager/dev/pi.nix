@@ -64,30 +64,33 @@ in
     # instead of editing settings.json or running `pi install`.
     settings = mkOpt attrs {
       defaultProvider = "openai-codex";
-      defaultModel = "gpt-5.6-sol";
+      defaultModel = "gpt-6-astra";
       packages = [
         {
           source = "~/Code/llm-agents";
           extensions = [
             "!pi/ci-guard/extensions/**"
+            "!pi/live-edit/extensions/**"
           ];
         }
         "~/Code/llm-agents-private"
         "~/Code/attractor"
+        "${pkgs.my.pi-codex-fast-mode}/lib/pi-codex-fast-mode"
         "${pkgs.my.pi-sub-bar}/lib/pi-sub-bar"
       ];
       theme = "catppuccin-mocha";
-      defaultThinkingLevel = "xhigh";
+      defaultThinkingLevel = "medium";
       hideThinkingBlock = true;
       enabledModels = [
+        "openai-codex/gpt-6-astra:medium"
         "openai-codex/gpt-5.6-sol:xhigh"
+        "openai-codex/gpt-6-astra:xhigh"
+        "openai-codex/gpt-6-astra:max"
         "openai-codex/gpt-5.6-sol:max"
         "openai-codex/gpt-5.6-terra:xhigh"
         "openai-codex/gpt-5.6-luna:xhigh"
-        "openai-codex/gpt-5.5:xhigh"
         "anthropic/claude-opus-5:max"
-        "anthropic/claude-fable-5:xhigh"
-        "anthropic/claude-opus-4-6:max"
+        "anthropic/claude-fable-5-1:xhigh"
       ];
       branchSummary = {
         skipPrompt = true;
@@ -136,7 +139,65 @@ in
     # Model registry written to ~/.pi/agent/models.json.
     # Remove custom models once they are included in Pi's built-in catalog.
     models = mkOpt attrs {
+      # Remove once Astra is included in Pi's built-in model catalog.
+      providers.openai-codex.models = [
+        {
+          id = "gpt-6-astra";
+          name = "GPT-6 Astra";
+          api = "openai-codex-responses";
+          baseUrl = "https://chatgpt.com/backend-api";
+          reasoning = true;
+          thinkingLevelMap = {
+            off = null;
+            minimal = null;
+            xhigh = "xhigh";
+            max = "max";
+          };
+          input = [
+            "text"
+            "image"
+          ];
+          contextWindow = 272000;
+          maxTokens = 128000;
+          compat = {
+            supportsOpenAIGrammarTools = true;
+            supportsAdditionalTools = true;
+            supportsToolSearch = true;
+          };
+        }
+      ];
+
+      # Pi 0.84.x identifies OAuth requests as Claude Code 2.1.75, which
+      # Anthropic rejects for Fable 5.1. Override the stale built-in header.
+      providers.anthropic.headers."user-agent" = "claude-cli/2.1.257";
       providers.anthropic.models = [
+        {
+          id = "claude-fable-5-1";
+          name = "Claude Fable 5.1";
+          reasoning = true;
+          thinkingLevelMap = {
+            off = null;
+            xhigh = "xhigh";
+            max = "max";
+          };
+          input = [
+            "text"
+            "image"
+          ];
+          contextWindow = 1000000;
+          maxTokens = 128000;
+          cost = {
+            input = 10;
+            output = 50;
+            cacheRead = 0.25;
+            cacheWrite = 12.5;
+          };
+          compat = {
+            forceAdaptiveThinking = true;
+            supportsTemperature = false;
+            supportsStrictTools = true;
+          };
+        }
         {
           id = "claude-opus-5";
           name = "Claude Opus 5";

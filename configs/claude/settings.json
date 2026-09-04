@@ -6,6 +6,7 @@
       "WebSearch"
     ]
   },
+  "model": "claude-fable-5[1m]",
   "statusLine": {
     "type": "command",
     "command": "ccstatusline"
@@ -26,5 +27,7 @@
     "autoAllowBashIfSandboxed": false
   },
   "alwaysThinkingEnabled": true,
-  "model": "claude-fable-5[1m]"
+  "tui": "fullscreen",
+  "theme": "auto",
+  "skipDangerousModePermissionPrompt": true
 }

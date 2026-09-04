@@ -79,7 +79,7 @@ in
                 ssh_auth_sock_needs_1password=1
               else
                 case "$SSH_AUTH_SOCK" in
-                  /private/tmp/com.apple.launchd.*/Listeners|/tmp/com.apple.launchd.*/Listeners|/var/folders/*/T/com.apple.launchd.*/Listeners)
+                  /private/tmp/com.apple.launchd.*/Listeners|/tmp/com.apple.launchd.*/Listeners|/private/var/run/com.apple.launchd.*/Listeners|/var/run/com.apple.launchd.*/Listeners|/var/folders/*/T/com.apple.launchd.*/Listeners)
                     ssh_auth_sock_needs_1password=1
                     ;;
                 esac
@@ -104,6 +104,10 @@ in
               else if string match -q -- "/private/tmp/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
                 set ssh_auth_sock_needs_1password 1
               else if string match -q -- "/tmp/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
+                set ssh_auth_sock_needs_1password 1
+              else if string match -q -- "/private/var/run/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
+                set ssh_auth_sock_needs_1password 1
+              else if string match -q -- "/var/run/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
                 set ssh_auth_sock_needs_1password 1
               else if string match -q -- "/var/folders/*/T/com.apple.launchd.*/Listeners" "$SSH_AUTH_SOCK"
                 set ssh_auth_sock_needs_1password 1
