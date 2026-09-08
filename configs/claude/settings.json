@@ -6,7 +6,7 @@
       "WebSearch"
     ]
   },
-  "model": "claude-fable-5[1m]",
+  "model": "fable[1m]",
   "statusLine": {
     "type": "command",
     "command": "ccstatusline"
@@ -28,6 +28,6 @@
   },
   "alwaysThinkingEnabled": true,
   "tui": "fullscreen",
-  "theme": "auto",
-  "skipDangerousModePermissionPrompt": true
+  "skipDangerousModePermissionPrompt": true,
+  "theme": "auto"
 }
