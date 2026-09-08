@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+# Run on gray-area from the checkout to deploy. This deliberately targets only
+# a named runner; it never enrolls, restarts, or modifies lima-dev.
+root=$(git -C "$(dirname "$0")" rev-parse --show-toplevel)
+instance=${1:-lima-scherzo}
+case "$instance" in
+  lima-scherzo | lima-scherzo-2) ;;
+  *) echo "Unsupported runner instance: $instance" >&2; exit 1 ;;
+esac
+if limactl shell "$instance" sudo test -e /var/lib/scherzo-cloud/runner-state.json; then
+  echo "Runner is enrolled; use a reviewed drain-and-update procedure instead." >&2
+  exit 1
+fi
+archive=$(mktemp -t scherzo-config.XXXXXXXX)
+trap 'rm -f "$archive"' EXIT
+
+# Include local configuration additions, but not ignored files or .git. Secrets
+# must remain outside this source tree and are provisioned only after the build.
+git -C "$root" ls-files --cached --others --exclude-standard -z |
+  COPYFILE_DISABLE=1 tar --no-xattrs --exclude='._*' -C "$root" --null -T - -cf "$archive"
+limactl copy "$archive" "$instance:/tmp/scherzo-config.tar"
+limactl shell "$instance" sudo bash -s -- "$instance" <<'GUEST'
+set -euo pipefail
+instance=$1
+source_dir=$(mktemp -d /tmp/scherzo-config.XXXXXXXX)
+trap 'rm -rf "$source_dir" /tmp/scherzo-config.tar' EXIT
+tar -xf /tmp/scherzo-config.tar -C "$source_dir"
+nixos-rebuild switch --flake "path:$source_dir#$instance" \
+  --no-write-lock-file --option max-jobs 1 --option cores 2
+GUEST
