@@ -1,0 +1,25 @@
+# Isolated compilation runner; Cargo defaults to one build job.
+vmType: vz
+os: Linux
+arch: aarch64
+images:
+  - location: https://github.com/nixos-lima/nixos-lima/releases/download/v0.0.5/nixos-lima-v0.0.5-aarch64.qcow2
+    arch: aarch64
+    digest: sha256:c66e6fbc3c529c90cb72c8bdb459db058478bb015f446ece284b77921c4f32ee
+user:
+  home: "/home/{{.User}}.linux"
+cpus: 2
+memory: 8GiB
+disk: 60GiB
+mounts: []
+containerd:
+  system: false
+  user: false
+ssh:
+  loadDotSSHPubKeys: false
+  forwardAgent: false
+# Runner Serve uses outbound WSS. Do not expose arbitrary guest services.
+portForwards:
+  - guestPortRange: [1, 65535]
+    ignore: true
+# Apply the local pinned checkout explicitly after boot; never clone floating main.
