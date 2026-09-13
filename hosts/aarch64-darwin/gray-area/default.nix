@@ -85,6 +85,7 @@ in
       "secret-proxy" = {
         enable = true;
         provider = "serviceAccount";
+        additionalLimaInstances = [ "lima-scherzo" ];
         namespaces = [
           "michael"
           "scherzo"

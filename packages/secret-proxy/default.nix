@@ -12,13 +12,13 @@ stdenv.mkDerivation {
 
   dontBuild = true;
 
-  nativeCheckInputs = [ python3 ];
+  nativeCheckInputs = [ (python3.withPackages (ps: [ ps.mitmproxy ])) ];
 
   doCheck = true;
   checkPhase = ''
     runHook preCheck
 
-    python -m unittest -v test_secret_provider.py
+    python -m unittest -v test_secret_provider.py test_basic_auth.py
 
     runHook postCheck
   '';

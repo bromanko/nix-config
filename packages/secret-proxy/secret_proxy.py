@@ -50,6 +50,8 @@ Usage:
       --set context_lens_port=4040
 """
 
+import base64
+import binascii
 import json
 import re
 import socket
@@ -596,8 +598,23 @@ class SecretProxy:
     def request(self, flow: mhttp.HTTPFlow):
         """Process each request, replacing placeholders and optionally redirecting to Context Lens."""
 
+        # Git encodes username:password before it reaches us. Only decode a
+        # single well-formed Basic header, and retain its original bytes until
+        # every placeholder passes the existing namespace/destination checks.
+        basic_credentials = None
+        authorization = flow.request.headers.get_all("authorization")
+        if len(authorization) == 1:
+            scheme, separator, encoded = authorization[0].partition(" ")
+            if separator and scheme.lower() == "basic":
+                try:
+                    decoded = base64.b64decode(encoded, validate=True).decode("utf-8")
+                    if ":" in decoded and self._find_placeholders(decoded):
+                        basic_credentials = decoded
+                except (binascii.Error, UnicodeDecodeError, ValueError):
+                    pass
+
         # First pass: find all placeholders in headers and query parameters
-        all_placeholders = []
+        all_placeholders = self._find_placeholders(basic_credentials or "")
         for header_name in flow.request.headers.keys():
             header_value = flow.request.headers[header_name]
             placeholders = self._find_placeholders(header_value)
@@ -609,7 +626,7 @@ class SecretProxy:
 
         # If placeholders are present, validate and replace them
         if all_placeholders:
-            self._inject_secrets(flow, all_placeholders)
+            self._inject_secrets(flow, all_placeholders, basic_credentials)
             # If the request was blocked, don't redirect
             if flow.response:
                 return
@@ -696,7 +713,10 @@ class SecretProxy:
         )
         return value
 
-    def _inject_secrets(self, flow: mhttp.HTTPFlow, all_placeholders: list[str]) -> None:
+    def _inject_secrets(
+        self, flow: mhttp.HTTPFlow, all_placeholders: list[str],
+        basic_credentials: Optional[str] = None,
+    ) -> None:
         """Validate and replace {{PLACEHOLDER}} patterns in request headers and query parameters."""
 
         unique_placeholders = list(set(all_placeholders))
@@ -775,6 +795,10 @@ class SecretProxy:
             return match.group(0)
 
         # Replace in headers
+        if basic_credentials is not None:
+            resolved = PLACEHOLDER_PATTERN.sub(replacer, basic_credentials)
+            encoded = base64.b64encode(resolved.encode("utf-8")).decode("ascii")
+            flow.request.headers["authorization"] = f"Basic {encoded}"
         for header_name in list(flow.request.headers.keys()):
             header_value = flow.request.headers[header_name]
 
