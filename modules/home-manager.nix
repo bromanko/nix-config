@@ -2,6 +2,7 @@
   inputs,
   config,
   lib,
+  pkgs,
   ...
 }:
 
@@ -40,6 +41,17 @@ with lib.my;
             );
         };
       };
+
+      home.activation.verifyActivationHost = lib.hm.dag.entryBefore [ "checkFilesChanged" ] ''
+        expectedHost=${escapeShellArg config.networking.hostName}
+        actualHost="$(${pkgs.hostname}/bin/hostname -s)"
+
+        if [ "$actualHost" != "$expectedHost" ]; then
+          echo "Home Manager activation refused: configuration is for '$expectedHost', but this host is '$actualHost'." >&2
+          echo "Activate the matching Darwin or NixOS configuration instead." >&2
+          exit 1
+        fi
+      '';
     };
   };
 }

@@ -48,11 +48,17 @@ in
     };
 
     casks = mkOption {
-      type = with types; listOf str;
+      type = listOf (oneOf [
+        str
+        attrs
+      ]);
       default = [ ];
       example = [
         "hammerspoon"
-        "virtualbox"
+        {
+          name = "raycast";
+          greedy = true;
+        }
       ];
       description = "Homebrew casks to install.";
     };

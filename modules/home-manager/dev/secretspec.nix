@@ -31,7 +31,9 @@ in
 
   config = mkIf cfg.enable {
     hm = {
-      home.packages = [ cfg.package ];
+      # Devenv also exposes a SecretSpec executable. Prefer the explicitly
+      # configured package when both are installed.
+      home.packages = [ (hiPrio cfg.package) ];
 
       xdg.configFile."secretspec/config.toml".source = configFile;
     };
