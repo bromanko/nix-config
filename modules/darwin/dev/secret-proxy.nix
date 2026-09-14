@@ -53,86 +53,88 @@ let
 
   # Script that maintains the SSH reverse tunnel to a Lima VM.
   # Uses Lima's existing SSH control socket so no extra auth is needed.
-  tunnelScript = pkgs.writeShellScript "secret-proxy-tunnel" ''
-    set -euo pipefail
+  tunnelScript =
+    instance:
+    pkgs.writeShellScript "secret-proxy-tunnel-${instance}" ''
+      set -euo pipefail
 
-    LIMA_SSH_CONFIG="${limaHome}/${cfg.limaInstance}/ssh.config"
-    LIMA_SOCKET="${limaHome}/${cfg.limaInstance}/ssh.sock"
-    LIMA_HOST="lima-${cfg.limaInstance}"
-    PORT="${toString cfg.port}"
+      LIMA_SSH_CONFIG="${limaHome}/${instance}/ssh.config"
+      LIMA_SOCKET="${limaHome}/${instance}/ssh.sock"
+      LIMA_HOST="lima-${instance}"
+      PORT="${toString cfg.port}"
 
-    log() {
-      printf '%s secret-proxy-tunnel: %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*"
-    }
+      log() {
+        printf '%s secret-proxy-tunnel: %s\n' "$(date -u '+%Y-%m-%dT%H:%M:%SZ')" "$*"
+      }
 
-    control_master_ready() {
-      [ -f "$LIMA_SSH_CONFIG" ] \
-        && [ -S "$LIMA_SOCKET" ] \
-        && /usr/bin/ssh -F "$LIMA_SSH_CONFIG" -O check "$LIMA_HOST" >/dev/null 2>&1
-    }
+      control_master_ready() {
+        [ -f "$LIMA_SSH_CONFIG" ] \
+          && [ -S "$LIMA_SOCKET" ] \
+          && /usr/bin/ssh -F "$LIMA_SSH_CONFIG" -O check "$LIMA_HOST" >/dev/null 2>&1
+      }
 
-    guest_proxy_healthy() {
-      # SSH evaluates remote commands with the guest's login shell, which may
-      # be Fish. Keep the outer command shell-agnostic and perform the proxy
-      # health check explicitly in Bash. A TCP-only check is not enough: after
-      # the host proxy restarts, sshd can keep a stale remote listener that
-      # accepts and then resets connections.
-      /usr/bin/ssh \
-        -F "$LIMA_SSH_CONFIG" \
-        -o BatchMode=yes \
-        -o ConnectTimeout=5 \
-        -o ConnectionAttempts=1 \
-        "$LIMA_HOST" \
-        "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/$PORT || exit 1; printf \"GARBAGE\\r\\n\\r\\n\" >&3; IFS= read -r -t 5 line <&3 || exit 1; [[ \"\$line\" == HTTP/* ]]'" \
-        >/dev/null 2>&1
-    }
+      guest_proxy_healthy() {
+        # SSH evaluates remote commands with the guest's login shell, which may
+        # be Fish. Keep the outer command shell-agnostic and perform the proxy
+        # health check explicitly in Bash. A TCP-only check is not enough: after
+        # the host proxy restarts, sshd can keep a stale remote listener that
+        # accepts and then resets connections.
+        /usr/bin/ssh \
+          -F "$LIMA_SSH_CONFIG" \
+          -o BatchMode=yes \
+          -o ConnectTimeout=5 \
+          -o ConnectionAttempts=1 \
+          "$LIMA_HOST" \
+          "bash -lc 'exec 3<>/dev/tcp/127.0.0.1/$PORT || exit 1; printf \"GARBAGE\\r\\n\\r\\n\" >&3; IFS= read -r -t 5 line <&3 || exit 1; [[ \"\$line\" == HTTP/* ]]'" \
+          >/dev/null 2>&1
+      }
 
-    cancel_forward() {
-      /usr/bin/ssh \
-        -F "$LIMA_SSH_CONFIG" \
-        -O cancel \
-        -R "127.0.0.1:$PORT:127.0.0.1:$PORT" \
-        "$LIMA_HOST" \
-        >/dev/null 2>&1 || true
-    }
+      cancel_forward() {
+        /usr/bin/ssh \
+          -F "$LIMA_SSH_CONFIG" \
+          -O cancel \
+          -R "127.0.0.1:$PORT:127.0.0.1:$PORT" \
+          "$LIMA_HOST" \
+          >/dev/null 2>&1 || true
+      }
 
-    establish_forward() {
-      /usr/bin/ssh \
-        -F "$LIMA_SSH_CONFIG" \
-        -o ExitOnForwardFailure=yes \
-        -O forward \
-        -R "127.0.0.1:$PORT:127.0.0.1:$PORT" \
-        "$LIMA_HOST"
-    }
+      establish_forward() {
+        /usr/bin/ssh \
+          -F "$LIMA_SSH_CONFIG" \
+          -o ExitOnForwardFailure=yes \
+          -O forward \
+          -R "127.0.0.1:$PORT:127.0.0.1:$PORT" \
+          "$LIMA_HOST"
+      }
 
-    log "monitoring reverse tunnel on guest 127.0.0.1:$PORT"
+      log "monitoring reverse tunnel on guest 127.0.0.1:$PORT"
 
-    while true; do
-      until control_master_ready; do
-        sleep 5
-      done
+      while true; do
+        until control_master_ready; do
+          sleep 5
+        done
 
-      if guest_proxy_healthy; then
-        sleep 10
-        continue
-      fi
-
-      log "guest proxy health check failed; recreating reverse forward"
-      cancel_forward
-      if establish_forward; then
-        sleep 1
         if guest_proxy_healthy; then
-          log "reverse tunnel established"
+          sleep 10
+          continue
+        fi
+
+        log "guest proxy health check failed; recreating reverse forward"
+        cancel_forward
+        if establish_forward; then
+          sleep 1
+          if guest_proxy_healthy; then
+            log "reverse tunnel established"
+          else
+            log "reverse tunnel command succeeded but proxy health check still fails"
+            sleep 5
+          fi
         else
-          log "reverse tunnel command succeeded but proxy health check still fails"
+          log "reverse tunnel setup failed; retrying"
           sleep 5
         fi
-      else
-        log "reverse tunnel setup failed; retrying"
-        sleep 5
-      fi
-    done
-  '';
+      done
+    '';
 in
 {
   options.modules.dev."secret-proxy" = with types; {
@@ -203,6 +205,12 @@ in
       type = types.str;
       default = "lima-dev";
       description = "Name of the Lima instance to tunnel into";
+    };
+
+    additionalLimaInstances = mkOption {
+      type = types.listOf types.str;
+      default = [ ];
+      description = "Additional Lima guests with independently supervised proxy tunnels";
     };
 
     namespaces = mkOption {
@@ -293,44 +301,58 @@ in
       ${configDir}/tunnel.err                  ${config.user.name}:staff 644  3     1024 *    N
     '';
 
-    launchd.user.agents.secret-proxy = {
-      serviceConfig = {
-        ProgramArguments = [
-          "${pkgs.mitmproxy}/bin/mitmdump"
-          "--listen-host"
-          "127.0.0.1"
-          "--listen-port"
-          (toString cfg.port)
-          "-s"
-          "${secretProxyPkg}/lib/secret-proxy/secret_proxy.py"
-        ]
-        ++ providerArgs
-        ++ [
-          "--set"
-          "block_global=false"
-        ]
-        ++ optionals cfg.contextLens.enable [
-          "--set"
-          "context_lens_enabled=true"
-          "--set"
-          "context_lens_port=${toString cfg.contextLens.port}"
-        ];
-        RunAtLoad = true;
-        KeepAlive = true;
-        StandardOutPath = "${configDir}/proxy.log";
-        StandardErrorPath = "${configDir}/proxy.err";
-        WorkingDirectory = configDir;
+    launchd.user.agents = {
+      secret-proxy = {
+        serviceConfig = {
+          ProgramArguments = [
+            "${pkgs.mitmproxy}/bin/mitmdump"
+            "--listen-host"
+            "127.0.0.1"
+            "--listen-port"
+            (toString cfg.port)
+            "-s"
+            "${secretProxyPkg}/lib/secret-proxy/secret_proxy.py"
+          ]
+          ++ providerArgs
+          ++ [
+            "--set"
+            "block_global=false"
+          ]
+          ++ optionals cfg.contextLens.enable [
+            "--set"
+            "context_lens_enabled=true"
+            "--set"
+            "context_lens_port=${toString cfg.contextLens.port}"
+          ];
+          RunAtLoad = true;
+          KeepAlive = true;
+          StandardOutPath = "${configDir}/proxy.log";
+          StandardErrorPath = "${configDir}/proxy.err";
+          WorkingDirectory = configDir;
+        };
       };
-    };
 
-    launchd.user.agents.secret-proxy-tunnel = {
-      serviceConfig = {
-        ProgramArguments = [ "${tunnelScript}" ];
-        RunAtLoad = true;
-        KeepAlive = true;
-        StandardOutPath = "${configDir}/tunnel.log";
-        StandardErrorPath = "${configDir}/tunnel.err";
+      secret-proxy-tunnel = {
+        serviceConfig = {
+          ProgramArguments = [ "${tunnelScript cfg.limaInstance}" ];
+          RunAtLoad = true;
+          KeepAlive = true;
+          StandardOutPath = "${configDir}/tunnel.log";
+          StandardErrorPath = "${configDir}/tunnel.err";
+        };
       };
-    };
+    }
+    // builtins.listToAttrs (
+      map (instance: {
+        name = "secret-proxy-tunnel-${instance}";
+        value.serviceConfig = {
+          ProgramArguments = [ "${tunnelScript instance}" ];
+          RunAtLoad = true;
+          KeepAlive = true;
+          StandardOutPath = "${configDir}/tunnel-${instance}.log";
+          StandardErrorPath = "${configDir}/tunnel-${instance}.err";
+        };
+      }) cfg.additionalLimaInstances
+    );
   };
 }
