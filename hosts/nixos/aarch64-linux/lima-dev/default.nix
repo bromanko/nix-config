@@ -55,7 +55,7 @@ in
       configurationLimit = 3;
     };
     tmp = {
-      useTmpfs = true;
+      useTmpfs = false;
     };
   };
 
