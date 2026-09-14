@@ -219,7 +219,8 @@ in
       homeDirectory = lib.mkForce "/home/bromanko.linux";
       packages = with pkgs; [
         ncurses
-        devenv
+        # Match Scherzo's supported validation baseline without updating nixpkgs.
+        inputs.scherzo-devenv.packages.${pkgs.stdenv.hostPlatform.system}.devenv
       ];
 
       # Placeholder tokens — replaced by secret-proxy with real values from

@@ -76,6 +76,7 @@ in
         "~/Code/llm-agents-private"
         "~/Code/attractor"
         "${pkgs.my.pi-codex-fast-mode}/lib/pi-codex-fast-mode"
+        "${pkgs.my.pi-mcp-adapter}/lib/pi-mcp-adapter"
         "${pkgs.my.pi-sub-bar}/lib/pi-sub-bar"
       ];
       theme = "catppuccin-mocha";

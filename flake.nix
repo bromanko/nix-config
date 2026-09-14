@@ -30,6 +30,9 @@
       url = "github:numtide/llm-agents.nix";
     };
     devenv.url = "github:cachix/devenv";
+    # The unattended Scherzo workspace requires exactly 2.2.2, independently
+    # of the interactive developer environment.
+    scherzo-devenv.url = "github:cachix/devenv/v2.2.2";
     homeage = {
       url = "github:bromanko/homeage/main";
       inputs.nixpkgs.follows = "nixpkgs";
