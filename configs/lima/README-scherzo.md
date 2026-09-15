@@ -1,5 +1,29 @@
 # Lima Scherzo connectivity prototype
 
+Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap.
+See [the dual-runner trial status](README-sizing.md) for the boot override and
+remaining qualification prerequisites. Older setup notes below are historical.
+
+## Shared validation capacity (2026-09-14)
+
+Both VMs now have narrow `95-validation-capacity.conf` service overrides in
+`/etc/systemd/system.control/scherzo-runner.service.d/`. They set
+`REPO_CHECK_JOBS=1`, `REPO_CHECK_LOCK=/run/scherzo-cloud/repo-check.lock`,
+`CARGO_BUILD_JOBS=1`, and
+`RUSTC_WRAPPER=/var/lib/scherzo-validation/serialized-rustc`. The compiler wrapper
+uses a separate `/run/scherzo-cloud/rustc.lock`. Both runners remain drained.
+
+Cloud PR #1487 must reach the selected source before ticket dispatch: it preserves
+these controls through clean validation. `REPO_CHECK_*` deliberately avoids the
+engine-reserved `SCHERZO_*` prefix. These controls coordinate aggregates and
+Cargo compiler invocations, not arbitrary tests or all memory use. A loaded
+simultaneous two-workflow trial remains outstanding.
+
+The common NixOS declaration supplies the same limits with a store-backed compiler
+wrapper. After deliberately deploying that declaration, remove only the temporary
+`95-validation-capacity.conf` override and verify the effective service settings.
+Do not bundle unrelated pending NixOS changes into this rollout.
+
 ## Cargo memory-pressure mitigation (2026-09-09)
 
 The reviewed implementation run for LIV-2112,
@@ -343,7 +367,7 @@ historical results, not evidence that this pending run has settled.
 
 ## Configuration
 
-- `configs/lima/scherzo.yaml`: VZ ARM64 VM, 2 CPUs, 4 GiB RAM, 60 GiB disk.
+- `configs/lima/scherzo.yaml`: VZ ARM64 VM, 3 CPUs, 8 GiB RAM, 100 GiB disk.
 - `hosts/nixos/aarch64-linux/lima-scherzo/default.nix`: NixOS and hardened systemd service.
 - `packages/scherzo-cloud.nix`: CLI/Runner Serve 0.30.0, with release archive hashes.
 - `configs/lima/provision-scherzo`: apply this checkout to the unenrolled VM.

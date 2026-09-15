@@ -8,9 +8,9 @@ images:
     digest: sha256:c66e6fbc3c529c90cb72c8bdb459db058478bb015f446ece284b77921c4f32ee
 user:
   home: "/home/{{.User}}.linux"
-cpus: 2
+cpus: 3
 memory: 8GiB
-disk: 60GiB
+disk: 100GiB
 mounts: []
 containerd:
   system: false
