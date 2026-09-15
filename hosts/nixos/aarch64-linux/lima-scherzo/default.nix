@@ -16,6 +16,10 @@ let
     [build]
     jobs = ${toString cargoJobs}
   '';
+  # This lock is separate from the aggregate lock: checks wait for compilers.
+  runnerRustcWrapper = pkgs.writeShellScript "scherzo-serialized-rustc" ''
+    exec ${pkgs.util-linux}/bin/flock --exclusive /run/scherzo-cloud/rustc.lock "$@"
+  '';
   runnerGitConfig = pkgs.writeText "scherzo-runner-gitconfig" ''
     [user]
       name = Scherzo Cloud Runner
@@ -40,7 +44,11 @@ in
       efiInstallAsRemovable = true;
       configurationLimit = 3;
     };
-    tmp.cleanOnBoot = true;
+    tmp = {
+      # Cold CLI builds exceed a RAM-backed /tmp on the 8-GiB runner VMs.
+      useTmpfs = false;
+      cleanOnBoot = true;
+    };
   };
   fileSystems."/boot" = {
     device = lib.mkForce "/dev/vda1";
@@ -58,7 +66,7 @@ in
   swapDevices = [
     {
       device = "/swapfile";
-      size = 2048;
+      size = 4096;
     }
   ];
 
@@ -152,7 +160,8 @@ in
       install -m 0600 ${publicationPlaceholder} /var/lib/scherzo-cloud/github-publish-placeholder
       # Managed workloads intentionally strip GIT_CONFIG_* environment overrides.
       install -m 0644 ${runnerGitConfig} /var/lib/scherzo-cloud/.gitconfig
-      # Clean repository test shells retain HOME but drop CARGO_BUILD_JOBS.
+      # Retain the home default too; isolated Cargo homes use the environment
+      # and compiler wrapper preserved by the updated validation boundary.
       install -d -m 0700 /var/lib/scherzo-cloud/.cargo
       install -m 0644 ${runnerCargoConfig} /var/lib/scherzo-cloud/.cargo/config.toml
     '';
@@ -160,6 +169,9 @@ in
       HOME = "/var/lib/scherzo-cloud";
       # Cargo concurrency is independent of the Nix daemon's max-jobs setting.
       CARGO_BUILD_JOBS = toString cargoJobs;
+      RUSTC_WRAPPER = runnerRustcWrapper;
+      REPO_CHECK_JOBS = "1";
+      REPO_CHECK_LOCK = "/run/scherzo-cloud/repo-check.lock";
       PI_CODING_AGENT_DIR = "/var/lib/scherzo-cloud/.pi/agent";
       XDG_RUNTIME_DIR = "/run/scherzo-cloud";
       GITHUB_PUBLISH_TOKEN_FILE = "/var/lib/scherzo-cloud/github-publish-placeholder";

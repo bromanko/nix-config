@@ -1,5 +1,9 @@
 # Second gray-area runner
 
+Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap.
+See [the dual-runner trial status](README-sizing.md) for the boot override and
+remaining qualification prerequisites. Older setup notes below are historical.
+
 Provisioned 2026-09-13 as `lima-scherzo-2`: 2 CPUs, 8 GiB RAM, 60 GiB disk,
 2 GiB guest swap, CLI 0.35.0 and Pi 0.85.0. It imports the first runner's
 hardened configuration but has an independent disk, enrollment, work root,
@@ -27,7 +31,7 @@ The separate `org.nixos.secret-proxy-tunnel-lima-scherzo-2` LaunchAgent was
 activated without restarting the shared proxy or first VM's tunnel. Its Nix
 script is rooted at `~/.local/state/secret-proxy-tunnel-mini2-root` on gray-area.
 
-## Pending subscription login
+## Initial subscription login (subsequently completed)
 
 This runner needs its own OAuth login; never copy the first VM's `auth.json`.
 From a terminal on gray-area:
