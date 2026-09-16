@@ -2,7 +2,10 @@
 
 pkgs.writeShellApplication {
   name = "limassh";
-  runtimeInputs = with pkgs; [ lima ];
+  runtimeInputs = with pkgs; [
+    lima
+    openssh
+  ];
   text = ''
     # Wrapper around limactl shell that inserts "lima-dev" as the instance name.
     # Usage: limassh [flags...] [-- command...]
@@ -13,6 +16,13 @@ pkgs.writeShellApplication {
     # When no command is provided, bootstrap into fish if available after the
     # NixOS config has been applied, but fall back to fish/bash/sh during early
     # provisioning so the shell still works before /run/current-system exists.
+
+    # Lima's long-lived control master may be created at VM startup, before a
+    # forwarded host agent is available. A later shell then inherits that
+    # master's stale agent socket rather than the caller's current agent.
+    # Disable multiplexing for interactive connections so agent forwarding is
+    # established from this invocation's SSH_AUTH_SOCK.
+    export SSH="ssh -o ControlMaster=no -o ControlPath=none -o ControlPersist=no"
 
     flags=()
     cmd=()

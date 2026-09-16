@@ -1,3 +1,37 @@
+## Disk-backed temporary storage (2026-09-15)
+
+Both runners now use disk-backed ext4 `/tmp`, including Runner Serve's
+`PrivateTmp` namespace. `/run` remains tmpfs. This avoids the 3.9-GiB tmpfs
+limit that stopped LIV-2353's cold isolated CLI build. Both guests were updated
+and rebooted one at a time after confirming Cloud and local idle/draining state;
+their enrolled credentials, retained work and existing system closures remain
+unchanged. No host, proxy, lima-dev or unrelated NixOS rollout was performed.
+
+The shared `hosts/nixos/aarch64-linux/lima-scherzo/default.nix` now declares
+`boot.tmp.useTmpfs = false`, inherited by the second runner. At maintenance time,
+the checkout's `flake.lock` conflict and unrelated pending changes prevented a
+safe full closure deployment. The live change therefore uses a persistent mask:
+`/etc/systemd/system.control/tmp.mount -> /dev/null` on each guest. Remove only
+this mask after deliberately deploying the matching declarative closure; do not
+unmask it while the old closure still enables tmpfs. The mask survived both
+reboots. Existing daily systemd-tmpfiles cleanup retains its 10-day `/tmp` age
+policy and boot cleanup remains configured; runner work under `/var/lib` is not
+part of that cleanup.
+
+Receipts and the cold isolated CLI build qualification are retained under
+`/var/lib/scherzo-cloud/recovery/disk-tmp-20260915/`. Qualification status is
+recorded in `cli-check-exit` and `cli-check.log` on the first runner. The cold
+public CLI source-boundary check passed (exit 0) using ordinary `/tmp` inside a
+private systemd namespace, including the isolated Rust tests and release build.
+Its log includes non-fatal cleanup warnings for read-only test fixtures. Both
+runners remain draining, online and idle; no ticket was dispatched by this
+maintenance. The lock conflict was subsequently resolved without advancing any
+input pins. Both runner system derivations and the gray-area Darwin derivation
+now evaluate successfully; both runners resolve disk-backed `/tmp` and 4-GiB
+swap. Formatting, shell syntax and Lima template validation passed. These are
+evaluation checks, not a deployment: the live masks remain until an explicit
+quiescent activation of the matching closures.
+
 ## Dual-runner sizing trial (2026-09-14)
 
 Both existing runner VMs now have **3 CPUs, 8 GiB RAM, 100 GiB disk and

@@ -17,7 +17,14 @@ let
   guestScript = ''
     set -euo pipefail
     install -d -m 0700 "$HOME/.ssh"
-    ln -sfn "$SSH_AUTH_SOCK" "$HOME/.ssh/${cfg.guestSocketName}"
+
+    # Resolve the concrete forwarded socket before creating the durable link.
+    # During a Lima boot, an older guest generation may temporarily rewrite
+    # SSH_AUTH_SOCK to ~/.ssh/agent.sock; linking that mutable path would let a
+    # later interactive login replace this isolated agent.
+    agent_socket="$(readlink -f -- "$SSH_AUTH_SOCK")"
+    [[ -S "$agent_socket" ]]
+    ln -sfn "$agent_socket" "$HOME/.ssh/${cfg.guestSocketName}"
     exec sleep 2147483647
   '';
   remoteCommand = "exec bash -lc ${lib.escapeShellArg guestScript}";

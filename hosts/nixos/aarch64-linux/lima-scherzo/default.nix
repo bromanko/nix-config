@@ -44,7 +44,11 @@ in
       efiInstallAsRemovable = true;
       configurationLimit = 3;
     };
-    tmp.cleanOnBoot = true;
+    tmp = {
+      # Cold CLI builds exceed a RAM-backed /tmp on the 8-GiB runner VMs.
+      useTmpfs = false;
+      cleanOnBoot = true;
+    };
   };
   fileSystems."/boot" = {
     device = lib.mkForce "/dev/vda1";
