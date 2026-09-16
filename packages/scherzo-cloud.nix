@@ -10,19 +10,19 @@
 }:
 
 let
-  version = "0.35.0";
+  version = "0.35.1";
   releases = {
     aarch64-darwin = {
       target = "aarch64-apple-darwin";
-      hash = "sha256-J39zhAonsFlmcB6IWN/CKN4dgWoef0qm7RIe+uMTqes=";
+      hash = "sha256-Q8jqGCSU3OnQxFh/IocJjqhAmQSfPJwEtNYs768u7QY=";
     };
     aarch64-linux = {
       target = "aarch64-unknown-linux-gnu";
-      hash = "sha256-EBZX0XSsDw5jgGHSeTc15q4wrO7uF3VCSynzoVmhel8=";
+      hash = "sha256-KVJgvn1xzyROvVzc0Wmrk0ljFnPOiRzuCGlq43ZugIM=";
     };
     x86_64-linux = {
       target = "x86_64-unknown-linux-gnu";
-      hash = "sha256-A11F7xEJUHHMQ/3NcSwlXSvGYoTqDaol+z4Kz7isYt4=";
+      hash = "sha256-Nw/AQrbRDVW1y3Jp69Di4Vh52nUOw08ln0o7Mi1FJCc=";
     };
   };
   release =

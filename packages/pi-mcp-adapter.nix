@@ -7,17 +7,17 @@
 }:
 
 let
-  version = "2.33.0";
+  version = "2.34.0";
   src = fetchFromGitHub {
     owner = "nicobailon";
     repo = "pi-mcp-adapter";
     rev = "v${version}";
-    hash = "sha256-6p0uDmtGse+vIH0yiYKBSpQQG0eiWcj9Q+uDcRs/Ulg=";
+    hash = "sha256-YpiJROIG0/U81wAoImjktbg/d5wGnc6o130IlOrTyEE=";
   };
 
-  # Normalize an abbreviated package URL and fill integrity fields omitted
-  # from nested development packages in the upstream lockfile. Nix parses the
-  # complete lockfile even though the installation below omits dev packages.
+  # Fill integrity fields omitted from nested development packages in the
+  # upstream lockfile. Nix parses the complete lockfile even though the
+  # installation below omits dev packages.
   patchLockfile = ''
     python3 - <<'PY'
     import json
@@ -26,11 +26,6 @@ let
     path = Path("package-lock.json")
     lock = json.loads(path.read_text())
     packages = lock["packages"]
-
-    packages["node_modules/@modelcontextprotocol/client"]["dependencies"][
-        "@modelcontextprotocol/core"
-    ] = "https://pkg.pr.new/@modelcontextprotocol/core@3b205e7dd2f997b6a87e479e36421f7eaa2058e0"
-
     integrities = {
         "pi-agent-core": "sha512-evyzXYWCLQGmcaBYHlmSku02r8qoN4SGI60GZABo6iV+H+nqX+P9ud8fEZ4GmRq9mUSREvvfX+w9dA9ThF9C6w==",
         "pi-ai": "sha512-wMsAdJMxuNri08vLqTyYVI201DQQezGhPSTkzYsHdw5dYX3rCNwEmSvpaAwhi7ELKI/2tE/CEgSWg/6iRxSgdQ==",
@@ -53,7 +48,7 @@ buildNpmPackage {
 
   npmDeps = fetchNpmDeps {
     inherit src;
-    hash = "sha256-J6WrgVHAgsAXhCpvhJ8hZYhUEoqZ/xpiu1vW42y2mSA=";
+    hash = "sha256-4BZUJa+rDpAmjF0NkDjWx+CHbnahyNBdRmf3ErpIa04=";
     nativeBuildInputs = [ python3 ];
     postPatch = patchLockfile;
   };
