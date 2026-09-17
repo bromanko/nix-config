@@ -4,6 +4,20 @@ Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap
 See [the dual-runner trial status](README-sizing.md) for preservation, boot override
 and remaining qualification prerequisites. Older entries below are historical.
 
+## Scherzo Cloud 0.36.0 rollout (2026-09-17)
+
+Both runner VMs now use Scherzo Cloud 0.36.0. The guest-only activations preserved
+the existing enrollment credentials and produced these systems:
+
+- `lima-scherzo`: `/nix/store/l6ykggx5h2b3kx37a244d2da63bjy4j6-nixos-system-lima-scherzo-26.11.20260818.0ae2bc1`
+- `lima-scherzo-2`: `/nix/store/481ddh3l3njv6fqa95w2qccykrg2dks4-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+
+Both services are active and advertise 0.36.0. A controlled assignment attempt
+still received an undecodable gateway frame after its opening handshake, so both
+registrations were returned to draining with zero assignments. LIV-2264 and
+LIV-2284 remain queued; do not re-enable these runners until the remaining
+runner/gateway version mismatch is resolved.
+
 ## Shared validation capacity (2026-09-14)
 
 Both VMs now have narrow `95-validation-capacity.conf` service overrides in
