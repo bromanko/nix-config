@@ -4,6 +4,22 @@ Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap
 See [the dual-runner trial status](README-sizing.md) for preservation, boot override
 and remaining qualification prerequisites. Older entries below are historical.
 
+## Scherzo Cloud 0.40.0 rollout (2026-09-20)
+
+Both gray-area runner VMs were upgraded from Scherzo Cloud 0.39.0 to 0.40.0
+through sequential guest-only NixOS activations built from `d8ad7d6`. The package
+install checks passed on macOS ARM64 and Linux ARM64, including the local workflow
+smoke test. The retained guest systems are:
+
+- `lima-scherzo`: `/nix/store/2y7q2hb30kdk2r3svrj0fbys9xllz3pv-nixos-system-lima-scherzo-26.11.20260818.0ae2bc1`
+- `lima-scherzo-2`: `/nix/store/6lxwzjyd1m254hmq45l21hbwm4k8899g-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+
+Before each switch, the Cloud registration was online, draining, and idle while
+local status reported zero assignments. Each service was stopped before activation
+and reconnected with its existing enrollment credential and a fresh boot. Both now
+advertise 0.40.0, remain draining and idle, and report zero service restarts. No
+runner was enabled and no canary was dispatched.
+
 ## Scherzo Cloud 0.38.0 rollout (2026-09-17)
 
 Both runner VMs now use Scherzo Cloud 0.38.0. The guest-only activations preserved
