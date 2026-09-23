@@ -1,6 +1,6 @@
 # Second gray-area runner
 
-Current sizing: 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap; CLI 0.35.1,
+Current sizing: 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap; CLI 0.41.0,
 Pi 0.85.0, independent OAuth completed. See [the dual-runner trial status](README-sizing.md)
 for the boot override and remaining qualification prerequisites. Provisioning notes
 below describe the original setup.

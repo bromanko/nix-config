@@ -4,6 +4,36 @@ Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap
 See [the dual-runner trial status](README-sizing.md) for preservation, boot override
 and remaining qualification prerequisites. Older entries below are historical.
 
+## Scherzo Cloud 0.41.1 rollout (2026-09-23)
+
+Both gray-area runners were upgraded sequentially from 0.41.0 using guest-only
+NixOS activations. The Linux ARM64 package install check and macOS ARM64
+package smoke test passed; each guest closure differed only in Scherzo Cloud.
+Both Cloud and local assignment counts were zero while draining before each
+switch. Both services reconnected with their existing credentials and new boot
+IDs, advertise 0.41.1, and have zero failed units. The previous enabled mode
+was restored. No workflow was dispatched.
+
+- `lima-scherzo`: `/nix/store/a4xrpxx002p98nngyaczcx7v0apfc2a8-nixos-system-lima-scherzo-26.11.20260818.0ae2bc1`
+- `lima-scherzo-2`: `/nix/store/waa5sqvm47p4lrgqz9z9qk6v5c830m7m-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+
+## Scherzo Cloud 0.41.0 rollout (2026-09-23)
+
+Both gray-area runners were upgraded sequentially from 0.40.0 to 0.41.0
+using guest-only NixOS activations. The Linux ARM64 and macOS ARM64 package
+install checks passed. Each candidate closure differed from its active system
+only in the Scherzo Cloud package. Cloud and local assignment counts were zero
+while draining before each switch; both services reconnected with their existing
+credentials and new boot IDs. The guest systems are:
+
+- `lima-scherzo`: `/nix/store/vhdk5vcks4z7a1h3dl2q47668kscqfkj-nixos-system-lima-scherzo-26.11.20260818.0ae2bc1`
+- `lima-scherzo-2`: `/nix/store/lbbjfhi0izbbb98bqbv87960iv0ac1c8-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+
+Both advertise 0.41.0, are online and idle, with zero service restarts or
+failed guest units. Their pre-upgrade enabled mode was restored after both
+reconnected. The existing `/tmp` mask and swap resize override remain intact.
+No workflow was dispatched.
+
 ## Scherzo Cloud 0.40.0 rollout (2026-09-20)
 
 Both gray-area runner VMs were upgraded from Scherzo Cloud 0.39.0 to 0.40.0
@@ -401,7 +431,7 @@ historical results, not evidence that this pending run has settled.
 
 - `configs/lima/scherzo.yaml`: VZ ARM64 VM, 3 CPUs, 8 GiB RAM, 100 GiB disk.
 - `hosts/nixos/aarch64-linux/lima-scherzo/default.nix`: NixOS and hardened systemd service.
-- `packages/scherzo-cloud.nix`: CLI/Runner Serve 0.30.0, with release archive hashes.
+- `packages/scherzo-cloud.nix`: CLI/Runner Serve 0.41.1, with release archive hashes.
 - `configs/lima/provision-scherzo`: apply this checkout to the unenrolled VM.
 
 No host mounts, forwarded SSH agents, or application port forwards are configured.
