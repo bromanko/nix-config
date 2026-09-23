@@ -45,10 +45,18 @@ limactl shell lima-scherzo-2 sudo -H -u scherzo-runner env \
 ```
 
 Use `/login`, select OpenAI Codex, complete browser authorization, then exit Pi.
-The non-secret `pi-models.json` includes the temporary Astra catalog entry from
-the operator's Home Manager configuration. It does not supply credentials.
-Before ticket dispatch, qualify actual model access and Cloud agent execution.
-Two heavy concurrent implementations and OAuth refresh remain unqualified.
+The initial configuration installed a temporary, non-secret Astra entry in
+`/var/lib/scherzo-cloud/.pi/agent/models.json`. On 2026-09-23, Pi's catalog
+was refreshed independently on both runners. An isolated catalog-only check
+found `openai-codex/gpt-6-astra` on both without `models.json`. Both obsolete
+runner-owned files were removed while drained, and the second guest activated
+`/nix/store/7g71fs7gb6v51gwmbmz2gc53vcpx4yv9-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+without the declarative override. Its closure removed only the temporary
+`scherzo-pi-models.json` entry. Both guests now use Pi's built-in and refreshed
+provider catalogs; no credentials were copied. A catalog row is not proof of
+live model access: qualify actual model calls and Cloud agent execution before
+ticket dispatch. Two heavy concurrent implementations and OAuth refresh remain
+unqualified.
 
 `lima-dev` is stopped, not deleted; Docker has 4 GiB configured. Do not restart
 lima-dev alongside both runners without reassessing the 24-GiB host's memory.
