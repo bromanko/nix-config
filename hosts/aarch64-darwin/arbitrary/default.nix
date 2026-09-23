@@ -177,10 +177,18 @@ with lib.my;
         settings.defaults.providers.scherzo_cloud_dev = {
           uri = "onepassword+token://Development";
           credentials.service_account_token = "keyring";
+          cache = {
+            provider = "keyring://secretspec/cache/{project}/{profile}/{key}";
+            max_age = "8h";
+          };
         };
         settings.defaults.providers.scherzo_cloud_infra = {
           uri = "onepassword+token://Development";
           credentials.service_account_token = "keyring";
+          cache = {
+            provider = "keyring://secretspec/cache/{project}/{profile}/{key}";
+            max_age = "8h";
+          };
         };
       };
       docker.enable = true;
