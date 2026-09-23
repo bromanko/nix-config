@@ -174,8 +174,14 @@ with lib.my;
       psql.enable = true;
       secretspec = {
         enable = true;
-        settings.defaults.providers.scherzo_cloud_dev = "onepassword://Development";
-        settings.defaults.providers.scherzo_cloud_infra = "onepassword://Development";
+        settings.defaults.providers.scherzo_cloud_dev = {
+          uri = "onepassword+token://Development";
+          credentials.service_account_token = "keyring";
+        };
+        settings.defaults.providers.scherzo_cloud_infra = {
+          uri = "onepassword+token://Development";
+          credentials.service_account_token = "keyring";
+        };
       };
       docker.enable = true;
       nodejs.enable = true;
@@ -262,7 +268,11 @@ with lib.my;
     };
   };
   hm = {
+    xdg.configFile."direnv/direnvrc".text = ''
+      export SCHERZO_SECRETSPEC_BIN="${pkgs.secretspec}/bin/secretspec"
+    '';
     home = {
+      sessionVariables.SCHERZO_SECRETSPEC_BIN = "${pkgs.secretspec}/bin/secretspec";
       packages =
         (with pkgs; [
           slack
