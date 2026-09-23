@@ -64,7 +64,7 @@ in
     # instead of editing settings.json or running `pi install`.
     settings = mkOpt attrs {
       defaultProvider = "openai-codex";
-      defaultModel = "gpt-6-astra";
+      defaultModel = "gpt-6-sol";
       packages = [
         {
           source = "~/Code/llm-agents";
@@ -83,14 +83,13 @@ in
       defaultThinkingLevel = "medium";
       hideThinkingBlock = true;
       enabledModels = [
+        "openai-codex/gpt-6-sol:medium"
         "openai-codex/gpt-6-astra:medium"
-        "openai-codex/gpt-5.6-sol:xhigh"
+        "openai-codex/gpt-6-sol:xhigh"
         "openai-codex/gpt-6-astra:xhigh"
-        "openai-codex/gpt-6-astra:max"
-        "openai-codex/gpt-5.6-sol:max"
         "openai-codex/gpt-5.6-terra:xhigh"
-        "openai-codex/gpt-5.6-luna:xhigh"
-        "anthropic/claude-opus-5:max"
+        "openai-codex/gpt-6-luna:xhigh"
+        "anthropic/claude-opus-5-5:xhigh"
         "anthropic/claude-fable-5-1:xhigh"
       ];
       branchSummary = {
@@ -168,9 +167,9 @@ in
         }
       ];
 
-      # Pi 0.84.x identifies OAuth requests as Claude Code 2.1.75, which
-      # Anthropic rejects for Fable 5.1. Override the stale built-in header.
-      providers.anthropic.headers."user-agent" = "claude-cli/2.1.257";
+      # Match the Claude Code version installed from llm-agents.nix so
+      # Anthropic OAuth requests pass the expected user-agent check.
+      providers.anthropic.headers."user-agent" = "claude-cli/2.1.280";
       providers.anthropic.models = [
         {
           id = "claude-fable-5-1";

@@ -6,7 +6,7 @@
 
 # Pi extension package fetched from npm.
 let
-  version = "2.2.0";
+  version = "2.2.1";
 in
 stdenv.mkDerivation {
   pname = "pi-claude-code-use";
@@ -14,7 +14,7 @@ stdenv.mkDerivation {
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@benvargas/pi-claude-code-use/-/pi-claude-code-use-${version}.tgz";
-    hash = "sha256-kg6djtAi5yJ2EhAekphiQ0aJQ1R/eWvaDIWOhCxzzzw=";
+    hash = "sha256-nJpYRfSrS/MpEfqXYKnHTUUsZdaS3ePs2Ot8qJKlIWk=";
   };
 
   dontBuild = true;
