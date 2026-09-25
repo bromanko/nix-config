@@ -276,11 +276,7 @@ with lib.my;
     };
   };
   hm = {
-    xdg.configFile."direnv/direnvrc".text = ''
-      export SCHERZO_SECRETSPEC_BIN="${pkgs.secretspec}/bin/secretspec"
-    '';
     home = {
-      sessionVariables.SCHERZO_SECRETSPEC_BIN = "${pkgs.secretspec}/bin/secretspec";
       packages =
         (with pkgs; [
           slack
