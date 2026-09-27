@@ -118,7 +118,7 @@ with lib.my;
           loom.enable = true;
         };
         aerospace = {
-          enable = true;
+          enable = false;
           jankyBorders.enable = false;
           windowRules = [
             {
@@ -174,6 +174,7 @@ with lib.my;
       psql.enable = true;
       secretspec = {
         enable = true;
+        package = pkgs.callPackage ../../../packages/secretspec.nix { };
         settings.defaults.providers.scherzo_cloud_dev = {
           uri = "onepassword+token://Development";
           credentials.service_account_token = "keyring";

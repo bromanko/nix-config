@@ -188,7 +188,23 @@
 
       overlays = mapModules ./overlays import // {
         default = final: prev: {
-          devenv = inputs.devenv.packages.${prev.stdenv.hostPlatform.system}.devenv;
+          devenv =
+            let
+              system = prev.stdenv.hostPlatform.system;
+              upstream = inputs.devenv.packages.${system}.devenv;
+            in
+            if prev.stdenv.hostPlatform.isDarwin then
+              upstream.overrideAttrs (old: {
+                # Devenv 2.3.1's proxy links OpenSSL but omits it from the
+                # final crate's inputs, so clean Darwin builds cannot find -lssl.
+                devenvProxy = old.devenvProxy.overrideAttrs (proxy: {
+                  buildInputs = (proxy.buildInputs or [ ]) ++ [
+                    inputs.devenv.inputs.nixpkgs.legacyPackages.${system}.openssl
+                  ];
+                });
+              })
+            else
+              upstream;
           my = self.packages.${prev.stdenv.hostPlatform.system} // {
             age-plugin-op = age-plugin-op.defaultPackage.${prev.stdenv.hostPlatform.system};
           };
