@@ -9,6 +9,8 @@
 let
   brewPrefix = "/opt/homebrew";
   brewPath = "${brewPrefix}/bin";
+  secretspecStateDir = "${config.hm.home.homeDirectory}/.local/state/secretspec";
+  secretspecCacheIdentity = "${secretspecStateDir}/cache-identity";
 
   github1PasswordPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia";
   grayAreaPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDhMuyTBj/2cYLaBjtdi5nZHwm281C51LogGRhG8A7mt";
@@ -179,7 +181,7 @@ with lib.my;
           uri = "onepassword+token://Development";
           credentials.service_account_token = "keyring";
           cache = {
-            provider = "keyring://secretspec/cache/{project}/{profile}/{key}";
+            provider = "age://${secretspecStateDir}/cache-dev.age?identity=${secretspecCacheIdentity}";
             max_age = "8h";
           };
         };
@@ -187,7 +189,7 @@ with lib.my;
           uri = "onepassword+token://Development";
           credentials.service_account_token = "keyring";
           cache = {
-            provider = "keyring://secretspec/cache/{project}/{profile}/{key}";
+            provider = "age://${secretspecStateDir}/cache-infra.age?identity=${secretspecCacheIdentity}";
             max_age = "8h";
           };
         };
