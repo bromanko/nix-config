@@ -4,6 +4,26 @@ Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap
 See [the dual-runner trial status](README-sizing.md) for preservation, boot override
 and remaining qualification prerequisites. Older entries below are historical.
 
+## Honeycomb runner trace rollout (2026-09-28)
+
+Both enrolled Lima guests received the loopback OpenTelemetry Collector while
+Cloud and local assignment counts were zero. The deployment source preserved
+Gray area's current 0.45.0 package pin and other pending host changes; the
+candidate closures added only the Collector, configuration, and service unit.
+The branch now pins 0.45.0 as well, and both configurations evaluate to the
+same NixOS derivations used for the deployment.
+
+- `lima-scherzo`: `/nix/store/milfilnyja8n093kpaj0rg3xdd7q01wg-nixos-system-lima-scherzo-26.11.20260818.0ae2bc1`
+- `lima-scherzo-2`: `/nix/store/8dwqpqkii5ypbsrmix8vpszgcvhn38l4-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+
+Each guest retained its enrollment credential and reconnected on 0.45.0. The
+Collector is active, has a root-owned `0600` Honeycomb key, and listens only
+on `127.0.0.1:4318`. Real `runner.gateway_connection` spans from both guests
+reached the Production `scherzo-runner` dataset. Both registrations returned to
+their prior enabled mode, online and idle, with no failed guest units. No
+workflow was dispatched. The shared telemetry patch was applied to Gray area's
+normal checkout as well, preserving its preexisting local changes.
+
 ## Scherzo Cloud 0.41.1 rollout (2026-09-23)
 
 Both gray-area runners were upgraded sequentially from 0.41.0 using guest-only
