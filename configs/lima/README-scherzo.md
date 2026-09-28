@@ -626,3 +626,15 @@ The local Coordinator integration suite also passed. No production schema,
 credential, run state, or service configuration was changed by these diagnostics.
 Temporary database objects and diagnostic processes were discarded, and the
 personal Tailscale profile was restored after control-plane inspection.
+
+## Runner trace export
+
+Both Lima guests share the `lima-scherzo` NixOS definition. It configures Runner
+Serve to send OTLP/HTTP traces to a loopback Collector. The Collector sends only
+traces to Honeycomb's `scherzo-runner` dataset and starts only after its root-owned
+`/etc/credstore/um-runner-honeycomb-api-key` file exists. The ingest key never
+appears in the Runner Serve service environment, Nix store, or workflow steps.
+Use the Scherzo Cloud `spikes/runner-hosts/lima/scripts/install-telemetry-auth`
+helper to install the key independently on each VM after the protected dataset
+and runner-specific Production Ingest Key are ready. See that repository's
+`docs/operations/runner-telemetry.md` for rollout and verification order.
