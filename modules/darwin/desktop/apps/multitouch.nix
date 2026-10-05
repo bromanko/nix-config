@@ -19,12 +19,10 @@ in
     # Install Multitouch via Homebrew
     modules.homebrew.casks = [ "multitouch" ];
 
-    # Disable conflicting macOS default gestures via activation script
+    # Disable the conflicting App Exposé gesture.
     system.activationScripts.postActivation.text = ''
       # Disable four-finger horizontal swipe (App Exposé)
       defaults write com.apple.dock showAppExposeGestureEnabled -bool false
-      # Disable four-finger vertical swipes (Mission Control/App Exposé)
-      defaults write com.apple.dock showMissionControlGestureEnabled -bool false
     '';
   };
 }

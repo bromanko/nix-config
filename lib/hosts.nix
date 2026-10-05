@@ -23,6 +23,7 @@ with inputs;
             overlays = pkgs.${system}.overlays;
           };
           networking.hostName = mkDefault (removeSuffix ".nix" (baseNameOf path));
+          networking.computerName = mkDefault (removeSuffix ".nix" (baseNameOf path));
         }
         inputs.determinate.darwinModules.default
         ../hosts/darwin.nix

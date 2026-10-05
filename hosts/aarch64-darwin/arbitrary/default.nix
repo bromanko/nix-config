@@ -9,6 +9,8 @@
 let
   brewPrefix = "/opt/homebrew";
   brewPath = "${brewPrefix}/bin";
+  secretspecStateDir = "${config.hm.home.homeDirectory}/.local/state/secretspec";
+  secretspecCacheIdentity = "${secretspecStateDir}/cache-identity";
 
   github1PasswordPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPzLxgUGkWXC/Hkvuxv4rsJfFYrYq1S16DouIXRXD2Ia";
   grayAreaPublicKey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIDhMuyTBj/2cYLaBjtdi5nZHwm281C51LogGRhG8A7mt";
@@ -103,22 +105,14 @@ with lib.my;
         vscode.enable = true;
         claude.enable = true;
         multitouch.enable = true;
-        swiftbar = {
-          enable = true;
-          buildkite = {
-            enable = true;
-            organization = "scherzo";
-            pipeline = "scherzo-cloud-main";
-            displayName = "Scherzo Cloud";
-          };
-        };
+        omniwm.enable = true;
         screencast = {
           enable = true;
           keycastr.enable = true;
           loom.enable = true;
         };
         aerospace = {
-          enable = true;
+          enable = false;
           jankyBorders.enable = false;
           windowRules = [
             {
@@ -174,22 +168,9 @@ with lib.my;
       psql.enable = true;
       secretspec = {
         enable = true;
-        settings.defaults.providers.scherzo_cloud_dev = {
-          uri = "onepassword+token://Development";
-          credentials.service_account_token = "keyring";
-          cache = {
-            provider = "keyring://secretspec/cache/{project}/{profile}/{key}";
-            max_age = "8h";
-          };
-        };
-        settings.defaults.providers.scherzo_cloud_infra = {
-          uri = "onepassword+token://Development";
-          credentials.service_account_token = "keyring";
-          cache = {
-            provider = "keyring://secretspec/cache/{project}/{profile}/{key}";
-            max_age = "8h";
-          };
-        };
+        package = pkgs.callPackage ../../../packages/secretspec.nix { };
+        # Per-user vault selection; the Scherzo repository owns cache policy.
+        settings.defaults.providers.useful_machinery_dev_vault = "onepassword://usefulmachinery.1password.com@SecretSpec Development";
       };
       docker.enable = true;
       nodejs.enable = true;
@@ -247,7 +228,6 @@ with lib.my;
         "fantastical"
         "figma"
         "google-chrome"
-        "granola"
         "hazeover"
         "homerow"
         "iina"
@@ -276,11 +256,7 @@ with lib.my;
     };
   };
   hm = {
-    xdg.configFile."direnv/direnvrc".text = ''
-      export SCHERZO_SECRETSPEC_BIN="${pkgs.secretspec}/bin/secretspec"
-    '';
     home = {
-      sessionVariables.SCHERZO_SECRETSPEC_BIN = "${pkgs.secretspec}/bin/secretspec";
       packages =
         (with pkgs; [
           slack
