@@ -188,7 +188,20 @@
 
       overlays = mapModules ./overlays import // {
         default = final: prev: {
-          devenv = inputs.devenv.packages.${prev.stdenv.hostPlatform.system}.devenv;
+          devenv =
+            let
+              upstream = inputs.devenv.packages.${prev.stdenv.hostPlatform.system}.devenv;
+            in
+            if prev.stdenv.hostPlatform.isDarwin then
+              upstream.overrideAttrs (old: {
+                # The pinned proxy's openssl-sys metadata can name Homebrew.
+                # Supply the Nix library explicitly to the final native link.
+                devenvProxy = old.devenvProxy.overrideAttrs (proxy: {
+                  buildInputs = (proxy.buildInputs or [ ]) ++ [ prev.openssl ];
+                });
+              })
+            else
+              upstream;
           my = self.packages.${prev.stdenv.hostPlatform.system} // {
             age-plugin-op = age-plugin-op.defaultPackage.${prev.stdenv.hostPlatform.system};
           };
