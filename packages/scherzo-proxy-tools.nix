@@ -37,8 +37,8 @@ pkgs.symlinkJoin {
       # inside it. Source checkout without this environment stays direct.
       if [ "''${GH_TOKEN:-}" = '{{scherzo:GITHUB_TOKEN}}' ]; then
         exec ${pkgs.git}/bin/git \
-          -c http.https://github.com/scherzo-systems/scherzo-cloud.git.proxy=http://127.0.0.1:17329 \
-          -c http.https://github.com/scherzo-systems/scherzo-cloud.git.sslCAInfo=${caBundle} \
+          -c http.https://github.com/useful-machinery/platform.git.proxy=http://127.0.0.1:17329 \
+          -c http.https://github.com/useful-machinery/platform.git.sslCAInfo=${caBundle} \
           "$@"
       fi
       exec ${pkgs.git}/bin/git "$@"
