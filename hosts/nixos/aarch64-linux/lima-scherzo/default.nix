@@ -12,6 +12,7 @@ let
   pi = pkgs.callPackage ../../../../packages/pi.nix { };
   devenv = inputs.devenv.packages.${pkgs.stdenv.hostPlatform.system}.devenv;
   cargoJobs = 1;
+  telemetryCredential = "/etc/credstore/um-runner-honeycomb-api-key";
   runnerCargoConfig = pkgs.writeText "scherzo-runner-cargo-config" ''
     [build]
     jobs = ${toString cargoJobs}
@@ -126,9 +127,58 @@ in
     workRoot = "/var/lib/scherzo-cloud/work";
   };
   systemd.tmpfiles.rules = [
+    "d /etc/credstore 0700 root root -"
     "d /var/lib/scherzo-cloud 0700 scherzo-runner scherzo-runner -"
     "d /var/lib/scherzo-cloud/work 0700 scherzo-runner scherzo-runner -"
   ];
+  services.opentelemetry-collector = {
+    enable = true;
+    package = pkgs.opentelemetry-collector-contrib;
+    settings = {
+      receivers.otlp.protocols.http.endpoint = "127.0.0.1:4318";
+      processors.batch = {
+        timeout = "10s";
+        send_batch_size = 256;
+      };
+      exporters."otlphttp/honeycomb" = {
+        endpoint = "https://api.honeycomb.io:443";
+        compression = "gzip";
+        headers = {
+          "x-honeycomb-team" = "\${file:/run/credentials/opentelemetry-collector.service/honeycomb-api-key}";
+        };
+        retry_on_failure = {
+          enabled = true;
+          initial_interval = "5s";
+          max_interval = "30s";
+          max_elapsed_time = "5m";
+        };
+        sending_queue = {
+          enabled = true;
+          queue_size = 256;
+        };
+      };
+      service.pipelines.traces = {
+        receivers = [ "otlp" ];
+        processors = [ "batch" ];
+        exporters = [ "otlphttp/honeycomb" ];
+      };
+    };
+  };
+  systemd.services.opentelemetry-collector = {
+    wants = [ "network-online.target" ];
+    after = [ "network-online.target" ];
+    unitConfig.ConditionPathExists = telemetryCredential;
+    serviceConfig = {
+      LoadCredential = [ "honeycomb-api-key:${telemetryCredential}" ];
+      PrivateTmp = true;
+      ProtectHome = true;
+      RestrictAddressFamilies = [
+        "AF_INET"
+        "AF_INET6"
+      ];
+      UMask = "0077";
+    };
+  };
   systemd.services.scherzo-runner = {
     description = "Scherzo Cloud Runner Serve";
     wants = [ "network-online.target" ];
@@ -180,12 +230,14 @@ in
       LINEAR_PROXY_URL = "http://127.0.0.1:17329";
       LINEAR_PROXY_CA_FILE = "${proxyTools.caBundle}";
       SSL_CERT_FILE = "${pkgs.cacert}/etc/ssl/certs/ca-bundle.crt";
+      OTEL_EXPORTER_OTLP_TRACES_ENDPOINT = "http://127.0.0.1:4318/v1/traces";
+      OTEL_EXPORTER_OTLP_TRACES_PROTOCOL = "http/protobuf";
     };
     serviceConfig = {
       Type = "simple";
       User = "scherzo-runner";
       Group = "scherzo-runner";
-      ExecStart = "${scherzoCloud}/bin/scherzo-cloud runner serve --config /etc/scherzo/runner.json";
+      ExecStart = "${scherzoCloud}/bin/um runner serve --config /etc/scherzo/runner.json";
       Restart = "on-failure";
       # Work-root recovery requires an operator, not an automatic restart loop.
       RestartPreventExitStatus = [ 5 ];

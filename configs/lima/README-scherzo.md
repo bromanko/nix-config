@@ -1,5 +1,19 @@
 # Lima Scherzo connectivity prototype
 
+## Useful Machinery source integration — October 6, 2026
+
+The shared runner package now pins the verified `um` v0.57.0 release from
+`useful-machinery/um`. Both gray-area guests use the `um` launcher, the current
+`useful-machinery/platform` Git proxy scope, and the collector configuration
+already deployed to those guests. Protected enrollment/state paths remain intact.
+
+Both guests were upgraded sequentially while idle and now connect to
+`api.usefulmachinery.com` with their existing credentials. Their Cloud display
+names are `gray-area-lima-um` and `gray-area-lima-um-2`. Each passed a targeted
+command canary and downloaded artifact integrity verification. Native macOS
+package install checks and both NixOS guest derivation evaluations passed.
+
+
 Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap.
 See [the dual-runner trial status](README-sizing.md) for preservation, boot override
 and remaining qualification prerequisites. Older entries below are historical.

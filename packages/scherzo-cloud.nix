@@ -10,19 +10,19 @@
 }:
 
 let
-  version = "0.41.1";
+  version = "0.57.0";
   releases = {
     aarch64-darwin = {
       target = "aarch64-apple-darwin";
-      hash = "sha256-wzu2/dRwdD59YUG0X0u5BZC3+EqfUqoDwAUOnK1hhBA=";
+      hash = "sha256-pPX5vts/akVw3i2JjJpLttErbJzWKCq0afQ9BWLaFO4=";
     };
     aarch64-linux = {
       target = "aarch64-unknown-linux-gnu";
-      hash = "sha256-FCJALS8SJ2uFKfTcWd1Tig5p3LUVkZesHHCYMGTgr/4=";
+      hash = "sha256-+eHU5fwRJrg5hVupGzgSPf4heUTZeBd/p4KihxdWm18=";
     };
     x86_64-linux = {
       target = "x86_64-unknown-linux-gnu";
-      hash = "sha256-jzg2nUDl422Bq7nW6hUJtTmQbYgXV1fi7GUD5h89gY8=";
+      hash = "sha256-jDPnE+2W6J8v/xjS8n1ICHXVzAN987dg17wJYZOyxuU=";
     };
   };
   release =
@@ -30,11 +30,11 @@ let
       or (throw "unsupported Scherzo Cloud platform: ${stdenvNoCC.hostPlatform.system}");
 in
 stdenvNoCC.mkDerivation {
-  pname = "scherzo-cloud";
+  pname = "um";
   inherit version;
 
   src = fetchurl {
-    url = "https://github.com/scherzo-systems/scherzo-cloud-cli/releases/download/v${version}/scherzo-cloud-${version}-${release.target}.tar.gz";
+    url = "https://github.com/useful-machinery/um/releases/download/v${version}/um-${version}-${release.target}.tar.gz";
     inherit (release) hash;
   };
 
@@ -52,11 +52,11 @@ stdenvNoCC.mkDerivation {
   installPhase = ''
     runHook preInstall
 
-    install -D -m 0755 scherzo-cloud "$out/libexec/scherzo-cloud/scherzo-cloud"
+    install -D -m 0755 um "$out/libexec/um/um"
     mkdir -p "$out/bin"
     # Patch the ELF interpreter instead of invoking ld-linux explicitly.
     # Runner child guards re-exec current_exe(), which must identify Scherzo.
-    makeWrapper "$out/libexec/scherzo-cloud/scherzo-cloud" "$out/bin/scherzo-cloud" \
+    makeWrapper "$out/libexec/um/um" "$out/bin/um" \
       --set SSL_CERT_FILE "${cacert}/etc/ssl/certs/ca-bundle.crt"
 
     runHook postInstall
@@ -66,7 +66,7 @@ stdenvNoCC.mkDerivation {
   nativeInstallCheckInputs = [ versionCheckHook ];
   versionCheckProgramArg = "--version";
   postInstallCheck = ''
-    test "$("$out/bin/scherzo-cloud" --version)" = "scherzo-cloud ${version}"
+    test "$("$out/bin/um" --version)" = "um ${version}"
 
     # A version probe alone misses wrappers that break the re-executed child
     # guard. Exercise a command workflow without network or provider credentials.
@@ -79,7 +79,7 @@ stdenvNoCC.mkDerivation {
         command:
           argv: [sh, -c, "exit 0"]
     YAML
-    "$out/bin/scherzo-cloud" workflow run \
+    "$out/bin/um" workflow run \
       --source-root "$TMPDIR/runner-smoke/source" \
       --execution-root "$TMPDIR/runner-smoke/work" \
       --run-dir "$TMPDIR/runner-smoke/result" \
@@ -87,10 +87,10 @@ stdenvNoCC.mkDerivation {
   '';
 
   meta = {
-    description = "Command-line interface and runner for Scherzo Cloud";
-    homepage = "https://github.com/scherzo-systems/scherzo-cloud-cli";
+    description = "Command-line interface and runner for Useful Machinery";
+    homepage = "https://github.com/useful-machinery/um";
     license = lib.licenses.asl20;
-    mainProgram = "scherzo-cloud";
+    mainProgram = "um";
     platforms = builtins.attrNames releases;
     sourceProvenance = with lib.sourceTypes; [ binaryNativeCode ];
   };
