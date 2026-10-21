@@ -256,12 +256,16 @@ with lib.my;
     };
   };
   hm = {
+    xdg.configFile."rex/init.lua".source = ../../../configs/rex/init.lua;
+    xdg.configFile."rex/themes/Catppuccin Mocha".source = ../../../configs/rex/themes/catppuccin-mocha;
+
     home = {
       packages =
         (with pkgs; [
           slack
           tailscale
           my.bartender-golden-gate
+          my.linear-cli
           my.tldx
           my.sprite
           my.ticket
