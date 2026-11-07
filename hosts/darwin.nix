@@ -27,6 +27,10 @@ with lib.my;
 
     hm = {
       home = {
+        file."iCloud Drive".source = config.hm.lib.file.mkOutOfStoreSymlink (
+          "${config.hm.home.homeDirectory}/Library/Mobile Documents/com~apple~CloudDocs"
+        );
+
         # This value determines the Home Manager release that your configuration
         # is compatible with. This helps avoid breakage when a new Home Manager
         # release introduces backwards incompatible changes.
