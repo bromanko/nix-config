@@ -49,6 +49,11 @@ let
 
     exec ${pkgs.openssh}/bin/ssh -t gray-area "$attach_command"
   '';
+
+  # Rex Beta bundles its CLI inside the app instead of installing it on PATH.
+  rexCli = pkgs.writeShellScriptBin "rex" ''
+    exec "/Applications/Rex Beta.app/Contents/Helpers/Rex Server.rex/Contents/MacOS/rex" "$@"
+  '';
 in
 with lib;
 with lib.my;
@@ -220,10 +225,17 @@ with lib.my;
           name = "deskflow/tap";
           trusted = true;
         }
+        {
+          name = "entireio/tap";
+          trusted = true;
+        }
       ];
       casks = [
         "anki"
+        "badgeify"
         "deskflow"
+        "discord"
+        "entireio/tap/entire"
         "betterdisplay"
         "fantastical"
         "figma"
@@ -255,6 +267,14 @@ with lib.my;
       };
     };
   };
+  # Rex stores its selected theme in macOS preferences; the import itself is
+  # one-time via Rex's Import Theme File command.
+  system.defaults.CustomUserPreferences."com.superlogical.rex" = {
+    "Workspace.appearance" = "dark";
+    "Workspace.interfaceStyle" = "useTheme";
+    "Workspace.showsKeySequenceHints" = true;
+  };
+
   hm = {
     xdg.configFile."rex/init.lua".source = ../../../configs/rex/init.lua;
     xdg.configFile."rex/themes/Catppuccin Mocha".source = ../../../configs/rex/themes/catppuccin-mocha;
@@ -276,6 +296,7 @@ with lib.my;
         ++ [
           grayAreaSsh
           grayAreaSshAttach
+          rexCli
         ];
 
       file = {
