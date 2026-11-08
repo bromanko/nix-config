@@ -42,10 +42,12 @@
     }
   ];
 
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.efi = {
-    efiSysMountPoint = "/efi";
-    canTouchEfiVariables = true;
+  # Hetzner boots this machine in legacy BIOS mode. Updating an EFI loader
+  # leaves the original GRUB bootstrap generation selected on reboot.
+  boot.loader.systemd-boot.enable = false;
+  boot.loader.grub = {
+    enable = true;
+    device = "/dev/sda";
   };
 
   services.openssh = {
@@ -79,6 +81,12 @@
   services.withings-mcp = {
     enable = true;
     domain = "withings.bromanko.com";
+  };
+
+  services.feedbin-mcp = {
+    enable = true;
+    domain = "feedbin.bromanko.com";
+    allowedEmail = "hello@bromanko.com";
   };
 
   users.groups.michael = { };
