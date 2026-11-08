@@ -57,6 +57,11 @@ Check `lsblk -f` output and ensure UUIDs match host config:
   - `fileSystems."/".device`
   - `fileSystems."/efi".device`
 
+This host uses **legacy BIOS**, not UEFI. Keep `boot.loader.grub.enable = true`
+and `boot.loader.grub.device = "/dev/sda"`. Updating systemd-boot on the EFI
+partition does not update the boot path used by this server. Check the actual
+firmware mode before changing bootloaders.
+
 Also verify/adjust:
 
 - `services.caddy.email`
@@ -126,3 +131,24 @@ PUBLIC_BASE_URL=https://withings.bromanko.com scripts/deploy root@<server-ip>
 ```
 
 Create `/var/lib/withings-mcp/env` from `scripts/withings-mcp.env.example` with required Withings, Supabase, and encryption-secret variables before restarting `withings-mcp`.
+
+## 9) Deploy Feedbin MCP
+
+The personal Feedbin HTTP/OAuth service is enabled in the host configuration
+and served at `https://feedbin.bromanko.com/mcp`. Its application wrapper
+lives in `~/Code/feedbin-mcp`. After applying the host configuration:
+
+```sh
+cd ~/Code/feedbin-mcp
+DEPLOY_HOSTNAME=5.78.44.117 ./deploy root@sleeper-service
+```
+
+The address override avoids requiring DNS for the SSH alias. It uses the
+1Password SSH agent configured in the user's SSH config. The deploy script
+creates the encryption key on the server; no Feedbin password is placed in
+Nix or shell configuration. Connect in ChatGPT using OAuth and complete the
+Feedbin login for `hello@bromanko.com`.
+
+Credentials and OAuth state are encrypted in `/var/lib/feedbin-mcp/state/`.
+The separate key lives in `/var/lib/feedbin-mcp/env`. Keep both when backing
+up or migrating. See the application's README for tests and rollback.
