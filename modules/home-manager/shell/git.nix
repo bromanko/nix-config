@@ -33,6 +33,19 @@ in
       programs.git = {
         enable = true;
 
+        # Commit with the work address in any clone of a useful-machinery repository,
+        # wherever it lives on disk.
+        includes =
+          map
+            (url: {
+              condition = "hasconfig:remote.*.url:${url}";
+              contents.user.email = cfg.workEmail;
+            })
+            [
+              "git@github.com:useful-machinery/**"
+              "https://github.com/useful-machinery/**"
+            ];
+
         settings = {
           user = {
             email = cfg.userEmail;
@@ -193,6 +206,12 @@ in
     userEmail = mkOption {
       type = types.str;
       default = "hello@bromanko.com";
+    };
+
+    workEmail = mkOption {
+      type = types.str;
+      default = "brian@usefulmachinery.com";
+      description = "Email used for commits in useful-machinery repositories.";
     };
 
     userName = mkOption {
