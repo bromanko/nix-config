@@ -190,14 +190,17 @@
         default = final: prev: {
           devenv =
             let
-              upstream = inputs.devenv.packages.${prev.stdenv.hostPlatform.system}.devenv;
+              system = prev.stdenv.hostPlatform.system;
+              upstream = inputs.devenv.packages.${system}.devenv;
             in
             if prev.stdenv.hostPlatform.isDarwin then
               upstream.overrideAttrs (old: {
-                # The pinned proxy's openssl-sys metadata can name Homebrew.
-                # Supply the Nix library explicitly to the final native link.
+                # Devenv 2.3.1's proxy links OpenSSL but omits it from the
+                # final crate's inputs, so clean Darwin builds cannot find -lssl.
                 devenvProxy = old.devenvProxy.overrideAttrs (proxy: {
-                  buildInputs = (proxy.buildInputs or [ ]) ++ [ prev.openssl ];
+                  buildInputs = (proxy.buildInputs or [ ]) ++ [
+                    inputs.devenv.inputs.nixpkgs.legacyPackages.${system}.openssl
+                  ];
                 });
               })
             else

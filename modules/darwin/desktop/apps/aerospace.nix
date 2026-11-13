@@ -144,5 +144,12 @@ in
         on-window-detected = cfg.windowRules;
       };
     };
+
+    # Start AeroSpace at login, but don't relaunch it after the user quits it.
+    launchd.user.agents.aerospace.serviceConfig.KeepAlive = mkForce false;
+
+    # Let Raycast/Finder launch the app with the same Nix-generated settings.
+    home-manager.users."${config.user.name}".home.file.".config/aerospace/aerospace.toml".source =
+      builtins.elemAt (lib.splitString " --config-path " config.launchd.user.agents.aerospace.command) 1;
   };
 }

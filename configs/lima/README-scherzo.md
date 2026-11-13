@@ -18,6 +18,46 @@ Current sizing: both runners have 3 CPUs, 8 GiB RAM, 100 GiB disk and 4 GiB swap
 See [the dual-runner trial status](README-sizing.md) for preservation, boot override
 and remaining qualification prerequisites. Older entries below are historical.
 
+## Scherzo Cloud 0.47.0 rollout (2026-09-28)
+
+Both enrolled Lima runners were upgraded sequentially from 0.45.0 to the
+published 0.47.0 release. Cloud and local assignment counts were zero while
+each runner was draining. Each guest's candidate closure differed from its
+active telemetry generation only in the Scherzo Cloud package. The activated
+systems are:
+
+- `lima-scherzo`: `/nix/store/7d93qq2z37m632cr1vdbra4lifzm9qnn-nixos-system-lima-scherzo-26.11.20260818.0ae2bc1`
+- `lima-scherzo-2`: `/nix/store/pxcdaj5ss7j98wj9i7mm01pxp962yq43-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+
+Both preserved their enrollment credentials, reconnected on 0.47.0, and were
+returned to their prior enabled mode. Their Collectors remained active with
+root-owned `0600` keys and loopback receivers. Real 0.47.0
+`runner.gateway_connection` spans reached the Production `scherzo-runner`
+dataset from [the first](https://ui.honeycomb.io/scherzo/environments/production/result/ztXBonPPNtf/trace?trace_id=31e2b12345489c6815f1a532049e9901)
+and [the second](https://ui.honeycomb.io/scherzo/environments/production/result/EYUEFMk1Cag/trace?trace_id=68e5238b2e71746c7d62253cd77f3f97).
+Those connections ended during intentional restarts while drained; both new
+boots connected successfully. No workflow was dispatched.
+
+## Honeycomb runner trace rollout (2026-09-28)
+
+Both enrolled Lima guests received the loopback OpenTelemetry Collector while
+Cloud and local assignment counts were zero. The deployment source preserved
+Gray area's current 0.45.0 package pin and other pending host changes; the
+candidate closures added only the Collector, configuration, and service unit.
+Both configurations evaluated to the same NixOS derivations used for that
+initial deployment. The subsequent 0.47.0 rollout is recorded above.
+
+- `lima-scherzo`: `/nix/store/milfilnyja8n093kpaj0rg3xdd7q01wg-nixos-system-lima-scherzo-26.11.20260818.0ae2bc1`
+- `lima-scherzo-2`: `/nix/store/8dwqpqkii5ypbsrmix8vpszgcvhn38l4-nixos-system-lima-scherzo-2-26.11.20260818.0ae2bc1`
+
+Each guest retained its enrollment credential and reconnected on 0.45.0. The
+Collector is active, has a root-owned `0600` Honeycomb key, and listens only
+on `127.0.0.1:4318`. Real `runner.gateway_connection` spans from both guests
+reached the Production `scherzo-runner` dataset. Both registrations returned to
+their prior enabled mode, online and idle, with no failed guest units. No
+workflow was dispatched. The shared telemetry patch was applied to Gray area's
+normal checkout as well, preserving its preexisting local changes.
+
 ## Scherzo Cloud 0.41.1 rollout (2026-09-23)
 
 Both gray-area runners were upgraded sequentially from 0.41.0 using guest-only
@@ -640,3 +680,15 @@ The local Coordinator integration suite also passed. No production schema,
 credential, run state, or service configuration was changed by these diagnostics.
 Temporary database objects and diagnostic processes were discarded, and the
 personal Tailscale profile was restored after control-plane inspection.
+
+## Runner trace export
+
+Both Lima guests share the `lima-scherzo` NixOS definition. It configures Runner
+Serve to send OTLP/HTTP traces to a loopback Collector. The Collector sends only
+traces to Honeycomb's `scherzo-runner` dataset and starts only after its root-owned
+`/etc/credstore/um-runner-honeycomb-api-key` file exists. The ingest key never
+appears in the Runner Serve service environment, Nix store, or workflow steps.
+Use the Scherzo Cloud `spikes/runner-hosts/lima/scripts/install-telemetry-auth`
+helper to install the key independently on each VM after the protected dataset
+and runner-specific Production Ingest Key are ready. See that repository's
+`docs/operations/runner-telemetry.md` for rollout and verification order.

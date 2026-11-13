@@ -21,7 +21,7 @@
     "gleam-review@bromanko-for-claude": false,
     "tmux-titles@bromanko-for-claude": true
   },
-  "outputStyle": "default",
+  "outputStyle": "Concise",
   "sandbox": {
     "enabled": true,
     "autoAllowBashIfSandboxed": false
