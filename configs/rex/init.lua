@@ -62,8 +62,5 @@ rex.bind("ctrl+a>space>shift+c>shift+r", "session.refresh")
 rex.bind("ctrl+a>space>shift+c>r", "client.config.reload")
 rex.bind("ctrl+a>space>shift+c>,", "client.settings")
 
--- Tmux's unprefixed Alt+Arrow pane navigation.
-rex.bind("alt+left", "pane.focus.left")
-rex.bind("alt+right", "pane.focus.right")
-rex.bind("alt+up", "pane.focus.up")
-rex.bind("alt+down", "pane.focus.down")
+-- Leave Alt+Arrow available to the shell (for example, fish word completion).
+-- Pane navigation uses Ctrl+A, Space, P, then H/J/K/L above.
